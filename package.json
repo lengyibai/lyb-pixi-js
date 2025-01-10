@@ -1,0 +1,47 @@
+{
+  "name": "lyb-pixi-js",
+  "version": "1.1.11",
+  "description": "自用Pixi.JS方法库",
+  "license": "ISC",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc & vite build"
+  },
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "umd"
+  ],
+  "author": {
+    "name": "冷弋白",
+    "email": "1329670984@qq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lengyibai/lyb-js.git"
+  },
+  "keywords": [
+    "冷弋白",
+    "lengyibai",
+    "lyb",
+    "lyb-pixi-js"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@pixi-spine/runtime-3.8": "^4.0.3",
+    "dayjs": "^1.11.13",
+    "decimal.js": "^10.4.3",
+    "gsap": "^3.12.5",
+    "pixi.js": "^7.4.2",
+    "vite": "^4.5.5"
+  }
+}
