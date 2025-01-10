@@ -1,4 +1,4 @@
-import { LibJs } from "./src/index";
+import { LibPixiJs } from "./src/index";
 
 //@ts-ignore
-window.LibJs = LibJs;
+window.LibPixiJs = LibPixiJs;

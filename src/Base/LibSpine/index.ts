@@ -2,14 +2,14 @@ import { type Container, Assets, Ticker } from "pixi.js";
 import { Spine, type Bone } from "@pixi-spine/runtime-3.8";
 import gsap from "gsap";
 
-interface OnUpdateParams {
+export interface OnUpdateParams {
   x: number;
   y: number;
   rotate: number;
   scaleX: number;
   scaleY: number;
 }
-interface SpineAnimateParams {
+export interface LibSpineParams {
   /** 默认是否可见 */
   visible?: boolean;
   /** 挂点列表 */
@@ -26,6 +26,7 @@ interface SpineAnimateParams {
     onUpdate?: (config: OnUpdateParams) => void;
   }[];
 }
+
 /** @description 自定义 Spine 动画 */
 export class LibSpine extends Spine {
   /** 挂点 */
@@ -41,7 +42,7 @@ export class LibSpine extends Spine {
   /** spine更新函数 */
   private _loopFn: () => void;
 
-  constructor(spineName: string, params?: SpineAnimateParams) {
+  constructor(spineName: string, params?: LibSpineParams) {
     const { followPointList, visible = false } = params || {};
     super(Assets.get(spineName).spineData);
     this.visible = visible;
@@ -62,10 +63,14 @@ export class LibSpine extends Spine {
     }
 
     this._loopFn = this._loop.bind(this);
-    Ticker.shared.add(this._loopFn);
+    Ticker.system.add(this._loopFn);
   }
 
-  /** @description 设置动画 */
+  /** @description 设置动画
+   * @param animationName 动画名称
+   * @param loop 是否循环播放
+   * @param delay 是否延迟播放
+   */
   setAnimation(animationName = "Animation", loop = false, delay = true) {
     return new Promise<void>((resolve) => {
       this.visible = true;
@@ -83,7 +88,11 @@ export class LibSpine extends Spine {
     });
   }
 
-  /** @description 添加动画 */
+  /** @description 添加动画
+   * @param animationName 动画名称
+   * @param loop 是否循环播放
+   * @param delay 延迟播放时间
+   */
   addAnimation(animationName = "Animation", loop = false, delay = 0) {
     return new Promise<void>((resolve) => {
       this.state.addAnimation(0, animationName, loop, delay).listener = {
@@ -103,14 +112,14 @@ export class LibSpine extends Spine {
 
   /** @description 销毁动画及挂点 */
   destroyAll() {
-    app.ticker.remove(this._loopFn);
+    Ticker.system.remove(this._loopFn);
     this.destroy();
     this.removeFromParent();
   }
 
   /** @description 更新渲染 */
   private _loop() {
-    this.update(app.ticker.deltaMS / 1000);
+    this.update(Ticker.system.deltaMS / 1000);
     this._updateFollowPoint();
   }
 
@@ -120,7 +129,7 @@ export class LibSpine extends Spine {
 
     this._followDots.forEach((item) => {
       const { worldX: x, worldY: y } = item.point;
-      const rotate = libJsConvertAngle(item.point.getWorldRotationX(), "rad");
+      const rotate = item.point.getWorldRotationX() * (Math.PI / 180);
       const scaleX = item.point.getWorldScaleX();
       const scaleY = item.point.getWorldScaleY();
 
