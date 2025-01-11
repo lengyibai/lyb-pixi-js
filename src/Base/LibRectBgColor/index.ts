@@ -62,3 +62,9 @@ export class LibRectBgColor extends Graphics {
     this.endFill();
   }
 }
+
+new LibRectBgColor({
+  width: 100,
+  height: 100,
+  bgColor: "red",
+});

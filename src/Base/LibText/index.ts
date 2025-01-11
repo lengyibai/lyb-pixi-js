@@ -17,8 +17,6 @@ export interface LibTextParams {
   fontFamily?: string;
   /** 字体粗细 */
   fontWeight?: TextStyleFontWeight;
-  /** 锚点 */
-  anchor?: any;
   /** 是否换行 */
   wordWrap?: boolean;
   /** 换行宽度 */
@@ -33,7 +31,7 @@ export interface LibTextParams {
   shadow?: [string, number, number, number];
 }
 
-/** @description 自定义普通文本类 */
+/** @description 自定义文本类 */
 export class LibText extends Text {
   constructor(options: LibTextParams) {
     const {
@@ -45,7 +43,6 @@ export class LibText extends Text {
       strokeThickness,
       fontFamily = "MicrosoftYaHei",
       fontWeight = "normal",
-      anchor = 0,
       wordWrap = false,
       wordWrapWidth = 100,
       lineHeight = 1.25,
@@ -79,6 +76,5 @@ export class LibText extends Text {
 
     super(text, style);
     this.position.x = indent * fontSize;
-    this.anchor.set(anchor);
   }
 }

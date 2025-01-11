@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>冷弋白的网页</title>
+    <script src="public/pixi.min.js"></script>
+    <script src="public/pixi-spine.js"></script>
+    <script src="./umd/lybPixi.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        color: #fff;
+      }
+
+      html,
+      body,
+      #app {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+
+      #app {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1a1a1a;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- JS -->
+    <script type="text/javascript">
+      const app = new PIXI.Application({
+        resizeTo: window,
+        antialias: false,
+        resolution: window.devicePixelRatio || 1,
+        autoDensity: true,
+        powerPreference: "high-performance",
+        premultipliedAlpha: false,
+      });
+
+      document.body.appendChild(app.view);
+
+      PIXI.Assets.addBundle("gameManifest", {
+        "fly.png": "public/particle/fly.png",
+        "fly.json": "public/particle/fly.json",
+        "logo": "public/spine/Bl_logo.json",
+      });
+      PIXI.Assets.loadBundle("gameManifest").then(() => {
+        const libParticleMove = new LibPixiJs.Base.LibParticleMove({
+          start: { x: 300, y: 600 },
+          control: [
+            { x: 600, y: 500 },
+            { x: 500, y: 100 },
+          ],
+          end: { x: 0, y: 0 },
+          json: PIXI.Assets.get("fly.json"),
+          duration: 1,
+          showControl: true,
+          ease: "power1.in",
+          loop: true,
+        });
+        app.stage.addChild(libParticleMove);
+
+        const spine = new LibPixiJs.Base.LibSpine(PIXI.Assets.get("logo"));
+        spine.setAnimation("in");
+        spine.addAnimation("idle", true);
+        app.stage.addChild(spine);
+        spine.position.set(window.innerWidth / 2, window.innerHeight / 2);
+        spine.scale.set(0.25);
+      });
+    </script>
+  </body>
+</html>

@@ -1,6 +1,17 @@
-import { Container, Sprite } from "pixi.js";
+import { Container, Graphics, Sprite } from "pixi.js";
 
 import { LibRectBgColor } from "../LibRectBgColor";
+
+interface LibContainerParams {
+  /** 宽度 */
+  width: number;
+  /** 高度 */
+  height: number;
+  /** 溢出裁剪 */
+  overHidden?: boolean;
+  /** 背景色 */
+  bgColor?: string;
+}
 
 /** @description 自定义容器大小及背景色 */
 export class LibContainer extends Container {
@@ -14,8 +25,19 @@ export class LibContainer extends Container {
    * @param height 容器高度
    * @param bgColor 背景色
    */
-  constructor(width: number, height: number, bgColor?: string) {
+  constructor(params: LibContainerParams) {
     super();
+
+    const { width, height, overHidden, bgColor } = params;
+
+    if (overHidden) {
+      const mask = new Graphics();
+      mask.beginFill(0xffffff); // 创建一个白色矩形
+      mask.drawRect(0, 0, width, height);
+      mask.endFill();
+      this.addChild(mask);
+      this.mask = mask;
+    }
 
     if (bgColor) {
       this._bgColorFill = new LibRectBgColor({

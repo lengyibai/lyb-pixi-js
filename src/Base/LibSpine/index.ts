@@ -42,9 +42,9 @@ export class LibSpine extends Spine {
   /** spine更新函数 */
   private _loopFn: () => void;
 
-  constructor(spineName: string, params?: LibSpineParams) {
+  constructor(texture: any, params?: LibSpineParams) {
     const { followPointList, visible = false } = params || {};
-    super(Assets.get(spineName).spineData);
+    super(texture.spineData);
     this.visible = visible;
     this.autoUpdate = false;
 

@@ -1,6 +1,7 @@
 import { Container, Graphics, ParticleContainer, Ticker } from "pixi.js";
 import { Emitter, type EmitterConfigV3 } from "@pixi/particle-emitter";
 import gsap from "gsap";
+import { LibText } from "../LibText";
 
 export interface LibParticleMoveParams {
   /** 粒子JSON资源 */
@@ -21,7 +22,7 @@ export interface LibParticleMoveParams {
   loop?: boolean;
 }
 
-/** @description 粒子移动 */
+/** @description 利用贝塞尔曲线实现粒子移动 */
 export class LibParticleMove extends Container {
   private _particleContainer: ParticleContainer;
 
@@ -97,14 +98,14 @@ export class LibParticleMove extends Container {
 
     // 渲染控制点
     if (showControl) {
-      anchorPoints.forEach((item) => {
+      anchorPoints.forEach((item, index) => {
         //创建一个小圆点
-        const dot = new Graphics();
-        dot.beginFill("#fff");
-        dot.drawCircle(0, 0, 5);
-        dot.endFill();
-        dot.position.set(item.x, item.y);
-        this.addChild(dot);
+        const text = new LibText({
+          text: index + 1,
+          fontSize: 16,
+        });
+        text.position.set(item.x, item.y);
+        this.addChild(text);
       });
     }
 

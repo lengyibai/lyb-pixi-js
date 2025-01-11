@@ -11,8 +11,8 @@ export default defineConfig({
     lib: {
       formats: ["umd"],
       entry: "main.ts",
-      name: "LibJs",
-      fileName: () => `lyb.js`,
+      name: "LibPixiJs",
+      fileName: () => `lyb-pixi.js`,
     },
   },
 });
