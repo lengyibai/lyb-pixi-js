@@ -52,7 +52,7 @@
         "logo": "resource/spine/Bl_logo.json",
       });
       PIXI.Assets.loadBundle("gameManifest").then(() => {
-        const libParticleMove = new LibPixiJs.Base.LibParticleMove({
+        const libParticleMove = new LibPixiJs.Base.LibPixiParticleMove({
           start: { x: 300, y: 600 },
           control: [
             { x: 600, y: 500 },
@@ -67,7 +67,7 @@
         });
         app.stage.addChild(libParticleMove);
 
-        const spine = new LibPixiJs.Base.LibSpine(PIXI.Assets.get("logo"));
+        const spine = new LibPixiJs.Base.LibPixiSpine(PIXI.Assets.get("logo"));
         spine.setAnimation("in");
         spine.addAnimation("idle", true);
         app.stage.addChild(spine);

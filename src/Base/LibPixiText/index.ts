@@ -1,6 +1,6 @@
 import { Text, TextStyle, type TextStyleAlign, type TextStyleFontWeight } from "pixi.js";
 
-export interface LibTextParams {
+export interface LibPixiTextParams {
   /** 文本内容 */
   text: string | number;
   /**  字体大小 */
@@ -32,8 +32,8 @@ export interface LibTextParams {
 }
 
 /** @description 自定义文本类 */
-export class LibText extends Text {
-  constructor(options: LibTextParams) {
+export class LibPixiText extends Text {
+  constructor(options: LibPixiTextParams) {
     const {
       text,
       fontSize = 36,

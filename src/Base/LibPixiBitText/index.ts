@@ -1,7 +1,7 @@
 import { BitmapText } from "pixi.js";
 
 /** @description 自定义位图文本 */
-export class LibBitText {
+export class LibPixiBitText {
   /** 字体名称 */
   private _fontName: string;
   /* 字体大小 */

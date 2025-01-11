@@ -1,8 +1,8 @@
 import { Container, Graphics, Sprite } from "pixi.js";
 
-import { LibRectBgColor } from "../LibRectBgColor";
+import { LibPixiRectBgColor } from "../LibPixiRectBgColor";
 
-interface LibContainerParams {
+interface LibPixiContainerParams {
   /** 宽度 */
   width: number;
   /** 高度 */
@@ -14,18 +14,18 @@ interface LibContainerParams {
 }
 
 /** @description 自定义容器大小及背景色 */
-export class LibContainer extends Container {
+export class LibPixiContainer extends Container {
   /** 填充容器 */
   private _fill?: Sprite;
   /** 背景色填充 */
-  private _bgColorFill?: LibRectBgColor;
+  private _bgColorFill?: LibPixiRectBgColor;
 
   /**
    * @param width 容器宽度
    * @param height 容器高度
    * @param bgColor 背景色
    */
-  constructor(params: LibContainerParams) {
+  constructor(params: LibPixiContainerParams) {
     super();
 
     const { width, height, overHidden, bgColor } = params;
@@ -40,7 +40,7 @@ export class LibContainer extends Container {
     }
 
     if (bgColor) {
-      this._bgColorFill = new LibRectBgColor({
+      this._bgColorFill = new LibPixiRectBgColor({
         width,
         height,
         bgColor,

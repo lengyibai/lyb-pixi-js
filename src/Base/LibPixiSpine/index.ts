@@ -9,7 +9,7 @@ export interface OnUpdateParams {
   scaleX: number;
   scaleY: number;
 }
-export interface LibSpineParams {
+export interface LibPixiSpineParams {
   /** 默认是否可见 */
   visible?: boolean;
   /** 挂点列表 */
@@ -28,7 +28,7 @@ export interface LibSpineParams {
 }
 
 /** @description 自定义 Spine 动画 */
-export class LibSpine extends Spine {
+export class LibPixiSpine extends Spine {
   /** 挂点 */
   private _followDots: {
     point: Bone;
@@ -42,9 +42,17 @@ export class LibSpine extends Spine {
   /** spine更新函数 */
   private _loopFn: () => void;
 
-  constructor(texture: any, params?: LibSpineParams) {
+  constructor(spineNameOrTexture: string | any, params?: LibPixiSpineParams) {
     const { followPointList, visible = false } = params || {};
-    super(texture.spineData);
+
+    let spineData;
+    if (typeof spineNameOrTexture === "string") {
+      spineData = Assets.get(spineNameOrTexture).spineData;
+    } else {
+      spineData = spineNameOrTexture.spineData;
+    }
+
+    super(spineData);
     this.visible = visible;
     this.autoUpdate = false;
 

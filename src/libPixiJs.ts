@@ -1,27 +1,27 @@
-import { LibBitText } from "./Base/LibBitText";
-import { LibContainer } from "./Base/LibContainer";
-import { LibParticleMove } from "./Base/LibParticleMove";
-import { LibRectBgColor } from "./Base/LibRectBgColor";
-import { LibSpine } from "./Base/LibSpine";
-import { LibText } from "./Base/LibText";
+import { LibPixiBitText } from "./Base/LibPixiBitText";
+import { LibPixiContainer } from "./Base/LibPixiContainer";
+import { LibPixiParticleMove } from "./Base/LibPixiParticleMove";
+import { LibPixiRectBgColor } from "./Base/LibPixiRectBgColor";
+import { LibPixiSpine } from "./Base/LibPixiSpine";
+import { LibPixiText } from "./Base/LibPixiText";
 
 /** @description 基础方法 */
 export const Base = {
   /** @description 自定义位图文本 */
-  LibBitText,
+  LibPixiBitText,
 
   /** @description 自定义容器大小及背景色 */
-  LibContainer,
+  LibPixiContainer,
 
   /** @description 粒子移动 */
-  LibParticleMove,
+  LibPixiParticleMove,
 
   /** @description 自定义矩形背景色 */
-  LibRectBgColor,
+  LibPixiRectBgColor,
 
   /** @description 自定义 Spine 动画 */
-  LibSpine,
+  LibPixiSpine,
 
   /** @description 自定义普通文本类 */
-  LibText,
+  LibPixiText,
 };

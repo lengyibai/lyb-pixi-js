@@ -1,9 +1,9 @@
 import { Container, Graphics, ParticleContainer, Ticker } from "pixi.js";
 import { Emitter, type EmitterConfigV3 } from "@pixi/particle-emitter";
 import gsap from "gsap";
-import { LibText } from "../LibText";
+import { LibPixiText } from "../LibPixiText";
 
-export interface LibParticleMoveParams {
+export interface LibPixiParticleMoveParams {
   /** 粒子JSON资源 */
   json: EmitterConfigV3;
   /** 运动时长 */
@@ -23,10 +23,10 @@ export interface LibParticleMoveParams {
 }
 
 /** @description 利用贝塞尔曲线实现粒子移动 */
-export class LibParticleMove extends Container {
+export class LibPixiParticleMove extends Container {
   private _particleContainer: ParticleContainer;
 
-  constructor(params: LibParticleMoveParams) {
+  constructor(params: LibPixiParticleMoveParams) {
     super();
 
     const {
@@ -100,7 +100,7 @@ export class LibParticleMove extends Container {
     if (showControl) {
       anchorPoints.forEach((item, index) => {
         //创建一个小圆点
-        const text = new LibText({
+        const text = new LibPixiText({
           text: index + 1,
           fontSize: 16,
         });

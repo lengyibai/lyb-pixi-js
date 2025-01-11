@@ -1,7 +1,7 @@
 import { Graphics } from "pixi.js";
 import gsap from "gsap";
 
-export interface LibRectBgColorParams {
+export interface LibPixiRectBgColorParams {
   /** 宽度 */
   width?: number;
   /** 高度 */
@@ -17,13 +17,13 @@ export interface LibRectBgColorParams {
 }
 
 /** @description 自定义矩形背景色 */
-export class LibRectBgColor extends Graphics {
+export class LibPixiRectBgColor extends Graphics {
   /** 启用着色 */
   private enableTint = true;
   /** 背景颜色 */
   private bgColor: string | number = "#fff";
 
-  constructor(options: LibRectBgColorParams) {
+  constructor(options: LibPixiRectBgColorParams) {
     super();
 
     const {
@@ -62,9 +62,3 @@ export class LibRectBgColor extends Graphics {
     this.endFill();
   }
 }
-
-new LibRectBgColor({
-  width: 100,
-  height: 100,
-  bgColor: "red",
-});
