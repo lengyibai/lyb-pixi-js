@@ -22,7 +22,9 @@ export interface LibPixiParticleMoveParams {
   loop?: boolean;
 }
 
-/** @description 利用贝塞尔曲线实现粒子移动 */
+/** @description 利用贝塞尔曲线实现粒子移动
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiParticleMove-粒子容器
+ */
 export class LibPixiParticleMove extends Container {
   private _particleContainer: ParticleContainer;
 

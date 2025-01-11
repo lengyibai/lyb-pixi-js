@@ -31,7 +31,9 @@ export interface LibPixiTextParams {
   shadow?: [string, number, number, number];
 }
 
-/** @description 自定义文本类 */
+/** @description 自定义文本类
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiText-文本
+ */
 export class LibPixiText extends Text {
   constructor(options: LibPixiTextParams) {
     const {

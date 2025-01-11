@@ -13,7 +13,9 @@ interface LibPixiContainerParams {
   bgColor?: string;
 }
 
-/** @description 自定义容器大小及背景色 */
+/** @description 自定义容器大小及背景色
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiContainer-容器
+ */
 export class LibPixiContainer extends Container {
   /** 填充容器 */
   private _fill?: Sprite;

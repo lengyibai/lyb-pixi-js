@@ -27,7 +27,9 @@ export interface LibPixiSpineParams {
   }[];
 }
 
-/** @description 自定义 Spine 动画 */
+/** @description 自定义 Spine 动画
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSpine-动画
+ */
 export class LibPixiSpine extends Spine {
   /** 挂点 */
   private _followDots: {

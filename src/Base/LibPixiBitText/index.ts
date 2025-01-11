@@ -1,6 +1,8 @@
 import { BitmapText } from "pixi.js";
 
-/** @description 自定义位图文本 */
+/** @description 自定义位图文本
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiBitText-位图
+ */
 export class LibPixiBitText {
   /** 字体名称 */
   private _fontName: string;

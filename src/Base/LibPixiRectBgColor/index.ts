@@ -16,7 +16,9 @@ export interface LibPixiRectBgColorParams {
   enableTint?: boolean;
 }
 
-/** @description 自定义矩形背景色 */
+/** @description 自定义矩形背景色
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiRectBgColor-矩形
+ */
 export class LibPixiRectBgColor extends Graphics {
   /** 启用着色 */
   private enableTint = true;
