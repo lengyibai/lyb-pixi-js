@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>冷弋白的网页</title>
-    <script src="public/pixi.min.js"></script>
-    <script src="public/pixi-spine.js"></script>
-    <script src="./umd/lybPixi.js"></script>
+    <script src="resource/pixi.min.js"></script>
+    <script src="resource/pixi-spine.js"></script>
+    <script src="./umd/lyb-pixi.js"></script>
     <style>
       * {
         margin: 0;
@@ -47,9 +47,9 @@
       document.body.appendChild(app.view);
 
       PIXI.Assets.addBundle("gameManifest", {
-        "fly.png": "public/particle/fly.png",
-        "fly.json": "public/particle/fly.json",
-        "logo": "public/spine/Bl_logo.json",
+        "fly.png": "resource/particle/fly.png",
+        "fly.json": "resource/particle/fly.json",
+        "logo": "resource/spine/Bl_logo.json",
       });
       PIXI.Assets.loadBundle("gameManifest").then(() => {
         const libParticleMove = new LibPixiJs.Base.LibParticleMove({
