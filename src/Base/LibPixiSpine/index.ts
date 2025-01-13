@@ -79,20 +79,13 @@ export class LibPixiSpine extends Spine {
   /** @description 设置动画
    * @param animationName 动画名称
    * @param loop 是否循环播放
-   * @param delay 是否延迟播放
    */
-  setAnimation(animationName = "Animation", loop = false, delay = true) {
+  setAnimation(animationName = "animation", loop = false) {
     return new Promise<void>((resolve) => {
       this.visible = true;
       this.state.setAnimation(0, animationName, loop).listener = {
         complete: () => {
-          if (delay) {
-            requestAnimationFrame(() => {
-              resolve();
-            });
-          } else {
-            resolve();
-          }
+          resolve();
         },
       };
     });
@@ -103,13 +96,12 @@ export class LibPixiSpine extends Spine {
    * @param loop 是否循环播放
    * @param delay 延迟播放时间
    */
-  addAnimation(animationName = "Animation", loop = false, delay = 0) {
+  addAnimation(animationName = "animation", loop = false, delay = 0) {
     return new Promise<void>((resolve) => {
+      this.visible = true;
       this.state.addAnimation(0, animationName, loop, delay).listener = {
         complete: () => {
-          requestAnimationFrame(() => {
-            resolve();
-          });
+          resolve();
         },
       };
     });
@@ -124,7 +116,6 @@ export class LibPixiSpine extends Spine {
   destroyAll() {
     Ticker.system.remove(this._loopFn);
     this.destroy();
-    this.removeFromParent();
   }
 
   /** @description 更新渲染 */

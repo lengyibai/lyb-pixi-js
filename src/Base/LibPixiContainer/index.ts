@@ -2,17 +2,6 @@ import { Container, Graphics, Sprite } from "pixi.js";
 
 import { LibPixiRectBgColor } from "../LibPixiRectBgColor";
 
-interface LibPixiContainerParams {
-  /** 宽度 */
-  width: number;
-  /** 高度 */
-  height: number;
-  /** 溢出裁剪 */
-  overHidden?: boolean;
-  /** 背景色 */
-  bgColor?: string;
-}
-
 /** @description 自定义容器大小及背景色
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiContainer-容器
  */
@@ -26,15 +15,19 @@ export class LibPixiContainer extends Container {
    * @param width 容器宽度
    * @param height 容器高度
    * @param bgColor 背景色
+   * @param overHidden 是否溢出裁剪
    */
-  constructor(params: LibPixiContainerParams) {
+  constructor(
+    width: number,
+    height: number,
+    bgColor?: string,
+    overHidden?: boolean
+  ) {
     super();
-
-    const { width, height, overHidden, bgColor } = params;
 
     if (overHidden) {
       const mask = new Graphics();
-      mask.beginFill(0xffffff); // 创建一个白色矩形
+      mask.beginFill(0xffffff);
       mask.drawRect(0, 0, width, height);
       mask.endFill();
       this.addChild(mask);
@@ -56,7 +49,10 @@ export class LibPixiContainer extends Container {
     }
   }
 
-  /** @description 设置容器大小 */
+  /** @description 设置容器大小
+   * @param width 容器宽度
+   * @param height 容器高度
+   */
   setSize(width: number, height: number) {
     if (this._fill) {
       this._fill.width = width;

@@ -133,12 +133,7 @@ this.addChild(fontText2);
 > 自定义容器大小及背景色
 
 ```ts
-const box = new LibPixiJs.Base.LibPixiContainer({
-  width: 100,
-  height: 100,
-  bgColor: "#fff",
-  overHidden: true,
-});
+const box = new LibPixiJs.Base.LibPixiContainer(100, 100, "#fff", true);
 this.addChild(box);
 ```
 
