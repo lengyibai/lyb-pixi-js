@@ -1,6 +1,6 @@
 import gsap from "gsap";
-import { LibPixiContainer } from "../../Base/LibPixiContainer";
-import { libPixiEvent } from "../../../Utils/LibPixiEvent";
+import { LibPixiContainer } from "../Base/LibPixiContainer";
+import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import type { Sprite } from "pixi.js";
 
 export interface LibPixiCloseBtnParams {

@@ -1,5 +1,5 @@
 import { Ticker } from "pixi.js";
-import { libJsRandom } from "lyb-js/dist/Random/LibJsRandom";
+import { libJsRandom } from "lyb-js/Random/LibJsRandom.js";
 
 /** @description 间隔触发
  * @param callback 回调函数

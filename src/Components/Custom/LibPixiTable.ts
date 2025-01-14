@@ -1,6 +1,6 @@
 /** @description 表格绘制并填入数字 */
 import { Text, Container, Graphics } from "pixi.js";
-import { libPixiScaleContainer } from "../../../Utils/LibPixiScaleContainer";
+import { libPixiScaleContainer } from "../../Utils/LibPixiScaleContainer";
 
 export interface LibPixiTableParams {
   /** 表格数据 */

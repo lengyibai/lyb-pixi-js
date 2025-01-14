@@ -1,6 +1,6 @@
 import type { Container } from "pixi.js";
-import { LibJsNumerStepper } from "lyb-js/dist/Misc/LibJsNumerStepper";
-import { libPixiFilter } from '../../../Utils/LibPixiFilter';
+import { libPixiFilter } from "../../Utils/LibPixiFilter";
+import { LibJsNumberStepper } from "lyb-js/Misc/LibJsNumberStepper.js";
 
 export interface LibPixiSubAddMinMaxParams {
   /** 最小按钮 */
@@ -24,7 +24,7 @@ export interface LibPixiSubAddMinMaxParams {
  */
 export class LibPixiSubAddMinMax {
   /** 步进器 */
-  private baseNumSteper: LibJsNumerStepper;
+  private baseNumSteper: LibJsNumberStepper;
   /** 最大最小按钮 */
   private minBtn: Container;
   private maxBtn: Container;
@@ -57,10 +57,13 @@ export class LibPixiSubAddMinMax {
     this.betAmountListLength = betAmountListLength;
 
     //金额增减步进器
-    this.baseNumSteper = new LibJsNumerStepper(betAmountListLength, (index) => {
-      this.onAmountIndex(index);
-      this.minMaxUpdateIndex(index);
-    });
+    this.baseNumSteper = new LibJsNumberStepper(
+      betAmountListLength,
+      (index) => {
+        this.onAmountIndex(index);
+        this.minMaxUpdateIndex(index);
+      }
+    );
 
     //设置初始状态
     this.minMaxUpdateIndex(initialBetIndex);

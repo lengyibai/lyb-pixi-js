@@ -29,7 +29,7 @@ import { libPixiFilter } from "./Utils/LibPixiFilter";
 import { libPixiShadow } from "./Utils/LibPixiShadow";
 import { libPixiTickerTimeout } from "./Utils/LibPixiTickerTimeout";
 
-/** @description 基础方法 */
+/** @description 组件 */
 export const Components = {
   Base: {
     /** @description 自定义位图文本
@@ -107,7 +107,7 @@ export const Components = {
   },
 };
 
-/** @description 自定义方法 */
+/** @description 方法 */
 export const Utils = {
   /** @description 音频播放器
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiAudio-音频播放器

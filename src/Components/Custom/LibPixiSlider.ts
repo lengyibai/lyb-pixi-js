@@ -1,7 +1,7 @@
 import { Container, type FederatedPointerEvent } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiContainer } from "../../Base/LibPixiContainer";
-import { libPixiOverflowHidden } from "../../../Utils/LibPixiOverflowHidden";
+import { libPixiOverflowHidden } from "../../Utils/LibPixiOverflowHidden";
+import { LibPixiContainer } from '../Base/LibPixiContainer';
 
 /** @description 类似轮播图，但是不会自动轮播
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSlider-横向滑动图

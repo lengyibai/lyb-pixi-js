@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiRectBgColor } from "../../Base/LibPixiRectBgColor";
+import { LibPixiRectBgColor } from '../Base/LibPixiRectBgColor';
 
 /** @description 底部弹出抽屉
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiDrawer-抽屉

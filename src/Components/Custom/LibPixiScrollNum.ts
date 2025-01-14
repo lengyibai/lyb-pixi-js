@@ -1,6 +1,6 @@
 import { Container, Graphics } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiContainer } from "../../Base/LibPixiContainer";
+import { LibPixiContainer } from '../Base/LibPixiContainer';
 
 export interface LibPixiScrollNumParams {
   /** 滚动区域宽度 */

@@ -1,5 +1,5 @@
 import { Container, Sprite, type Texture } from "pixi.js";
-import { libPixiEvent } from "../../../Utils/LibPixiEvent";
+import { libPixiEvent } from "../../Utils/LibPixiEvent";
 
 export interface LibPixiButtonHoverParams {
   /** 图标资源 */

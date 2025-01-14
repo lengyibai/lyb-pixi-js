@@ -1,6 +1,5 @@
 import { Container, Graphics, Sprite } from "pixi.js";
-
-import { LibPixiRectBgColor } from "../LibPixiRectBgColor";
+import { LibPixiRectBgColor } from './LibPixiRectBgColor';
 
 /** @description 自定义容器大小及背景色
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiContainer-容器

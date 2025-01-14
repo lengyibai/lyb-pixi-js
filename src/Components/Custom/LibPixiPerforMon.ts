@@ -6,7 +6,7 @@ import {
   type IRenderer,
   Ticker,
 } from "pixi.js";
-import { LibPixiText } from "../../Base/LibPixiText";
+import { LibPixiText } from '../Base/LibPixiText';
 
 /** @description 监视帧率、Draw Call、Max Draw Call
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPerforMon-性能监视器
