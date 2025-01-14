@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "build": "vite build & tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@pixi-spine/runtime-3.8": "^4.0.3",
+    "@pixi/filter-drop-shadow": "^5.2.0",
+    "@pixi/particle-emitter": "^5.0.8",
+    "dayjs": "^1.11.13",
+    "decimal.js": "^10.4.3",
+    "gsap": "^3.12.5",
+    "lyb-js": "^1.2.10",
+    "pixi.js": "^7.4.2",
+    "vite": "^4.5.5"
+  }
+}

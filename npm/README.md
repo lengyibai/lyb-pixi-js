@@ -26,7 +26,7 @@ app.stage.addChild(text);
 > 按需引入，打包时就不会把整个库打进去
 
 ```ts
-import { LibRectBgColor } from "lyb-pixi-js/dist/Base/LibPixiRectBgColor";
+import { LibRectBgColor } from "lyb-pixi-js/Base/LibPixiRectBgColor";
 
 const box = new LibPixiRectBgColor({
   width: 100,
@@ -40,8 +40,8 @@ app.stage.addChild(box);
 
 ```ts
 //你的公共工具函数文件 utils.ts
-export * from "lyb-pixi-js/dist/Base/LibPixiText";
-export * from "lyb-pixi-js/dist/Base/LibPixiRectBgColor";
+export * from "lyb-pixi-js/Base/LibPixiText";
+export * from "lyb-pixi-js/Base/LibPixiRectBgColor";
 
 //你的项目文件 index.ts
 import { LibText,LibRectBgColor } from "utils";
@@ -66,7 +66,7 @@ app.stage.addChild(box);
 > 你可以借助 `script` 标签直接通过 `CDN` 来使用 `LibPixiJs`
 
 ```html
-<script src="https://unpkg.com/lyb-pixi-js/umd/lyb-pixi.js"></script>
+<script src="https://unpkg.com/lyb-pixi-js/lyb-pixi.js"></script>
 
 <script>
 const text = new LibPixiJs.Base.LibPixiText({

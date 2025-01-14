@@ -1,6 +1,7 @@
+
 import type { Container } from "pixi.js";
-import { libPixiFilter } from "../../Utils/LibPixiFilter";
-import { LibJsNumberStepper } from "lyb-js/Misc/LibJsNumberStepper.js";
+import { libPixiFilter } from "../../Utils/LibPixiFilter";//@ts-ignore
+import { LibJsNumberStepper } from 'lyb-js/Misc/LibJsNumberStepper.js';
 
 export interface LibPixiSubAddMinMaxParams {
   /** 最小按钮 */
@@ -58,7 +59,7 @@ export class LibPixiSubAddMinMax {
 
     //金额增减步进器
     this.baseNumSteper = new LibJsNumberStepper(
-      betAmountListLength,
+      betAmountListLength,//@ts-ignore
       (index) => {
         this.onAmountIndex(index);
         this.minMaxUpdateIndex(index);

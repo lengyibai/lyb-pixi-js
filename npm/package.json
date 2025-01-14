@@ -1,23 +1,14 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.1.7",
+  "version": "1.1.10",
   "description": "自用Pixi.JS方法库",
   "license": "ISC",
-  "scripts": {
-    "build": "vite build & tsc"
-  },
   "exports": {
-    ".": "./dist/index.js",
-    "./Components/Base/*": "./dist/Components/Base/*",
-    "./Components/Custom/*": "./dist/Components/Custom/*",
-    "./Utils/*": "./dist/Utils/*"
+    ".": "./index.js",
+    "./Components/Base/*": "./Components/Base/*",
+    "./Components/Custom/*": "./Components/Custom/*",
+    "./Utils/*": "./Utils/*"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "package.json",
-    "umd"
-  ],
   "author": {
     "name": "冷弋白",
     "email": "1329670984@qq.com"
@@ -32,10 +23,6 @@
     "lyb",
     "lyb-pixi-js"
   ],
-  "devDependencies": {
-    "@types/node": "^22.10.5",
-    "typescript": "^5.7.3"
-  },
   "dependencies": {
     "@pixi-spine/runtime-3.8": "^4.0.3",
     "@pixi/filter-drop-shadow": "^5.2.0",
@@ -43,7 +30,7 @@
     "dayjs": "^1.11.13",
     "decimal.js": "^10.4.3",
     "gsap": "^3.12.5",
-    "lyb-js": "^1.2.7",
+    "lyb-js": "^1.2.10",
     "pixi.js": "^7.4.2",
     "vite": "^4.5.5"
   }

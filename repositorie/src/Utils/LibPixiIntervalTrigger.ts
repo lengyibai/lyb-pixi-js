@@ -1,4 +1,4 @@
-import { Ticker } from "pixi.js";
+import { Ticker } from "pixi.js";//@ts-ignore
 import { libJsRandom } from "lyb-js/Random/LibJsRandom.js";
 
 /** @description 间隔触发
