@@ -1,2 +1,1 @@
-export * as LibPixiJs from "./libPixiJs"
-
+export * as LibPixiJs from "./libPixiJs";

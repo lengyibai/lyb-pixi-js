@@ -15,6 +15,12 @@ export default defineConfig({
     },
   ],
 
+  resolve: {
+    alias: {
+      "lyb-js": "/node_modules/lyb-js",
+    },
+  },
+
   build: {
     outDir: "umd",
     lib: {
