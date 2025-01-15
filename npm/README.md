@@ -256,31 +256,29 @@ const libPixiParticleMove = new LibPixiJs.Base.LibPixiParticleMove({
 > 悬浮切换材质
 
 ```ts
-import { Texture } from "pixi.js";
-import { LibPixiButtonHover } from "./path/to/LibPixiButtonHover";
-
-//加载材质资源
-const defaultTexture: Texture = Texture.from("default-icon.png");
-const hoverTexture: Texture = Texture.from("hover-icon.png");
+import { LibPixiButtonHover } from "lyb-pixi-js";
 
 //创建按钮实例
 const button = new LibPixiButtonHover({
-  texture: defaultTexture,
-  hoverTexture: hoverTexture,
-  tintColor: "#FF0000", //可选：按钮的初始颜色
+  texture: PIXI.Texture.from('path/to/normal.png'),
+  hoverTexture: PIXI.Texture.from('path/to/hover.png'),
+  tintColor: "#ff0000", //默认颜色
+  hoverTintColor: "#00ff00", //悬浮颜色
+  disabledColor: "#cccccc" //禁用颜色
 });
 
-//设置按钮状态
-button.setDisabled(true); //禁用按钮
-
-//在Pixi.js应用的容器中添加按钮
-app.stage.addChild(button);
+//启用/禁用按钮
+button.setDisabled(false); //启用
+button.setDisabled(true); //禁用
 
 //切换按钮材质
 button.toggleTexture(
-  Texture.from("new-default.png"),
-  Texture.from("new-hover.png")
+  PIXI.Texture.from('path/to/new_normal.png'),
+  PIXI.Texture.from('path/to/new_hover.png')
 );
+
+//添加到Pixi舞台
+app.stage.addChild(button);
 ```
 
 ### LibPixiCloseBtn-关闭按钮
@@ -477,40 +475,35 @@ slider.next();
 > 最小、最大按钮和增减按钮功能及置灰逻辑
 
 ```ts
-import { LibPixiSubAddMinMax } from "./path/to/LibPixiSubAddMinMax";
-import { Container } from "pixi.js";
+import { LibPixiSubAddMinMax } from "lyb-pixi-js";
 
-//创建最小、最大、增加和减少按钮
-const minBtn = new Container();
-const maxBtn = new Container();
-const subBtn = new Container();
-const addBtn = new Container();
-
-//设置初始下注索引和金额列表数量
-const initialBetIndex = 0;
-const betAmountListLength = 5;
-
-//金额更新回调
-const onAmountIndex = (index: number) => {
-  console.log(`当前金额索引: ${index}`);
-};
-
-//创建LibPixiSubAddMinMax实例
-const betAmountController = new LibPixiSubAddMinMax({
-  minBtn,
-  maxBtn,
-  subBtn,
-  addBtn,
-  initialBetIndex,
-  betAmountListLength,
-  onAmountIndex,
+//创建按钮实例
+const betControl = new LibPixiSubAddMinMax({
+  initialBetIndex: 0, //初始下注索引
+  betAmountListLength: 10, //下注金额列表长度
+  onAmountIndex: (index) => {
+    console.log("当前下注金额索引:", index);
+  },
+  onDisabled: (type) => {
+    if (type === "min") {
+      minButton.tint = 0x999999; //禁用最小按钮
+    } else if (type === "max") {
+      maxButton.tint = 0x999999; //禁用最大按钮
+    } else {
+      minButton.tint = 0xFFFFFF; //启用最小按钮
+      maxButton.tint = 0xFFFFFF; //启用最大按钮
+    }
+  }
 });
 
-//绑定按钮事件
-minBtn.on("pointerdown", () => betAmountController.min());
-maxBtn.on("pointerdown", () => betAmountController.max());
-subBtn.on("pointerdown", () => betAmountController.sub());
-addBtn.on("pointerdown", () => betAmountController.add());
+//设置初始状态
+betControl.min();  //设置为最小值
+betControl.max();  //设置为最大值
+betControl.sub();  //减少下注
+betControl.add();  //增加下注
+
+//添加到Pixi舞台
+app.stage.addChild(minButton, maxButton, subButton, addButton);
 ```
 
 ### LibPixiTable-数字表格
@@ -552,27 +545,27 @@ stage.addChild(table);
 ```ts
 const audioPlayer = new LibPixiAudio();
 
-// 播放音效
+//播放音效
 audioPlayer.playEffect("effect-link").then(() => {
   console.log("音效播放完成");
 });
 
-// 播放音乐
+//播放音乐
 audioPlayer.playMusic("music-link");
 
-// 暂停音乐
+//暂停音乐
 audioPlayer.pauseMusic();
 
-// 继续播放音乐
+//继续播放音乐
 audioPlayer.resumeMusic();
 
-// 停止指定音效
+//停止指定音效
 audioPlayer.stopEffect("effect-link");
 
-// 设置启用音效
+//设置启用音效
 audioPlayer.setEffectEnabled(false);
 
-// 设置启用音乐
+//设置启用音乐
 audioPlayer.setMusicEnabled(false);
 ```
 
@@ -582,10 +575,10 @@ audioPlayer.setMusicEnabled(false);
 
 ```ts
 const nineGrid = libPixiCreateNineGrid({
-  texture: yourTexture, // 传入纹理
-  dotWidth: 10, // 四个角的宽度，可以是数字或者数组
-  width: 200, // 宽度
-  height: 150, // 高度
+  texture: yourTexture, //传入纹理
+  dotWidth: 10, //四个角的宽度，可以是数字或者数组
+  width: 200, //宽度
+  height: 150, //高度
 });
 ```
 
@@ -598,7 +591,7 @@ libPixiEvent(container, "pointerdown", (e) => {
   console.log("Pointer down event triggered", e);
 });
 
-// 只执行一次的事件
+//只执行一次的事件
 libPixiEvent(
   container,
   "pointerup",
@@ -618,7 +611,7 @@ const closeEvent = libPixiEventControlled(container, "pointerdown", (e) => {
   console.log("Pointer down event triggered", e);
 });
 
-// 调用返回的函数关闭事件监听
+//调用返回的函数关闭事件监听
 closeEvent();
 ```
 
@@ -627,10 +620,10 @@ closeEvent();
 > 滤镜
 
 ```ts
-const brightnessFilter = libPixiFilter("brightness", 1.2); // 设置亮度为1.2
-const blurFilter = libPixiFilter("blur"); // 设置模糊滤镜
-const desaturateFilter = libPixiFilter("desaturate"); // 设置去饱和滤镜
-const contrastFilter = libPixiFilter("contrast", 1.5); // 设置对比度为1.5
+const brightnessFilter = libPixiFilter("brightness", 1.2); //设置亮度为1.2
+const blurFilter = libPixiFilter("blur"); //设置模糊滤镜
+const desaturateFilter = libPixiFilter("desaturate"); //设置去饱和滤镜
+const contrastFilter = libPixiFilter("contrast", 1.5); //设置对比度为1.5
 ```
 
 ### LibPixiIntervalTrigger-间隔触发
@@ -640,15 +633,15 @@ const contrastFilter = libPixiFilter("contrast", 1.5); // 设置对比度为1.5
 ```ts
 const stopInterval = libPixiIntervalTrigger(() => {
   console.log("Triggered interval callback");
-}, [500, 1000]); // 随机间隔 500ms 到 1000ms
+}, [500, 1000]); //随机间隔 500ms 到 1000ms
 
 //or
 
 const stopInterval = libPixiIntervalTrigger(() => {
   console.log("Triggered interval callback");
-}, 500); // 间隔 500ms
+}, 500); //间隔 500ms
 
-// 停止间隔触发
+//停止间隔触发
 stopInterval();
 ```
 
@@ -661,7 +654,7 @@ const stopOutsideClick = libPixiOutsideClick(container, button, () => {
   console.log("Container closed");
 });
 
-// 停止监听点击事件
+//停止监听点击事件
 stopOutsideClick();
 ```
 
@@ -670,7 +663,7 @@ stopOutsideClick();
 > 为容器创建并应用一个矩形遮罩，用于隐藏溢出的内容，函数会返回遮罩，可控制是否显示遮罩
 
 ```ts
-const mask = libPixiOverflowHidden(container); // 为容器创建并应用矩形蒙版
+const mask = libPixiOverflowHidden(container); //为容器创建并应用矩形蒙版
 ```
 
 ### LibPixiPromiseTickerTimeout-TickerPromise 定时器
@@ -690,7 +683,7 @@ libPixiPromiseTickerTimeout(1000, () => {
 > 元素超过指定宽度就缩放
 
 ```ts
-libPixiScaleContainer(container, 500, 300); // 容器超过 500px 宽度或 300px 高度时进行缩放
+libPixiScaleContainer(container, 500, 300); //容器超过 500px 宽度或 300px 高度时进行缩放
 ```
 
 ### LibPixiShadow-阴影
@@ -716,6 +709,6 @@ const stopTimer = libPixiTickerTimeout(() => {
   console.log("Callback after delay");
 }, 1000);
 
-// 停止定时器
+//停止定时器
 stopTimer();
 ```

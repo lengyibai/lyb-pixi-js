@@ -4,48 +4,64 @@ import { libPixiEvent } from "../../Utils/LibPixiEvent";
 export interface LibPixiButtonHoverParams {
   /** 图标资源 */
   texture: Texture;
-  /** 悬浮图标 */
-  hoverTexture: Texture;
-  /** 染色 */
+  /** 悬浮图标，type为"texture"时生效 */
+  hoverTexture?: Texture;
+  /** 默认颜色 */
   tintColor?: string;
+  /** 悬浮颜色，默认白色 */
+  hoverTintColor?: string;
+  /** 置灰颜色 */
+  disabledColor?: string;
 }
 
 /** @description 悬浮切换材质
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiButtonHover-按钮悬浮
  */
 export class LibPixiButtonHover extends Container {
+  /** 是否被禁用 */
+  private disabled = false;
   /** 按钮 */
   private _btn: Sprite;
   /** 默认材质 */
   private _texture: Texture;
   /** 悬浮材质 */
-  private _hoverTexture: Texture;
-  /** 染色 */
+  private _hoverTexture?: Texture;
+  /** 默认颜色 */
   private _tintColor?: string;
+  /** 置灰颜色 */
+  private _disabledColor: string;
 
   constructor(params: LibPixiButtonHoverParams) {
     super();
 
-    const { texture, hoverTexture, tintColor } = params;
+    const {
+      texture,
+      hoverTexture,
+      tintColor,
+      hoverTintColor = "#fff",
+      disabledColor = "#999",
+    } = params;
     this._texture = texture;
     this._hoverTexture = hoverTexture;
     this._tintColor = tintColor;
-
-    //创建图标容器
-    const iconBox = new Container();
-    this.addChild(iconBox);
+    this._disabledColor = disabledColor;
 
     //创建图标
     this._btn = new Sprite(texture);
-    iconBox.addChild(this._btn);
+    this.addChild(this._btn);
+    this._btn.anchor.set(0.5);
     tintColor && (this._btn.tint = tintColor);
 
-    libPixiEvent(iconBox, "pointerenter", () => {
-      this._btn._texture = this._hoverTexture;
-      this._btn.tint = "#fff";
+    libPixiEvent(this._btn, "pointerenter", () => {
+      if (this.disabled) return;
+      this._btn.tint = hoverTintColor;
+      if (this._hoverTexture) {
+        this._btn._texture = this._hoverTexture;
+      }
     });
 
-    libPixiEvent(iconBox, "pointerleave", () => {
+    libPixiEvent(this._btn, "pointerleave", () => {
+      if (this.disabled) return;
       this._btn._texture = this._texture;
       tintColor && (this._btn.tint = tintColor);
     });
@@ -65,6 +81,8 @@ export class LibPixiButtonHover extends Container {
    * @param status 状态
    */
   setDisabled(status: boolean) {
-    this._btn.tint = status ? "#7C7C7C" : this._tintColor || "#fff";
+    this.disabled = status;
+    this._btn.tint = status ? this._disabledColor : this._tintColor || "#fff";
+    this._btn.texture = this._texture;
   }
 }

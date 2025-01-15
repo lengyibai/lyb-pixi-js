@@ -76,7 +76,7 @@ export class LibPixiAudio {
         duration: 1,
         ease: "linear",
       });
-      this._musicPlayer.pause();
+      this._musicPlayer?.pause();
     }
 
     const url = Assets.get(key).url;
@@ -106,13 +106,13 @@ export class LibPixiAudio {
   /** @description 暂停音乐 */
   pauseMusic() {
     this._isMusicPaused = true;
-    this._musicPlayer.pause();
+    this._musicPlayer?.pause();
   }
 
   /** @description 继续播放音乐 */
   resumeMusic() {
     this._isMusicPaused = false;
-    this._musicPlayer.play();
+    this._musicPlayer?.play();
   }
 
   /** @description 停止播放指定音效
@@ -149,9 +149,9 @@ export class LibPixiAudio {
    */
   private _setPlayStatus = (status: boolean) => {
     if (status) {
-      !this._isMusicPaused && this._musicPlayer.play();
+      !this._isMusicPaused && this._musicPlayer?.play();
     } else {
-      this._musicPlayer.pause();
+      this._musicPlayer?.pause();
     }
 
     this._playingList.forEach((item) => {
