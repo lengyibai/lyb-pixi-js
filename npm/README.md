@@ -1,4 +1,4 @@
-# Lib自用PixiJS组件&工具方法
+# Lib 自用 PixiJS 组件&工具方法
 
 ## 介绍
 
@@ -18,7 +18,7 @@ import { LibPixiJs } from "lyb-pixi-js";
 const text = new LibPixiJs.Base.LibPixiText({
   text: "Hello World!",
   fontSize: 50,
-  fontColor:"red",
+  fontColor: "red",
 });
 app.stage.addChild(text);
 ```
@@ -44,12 +44,12 @@ export * from "lyb-pixi-js/Base/LibPixiText";
 export * from "lyb-pixi-js/Base/LibPixiRectBgColor";
 
 //你的项目文件 index.ts
-import { LibText,LibRectBgColor } from "utils";
+import { LibText, LibRectBgColor } from "utils";
 
 const text = new LibPixiText({
   text: "Hello World!",
   fontSize: 50,
-  fontColor:"red",
+  fontColor: "red",
 });
 app.stage.addChild(text);
 
@@ -69,18 +69,18 @@ app.stage.addChild(box);
 <script src="https://unpkg.com/lyb-pixi-js/lyb-pixi.js"></script>
 
 <script>
-const text = new LibPixiJs.Base.LibPixiText({
-  text: "Hello World!",
-  fontSize: 50,
-  fontColor:"red",
-});
-app.stage.addChild(text);
+  const text = new LibPixiJs.Base.LibPixiText({
+    text: "Hello World!",
+    fontSize: 50,
+    fontColor: "red",
+  });
+  app.stage.addChild(text);
 </script>
 ```
 
 ## 目录
 
-### 基础
+### 组件
 
 \- [LibPixiText-文本](#LibPixiText-文本)
 
@@ -114,6 +114,31 @@ app.stage.addChild(text);
 
 \- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
 
+### 方法
+
+\- [LibPixiAudio-音频播放器](#LibPixiAudio-音频播放器)
+
+\- [LibPixiCreateNineGrid-九宫格图](#LibPixiCreateNineGrid-九宫格图)
+
+\- [LibPixiEvent-事件注册](#LibPixiEvent-事件注册)
+
+\- [LibPixiEventControlled-可关闭的事件](#LibPixiEventControlled-可关闭的事件)
+
+\- [LibPixiFilter-滤镜](#LibPixiFilter-滤镜)
+
+\- [LibPixiIntervalTrigger-间隔触发](#LibPixiIntervalTrigger-间隔触发)
+
+\- [LibPixiOutsideClick-失焦隐藏](#LibPixiOutsideClick-失焦隐藏)
+
+\- [LibPixiOverflowHidden-溢出裁剪](#LibPixiOverflowHidden-溢出裁剪)
+
+\- [LibPixiPromiseTickerTimeout-TickerPromise 定时器](#LibPixiPromiseTickerTimeout-TickerPromise定时器)
+
+\- [LibPixiScaleContainer-超出缩放](#LibPixiScaleContainer-超出缩放)
+
+\- [LibPixiShadow-阴影](#LibPixiShadow-阴影)
+
+\- [LibPixiTickerTimeout-Ticker 定时器](#LibPixiTickerTimeout-Ticker定时器)
 
 ## Base-基础
 
@@ -125,7 +150,7 @@ app.stage.addChild(text);
 const text = new LibPixiJs.Base.LibPixiText({
   text: "Hello World!",
   fontSize: 50,
-  fontColor:"red",
+  fontColor: "red",
 });
 this.addChild(text);
 ```
@@ -194,7 +219,7 @@ this.bgSpine = new LibPixiSpine("spine_buyfree", {
       onUpdate: ({ x, y, rotate, scaleX, scaleY }) => {
         followContainer2.position.set(
           x + 1920 / 2 - followContainer2.width / 2,
-          y + 1080 / 2 - followContainer2.height / 2,
+          y + 1080 / 2 - followContainer2.height / 2
         );
         followContainer2.rotation = rotate;
         followContainer2.scale.set(scaleX, scaleY);
@@ -219,7 +244,7 @@ const libPixiParticleMove = new LibPixiJs.Base.LibPixiParticleMove({
   json: PIXI.Assets.get("fly.json"),
   duration: 1,
   showControl: true,
-  ease:"power1.in",
+  ease: "power1.in",
   loop: true,
 });
 ```
@@ -252,7 +277,10 @@ button.setDisabled(true); //禁用按钮
 app.stage.addChild(button);
 
 //切换按钮材质
-button.toggleTexture(Texture.from("new-default.png"), Texture.from("new-hover.png"));
+button.toggleTexture(
+  Texture.from("new-default.png"),
+  Texture.from("new-hover.png")
+);
 ```
 
 ### LibPixiCloseBtn-关闭按钮
@@ -525,13 +553,12 @@ stage.addChild(table);
 const audioPlayer = new LibPixiAudio();
 
 // 播放音效
-audioPlayer.playEffect('effect-link')
-  .then(() => {
-    console.log('音效播放完成');
-  });
+audioPlayer.playEffect("effect-link").then(() => {
+  console.log("音效播放完成");
+});
 
 // 播放音乐
-audioPlayer.playMusic('music-link');
+audioPlayer.playMusic("music-link");
 
 // 暂停音乐
 audioPlayer.pauseMusic();
@@ -540,7 +567,7 @@ audioPlayer.pauseMusic();
 audioPlayer.resumeMusic();
 
 // 停止指定音效
-audioPlayer.stopEffect('effect-link');
+audioPlayer.stopEffect("effect-link");
 
 // 设置启用音效
 audioPlayer.setEffectEnabled(false);
@@ -567,14 +594,19 @@ const nineGrid = libPixiCreateNineGrid({
 > 事件注册
 
 ```ts
-libPixiEvent(container, 'pointerdown', (e) => {
-  console.log('Pointer down event triggered', e);
+libPixiEvent(container, "pointerdown", (e) => {
+  console.log("Pointer down event triggered", e);
 });
 
 // 只执行一次的事件
-libPixiEvent(container, 'pointerup', (e) => {
-  console.log('Pointer up event triggered', e);
-}, true);
+libPixiEvent(
+  container,
+  "pointerup",
+  (e) => {
+    console.log("Pointer up event triggered", e);
+  },
+  true
+);
 ```
 
 ### LibPixiEventControlled-可关闭的事件
@@ -582,8 +614,8 @@ libPixiEvent(container, 'pointerup', (e) => {
 > 设置可关闭的事件监听，调用自身后不再触发
 
 ```ts
-const closeEvent = libPixiEventControlled(container, 'pointerdown', (e) => {
-  console.log('Pointer down event triggered', e);
+const closeEvent = libPixiEventControlled(container, "pointerdown", (e) => {
+  console.log("Pointer down event triggered", e);
 });
 
 // 调用返回的函数关闭事件监听
@@ -595,10 +627,10 @@ closeEvent();
 > 滤镜
 
 ```ts
-const brightnessFilter = libPixiFilter('brightness', 1.2); // 设置亮度为1.2
-const blurFilter = libPixiFilter('blur'); // 设置模糊滤镜
-const desaturateFilter = libPixiFilter('desaturate'); // 设置去饱和滤镜
-const contrastFilter = libPixiFilter('contrast', 1.5); // 设置对比度为1.5
+const brightnessFilter = libPixiFilter("brightness", 1.2); // 设置亮度为1.2
+const blurFilter = libPixiFilter("blur"); // 设置模糊滤镜
+const desaturateFilter = libPixiFilter("desaturate"); // 设置去饱和滤镜
+const contrastFilter = libPixiFilter("contrast", 1.5); // 设置对比度为1.5
 ```
 
 ### LibPixiIntervalTrigger-间隔触发
@@ -607,13 +639,13 @@ const contrastFilter = libPixiFilter('contrast', 1.5); // 设置对比度为1.5
 
 ```ts
 const stopInterval = libPixiIntervalTrigger(() => {
-  console.log('Triggered interval callback');
+  console.log("Triggered interval callback");
 }, [500, 1000]); // 随机间隔 500ms 到 1000ms
 
 //or
 
 const stopInterval = libPixiIntervalTrigger(() => {
-  console.log('Triggered interval callback');
+  console.log("Triggered interval callback");
 }, 500); // 间隔 500ms
 
 // 停止间隔触发
@@ -626,7 +658,7 @@ stopInterval();
 
 ```ts
 const stopOutsideClick = libPixiOutsideClick(container, button, () => {
-  console.log('Container closed');
+  console.log("Container closed");
 });
 
 // 停止监听点击事件
@@ -641,15 +673,15 @@ stopOutsideClick();
 const mask = libPixiOverflowHidden(container); // 为容器创建并应用矩形蒙版
 ```
 
-### LibPixiPromiseTickerTimeout-TickerPromise定时器
+### LibPixiPromiseTickerTimeout-TickerPromise 定时器
 
 > 基于 Ticker 和 Promise 的定时器
 
 ```ts
 libPixiPromiseTickerTimeout(1000, () => {
-  console.log('Callback after 1000ms');
+  console.log("Callback after 1000ms");
 }).then(() => {
-  console.log('Timer completed');
+  console.log("Timer completed");
 });
 ```
 
@@ -675,13 +707,13 @@ libPixiShadow(container, {
 });
 ```
 
-### LibPixiTickerTimeout-Ticker定时器
+### LibPixiTickerTimeout-Ticker 定时器
 
 > 基于 Ticker 的定时器
 
 ```ts
 const stopTimer = libPixiTickerTimeout(() => {
-  console.log('Callback after delay');
+  console.log("Callback after delay");
 }, 1000);
 
 // 停止定时器
