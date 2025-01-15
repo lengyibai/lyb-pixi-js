@@ -21,17 +21,20 @@ export class LibPixiAudio {
 
   constructor() {
     this._musicPlayer = new Audio();
+
     document.addEventListener("visibilitychange", () => {
       this._isBackground = document.hidden;
       this._setPlayStatus(!document.hidden);
     });
   }
 
-  /** @description 播放音效 */
-  playEffect(link: string) {
+  /** @description 播放音效
+   * @param key 音效资源Key，内部会使用Assets.get(key)获取音频资源
+   */
+  playEffect(key: string) {
     return new Promise<void>((resolve) => {
       const id = new Date().getTime();
-      const url = Assets.get(link).url;
+      const url = Assets.get(key).url;
       const audio = new Audio(url);
       audio.muted = this._isBackground || !this.effectEnabled;
 
@@ -52,8 +55,10 @@ export class LibPixiAudio {
     });
   }
 
-  /** @description 播放音乐 */
-  async playMusic(link: string) {
+  /** @description 播放音乐
+   * @param key 音效资源Key，内部会使用Assets.get(key)获取音频资源
+   */
+  async playMusic(key: string) {
     //如果有音乐正在播放，则停止
     if (this._musicPlayer) {
       gsap.killTweensOf(this._musicPlayer);
@@ -65,7 +70,7 @@ export class LibPixiAudio {
       this._musicPlayer.pause();
     }
 
-    const url = Assets.get(link).url;
+    const url = Assets.get(key).url;
     this._musicPlayer.src = url;
     this._musicPlayer.loop = true;
     this._musicPlayer.volume = 0;
@@ -89,19 +94,21 @@ export class LibPixiAudio {
     play();
   }
 
-  /** @description 暂停音乐，一般是为了停止音乐后播放指定的音效，音效结束后调用 resumeMusic */
+  /** @description 暂停音乐 */
   pauseMusic() {
     this._isMusicPaused = true;
     this._musicPlayer.pause();
   }
 
-  /** @description 继续播放音乐，调用 pauseMusic 之后调用 */
+  /** @description 继续播放音乐 */
   resumeMusic() {
     this._isMusicPaused = false;
     this._musicPlayer.play();
   }
 
-  /** @description 停止播放指定音效 */
+  /** @description 停止播放指定音效
+   * @param key 音效资源Key，内部会使用Assets.get(key)获取音频资源进行停止
+   */
   stopEffect(link: string) {
     const url = Assets.get(link).url;
     this._playingList.forEach((item) => {
@@ -112,22 +119,26 @@ export class LibPixiAudio {
     this._playingList = this._playingList.filter((item) => item.url !== url);
   }
 
-  /** @description 设置启用音效 */
+  /** @description 设置启用音效
+   * @param enabled 启用状态，false为禁用
+   */
   setEffectEnabled(enabled: boolean) {
     this.effectEnabled = enabled;
-    this._playingList.forEach((item) => {
-      item.audio.muted = !enabled;
-    });
+    this._setEffectMute(!enabled);
   }
 
-  /** @description 设置启用音乐 */
+  /** @description 设置启用音乐
+   * @param enabled 启用状态，false为禁用
+   */
   setMusicEnabled(enabled: boolean) {
     this.musicEnabled = enabled;
-    this._musicPlayer.muted = !enabled;
+    this._setMusicMute(!enabled);
   }
 
-  /** @description 设置音效和音乐播放状态 */
-  private _setPlayStatus(status: boolean) {
+  /** @description 设置音效和音乐播放状态
+   * @param status 播放状态，false为暂停
+   */
+  private _setPlayStatus = (status: boolean) => {
     if (status) {
       !this._isMusicPaused && this._musicPlayer.play();
     } else {
@@ -140,6 +151,22 @@ export class LibPixiAudio {
       } else {
         item.audio.pause();
       }
+    });
+  };
+
+  /** @description 设置静音音乐
+   * @param disabled 静音状态，true为静音
+   */
+  private _setMusicMute(disabled: boolean) {
+    this._musicPlayer.muted = disabled || !this.musicEnabled;
+  }
+
+  /** @description 设置静音音效
+   * @param disabled 静音状态，true为静音
+   */
+  private _setEffectMute(disabled: boolean) {
+    this._playingList.forEach((item) => {
+      item.audio.muted = disabled || !this.effectEnabled;
     });
   }
 }
