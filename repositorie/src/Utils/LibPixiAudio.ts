@@ -1,4 +1,6 @@
+import gsap from "gsap";
 import { Assets } from "pixi.js";
+import "@pixi/sound";
 
 /** @description 音频播放器
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiAudio-音频播放器
@@ -30,14 +32,15 @@ export class LibPixiAudio {
 
   /** @description 播放音效
    * @param key 音效资源Key，内部会使用Assets.get(key)获取音频资源
+   * @param end 倒数几秒位置播放，单位秒
    */
-  playEffect(key: string) {
+  playEffect(key: string, end?: number) {
     return new Promise<void>((resolve) => {
       const id = new Date().getTime();
       const url = Assets.get(key).url;
       const audio = new Audio(url);
-      audio.muted = this._isBackground || !this.effectEnabled;
 
+      audio.muted = this._isBackground || !this.effectEnabled;
       audio.addEventListener("ended", () => {
         this._playingList = this._playingList.filter((item) => item.id !== id);
         resolve();
@@ -45,6 +48,12 @@ export class LibPixiAudio {
       audio
         .play()
         .then(() => {
+          //倒数几秒位置播放
+          if (end) {
+            const duration = audio.duration;
+            const start = duration - end;
+            audio.currentTime = Math.max(start, 0);
+          }
           this._playingList.push({
             id,
             audio,
@@ -109,8 +118,8 @@ export class LibPixiAudio {
   /** @description 停止播放指定音效
    * @param key 音效资源Key，内部会使用Assets.get(key)获取音频资源进行停止
    */
-  stopEffect(link: string) {
-    const url = Assets.get(link).url;
+  stopEffect(key: string) {
+    const url = Assets.get(key).url;
     this._playingList.forEach((item) => {
       if (item.url === url) {
         item.audio.pause();

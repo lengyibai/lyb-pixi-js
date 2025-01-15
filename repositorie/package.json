@@ -10,6 +10,7 @@
     "@pixi-spine/runtime-3.8": "^4.0.3",
     "@pixi/filter-drop-shadow": "^5.2.0",
     "@pixi/particle-emitter": "^5.0.8",
+    "@pixi/sound": "^5.2.3",
     "dayjs": "^1.11.13",
     "decimal.js": "^10.4.3",
     "gsap": "^3.12.5",
