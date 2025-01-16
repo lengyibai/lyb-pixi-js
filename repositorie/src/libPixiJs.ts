@@ -28,6 +28,7 @@ import { libPixiScaleContainer } from "./Utils/LibPixiScaleContainer";
 import { libPixiFilter } from "./Utils/LibPixiFilter";
 import { libPixiShadow } from "./Utils/LibPixiShadow";
 import { libPixiTickerTimeout } from "./Utils/LibPixiTickerTimeout";
+import { LibPixiSlideInput } from "./Utils/LibPixiSlideInput";
 
 /** @description 组件 */
 export const Components = {
@@ -192,4 +193,9 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiTickerTimeout-Ticker定时器
    */
   libPixiTickerTimeout,
+
+  /** @description 滑动选择器核心代码
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSlideInput-滑动选择值
+   */
+  LibPixiSlideInput,
 };

@@ -140,6 +140,8 @@ app.stage.addChild(box);
 
 \- [LibPixiTickerTimeout-Ticker 定时器](#LibPixiTickerTimeout-Ticker定时器)
 
+\- [LibPixiSlideInput-滑块选择值](#LibPixiSlideInput-滑块选择值)
+
 ## Base-基础
 
 ### LibPixiText-文本
@@ -666,7 +668,7 @@ stopOutsideClick();
 const mask = libPixiOverflowHidden(container); //为容器创建并应用矩形蒙版
 ```
 
-### LibPixiPromiseTickerTimeout-TickerPromise 定时器
+### LibPixiPromiseTickerTimeout-TickerPromise定时器
 
 > 基于 Ticker 和 Promise 的定时器
 
@@ -700,7 +702,7 @@ libPixiShadow(container, {
 });
 ```
 
-### LibPixiTickerTimeout-Ticker 定时器
+### LibPixiTickerTimeout-Ticker定时器
 
 > 基于 Ticker 的定时器
 
@@ -712,3 +714,38 @@ const stopTimer = libPixiTickerTimeout(() => {
 //停止定时器
 stopTimer();
 ```
+
+### LibPixiSlideInput-滑块选择值
+
+> 滑动选择器核心代码
+
+```ts
+import { Application, Container } from "pixi.js";
+import { LibPixiSlideInput } from "./LibPixiSlideInput";
+
+// 初始化 PIXI 应用和容器
+const app = new Application();
+const clickArea = [new Container()]; // 点击范围
+const sideArea = new Container(); // 滑动区域
+
+// 创建 LibPixiSlideInput 实例
+const slideInput = new LibPixiSlideInput({
+  app,
+  clickArea,
+  sideArea,
+  maxMoveDistance: 500,
+  onDown: () => {
+    console.log("按下事件触发");
+  },
+  onUp: () => {
+    console.log("抬起事件触发");
+  },
+  onChange: (x, value) => {
+    console.log(`当前滑动位置: ${x}, 进度: ${value}`);
+  },
+});
+
+// 设置进度为 50%
+slideInput.setValue(0.5);
+```
+

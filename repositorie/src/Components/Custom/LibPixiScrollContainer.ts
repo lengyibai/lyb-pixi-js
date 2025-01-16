@@ -115,9 +115,9 @@ export class LibPixiScrollContainer extends LibPixiContainer {
   }
 
   /** @description 拖动 */
-  private _onDragMove(event: any) {
+  private _onDragMove(event: FederatedPointerEvent) {
     if (this._isDragging) {
-      const position = event.data.getLocalPosition(this);
+      const position = event.getLocalPosition(this);
       const newPosition = position.y - this._startY;
       this._content.y = newPosition;
     }
