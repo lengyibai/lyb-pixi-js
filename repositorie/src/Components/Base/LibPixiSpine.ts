@@ -1,6 +1,7 @@
 import { type Container, Assets, Ticker } from "pixi.js";
 import { Spine, type Bone } from "@pixi-spine/runtime-3.8";
 import gsap from "gsap";
+import "pixi-spine";
 
 export interface OnUpdateParams {
   x: number;
