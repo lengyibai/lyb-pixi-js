@@ -652,12 +652,24 @@ stopInterval();
 > 点击容器外或入口按钮时隐藏
 
 ```ts
-const stopOutsideClick = libPixiOutsideClick(container, button, () => {
-  console.log("Container closed");
-});
 
-//停止监听点击事件
-stopOutsideClick();
+let removeEventListener: () => void;
+const btn = new Sprite(Assets.get("btnIcon"));
+const optionList = new Container();
+libPixiEvent(btn, "pointertap", () => {
+  optionList.visible = !optionList.visible;
+
+  //列表显示后开始监听是否点击容器外
+  if (optionList.visible) {
+    removeEventListener = libPixiOutsideClick(optionList, btn, () => {
+      optionList.visible = false;
+    });
+  }
+  //如果通过再次点击按钮关闭了列表，则移除监听器
+  else {
+    removeEventListener();
+  }
+});
 ```
 
 ### LibPixiOverflowHidden-溢出裁剪
