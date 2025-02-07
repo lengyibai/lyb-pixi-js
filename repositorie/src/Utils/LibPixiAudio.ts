@@ -1,6 +1,7 @@
 import { Assets } from "pixi.js";
 import { Howl } from "howler";
 import "@pixi/sound";
+import gsap from "gsap";
 
 export class LibPixiAudio {
   /** 是否启用音效 */
