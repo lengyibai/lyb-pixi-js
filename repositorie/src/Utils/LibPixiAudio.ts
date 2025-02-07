@@ -1,10 +1,7 @@
-import gsap from "gsap";
 import { Assets } from "pixi.js";
+import { Howl } from "howler";
 import "@pixi/sound";
 
-/** @description 音频播放器
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiAudio-音频播放器
- */
 export class LibPixiAudio {
   /** 是否启用音效 */
   effectEnabled = true;
@@ -16,14 +13,11 @@ export class LibPixiAudio {
   /** 是否已切换后台 */
   private _isBackground = false;
   /** 当前音乐播放器 */
-  private _musicPlayer: HTMLAudioElement;
+  private _musicPlayer?: Howl;
   /** 当前正在播放的音效列表 */
-  private _playingList: { id: number; audio: HTMLAudioElement; url: string }[] =
-    [];
+  private _playingList: { id: number; audio: Howl; url: string }[] = [];
 
   constructor() {
-    this._musicPlayer = new Audio();
-
     document.addEventListener("visibilitychange", () => {
       this._isBackground = document.hidden;
       this._setPlayStatus(!document.hidden);
@@ -38,29 +32,28 @@ export class LibPixiAudio {
     return new Promise<void>((resolve) => {
       const id = new Date().getTime();
       const url = Assets.get(key).url;
-      const audio = new Audio(url);
+      const sound = new Howl({
+        src: url,
+        mute: this._isBackground || !this.effectEnabled,
+      });
+      sound.play();
 
-      audio.muted = this._isBackground || !this.effectEnabled;
-      audio.addEventListener("ended", () => {
+      sound.on("end", () => {
         this._playingList = this._playingList.filter((item) => item.id !== id);
         resolve();
       });
-      audio
-        .play()
-        .then(() => {
-          //倒数几秒位置播放
-          if (end) {
-            const duration = audio.duration;
-            const start = duration - end;
-            audio.currentTime = Math.max(start, 0);
-          }
-          this._playingList.push({
-            id,
-            audio,
-            url,
-          });
-        })
-        .catch(() => {});
+
+      //倒数几秒位置播放
+      if (end) {
+        const duration = sound.duration();
+        const start = duration - end;
+        sound.seek(start);
+      }
+      this._playingList.push({
+        id,
+        audio: sound,
+        url,
+      });
     });
   }
 
@@ -68,6 +61,7 @@ export class LibPixiAudio {
    * @param key 音效资源Key，内部会使用Assets.get(key)获取音频资源
    */
   async playMusic(key: string) {
+    const url = Assets.get(key).url;
     //如果有音乐正在播放，则停止
     if (this._musicPlayer) {
       gsap.killTweensOf(this._musicPlayer);
@@ -76,31 +70,25 @@ export class LibPixiAudio {
         duration: 1,
         ease: "linear",
       });
-      this._musicPlayer?.pause();
+      this._musicPlayer.stop();
     }
 
-    const url = Assets.get(key).url;
-    this._musicPlayer.src = url;
-    this._musicPlayer.loop = true;
-    this._musicPlayer.volume = 0;
+    this._musicPlayer = new Howl({
+      src: url,
+      loop: true,
+      volume: 0,
+      html5: true,
+      mute: this._isBackground || !this.effectEnabled,
+    });
 
-    const play = () => {
-      this._musicPlayer
-        .play()
-        .then(() => {
-          this._isMusicPaused = false;
-          gsap.killTweensOf(this._musicPlayer);
-          gsap.to(this._musicPlayer, {
-            volume: 1,
-            duration: 1,
-            ease: "linear",
-          });
-        })
-        .catch(() => {
-          requestAnimationFrame(play.bind(this));
-        });
-    };
-    play();
+    this._musicPlayer.play();
+    this._isMusicPaused = false;
+    gsap.killTweensOf(this._musicPlayer);
+    gsap.to(this._musicPlayer, {
+      volume: 1,
+      duration: 1,
+      ease: "linear",
+    });
   }
 
   /** @description 暂停音乐 */
@@ -167,7 +155,7 @@ export class LibPixiAudio {
    * @param disabled 静音状态，true为静音
    */
   private _setMusicMute(disabled: boolean) {
-    this._musicPlayer.muted = disabled || !this.musicEnabled;
+    this._musicPlayer?.mute(disabled || !this.musicEnabled);
   }
 
   /** @description 设置静音音效
@@ -175,7 +163,7 @@ export class LibPixiAudio {
    */
   private _setEffectMute(disabled: boolean) {
     this._playingList.forEach((item) => {
-      item.audio.muted = disabled || !this.effectEnabled;
+      item.audio.mute(disabled || !this.effectEnabled);
     });
   }
 }
