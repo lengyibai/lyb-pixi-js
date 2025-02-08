@@ -100,6 +100,7 @@ export class LibPixiAudio {
   /** @description 继续播放音乐 */
   resumeMusic() {
     this._isMusicPaused = false;
+    if (this._musicPlayer?.playing()) return;
     this._musicPlayer?.play();
   }
 
