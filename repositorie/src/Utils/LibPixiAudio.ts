@@ -78,8 +78,7 @@ export class LibPixiAudio {
       src: url,
       loop: true,
       volume: 0,
-      html5: true,
-      mute: this._isBackground || !this.effectEnabled,
+      mute: this._isBackground || !this.musicEnabled,
     });
 
     this._musicPlayer.play();
