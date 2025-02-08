@@ -93,6 +93,7 @@ export class LibPixiScrollContainer extends LibPixiContainer {
 
   /** @description 返回顶部 */
   scrollToTop() {
+    gsap.killTweensOf(this._content);
     this._content.y = 0;
   }
 
