@@ -142,6 +142,8 @@ app.stage.addChild(box);
 
 \- [LibPixiSlideInput-滑块选择值](#LibPixiSlideInput-滑块选择值)
 
+\- [LibGlobalUpdater-事件实例汇总](#LibGlobalUpdater-事件实例汇总)
+
 ## Base-基础
 
 ### LibPixiText-文本
@@ -262,11 +264,11 @@ import { LibPixiButtonHover } from "lyb-pixi-js";
 
 //创建按钮实例
 const button = new LibPixiButtonHover({
-  texture: PIXI.Texture.from('path/to/normal.png'),
-  hoverTexture: PIXI.Texture.from('path/to/hover.png'),
+  texture: PIXI.Texture.from("path/to/normal.png"),
+  hoverTexture: PIXI.Texture.from("path/to/hover.png"),
   tintColor: "#ff0000", //默认颜色
   hoverTintColor: "#00ff00", //悬浮颜色
-  disabledColor: "#cccccc" //禁用颜色
+  disabledColor: "#cccccc", //禁用颜色
 });
 
 //启用/禁用按钮
@@ -275,8 +277,8 @@ button.setDisabled(true); //禁用
 
 //切换按钮材质
 button.toggleTexture(
-  PIXI.Texture.from('path/to/new_normal.png'),
-  PIXI.Texture.from('path/to/new_hover.png')
+  PIXI.Texture.from("path/to/new_normal.png"),
+  PIXI.Texture.from("path/to/new_hover.png")
 );
 
 //添加到Pixi舞台
@@ -492,17 +494,17 @@ const betControl = new LibPixiSubAddMinMax({
     } else if (type === "max") {
       maxButton.tint = 0x999999; //禁用最大按钮
     } else {
-      minButton.tint = 0xFFFFFF; //启用最小按钮
-      maxButton.tint = 0xFFFFFF; //启用最大按钮
+      minButton.tint = 0xffffff; //启用最小按钮
+      maxButton.tint = 0xffffff; //启用最大按钮
     }
-  }
+  },
 });
 
 //设置初始状态
-betControl.min();  //设置为最小值
-betControl.max();  //设置为最大值
-betControl.sub();  //减少下注
-betControl.add();  //增加下注
+betControl.min(); //设置为最小值
+betControl.max(); //设置为最大值
+betControl.sub(); //减少下注
+betControl.add(); //增加下注
 
 //添加到Pixi舞台
 app.stage.addChild(minButton, maxButton, subButton, addButton);
@@ -652,7 +654,6 @@ stopInterval();
 > 点击容器外或入口按钮时隐藏
 
 ```ts
-
 let removeEventListener: () => void;
 const btn = new Sprite(Assets.get("btnIcon"));
 const optionList = new Container();
@@ -680,7 +681,7 @@ libPixiEvent(btn, "pointertap", () => {
 const mask = libPixiOverflowHidden(container); //为容器创建并应用矩形蒙版
 ```
 
-### LibPixiPromiseTickerTimeout-TickerPromise定时器
+### LibPixiPromiseTickerTimeout-TickerPromise 定时器
 
 > 基于 Ticker 和 Promise 的定时器
 
@@ -714,7 +715,7 @@ libPixiShadow(container, {
 });
 ```
 
-### LibPixiTickerTimeout-Ticker定时器
+### LibPixiTickerTimeout-Ticker 定时器
 
 > 基于 Ticker 的定时器
 
@@ -759,5 +760,34 @@ const slideInput = new LibPixiSlideInput({
 
 // 设置进度为 50%
 slideInput.setValue(0.5);
+```
+
+### LibGlobalUpdater-事件实例汇总
+
+> 将组件实例化后，将涉及通过事件总线更新的实例进行存储，用于事件总线统一在一个位置监听并通过从实例汇总中获取实例调用实例的方法进行更新
+
+```ts
+//app.ts
+this.gameUI = new GameUI();
+this.addChild(this.gameUI);
+globalUpdater.setInstance("GameUI", this.gameUI);
+
+this.toolbarUI = new ToolbarUI();
+this.addChild(this.toolbarUI);
+globalUpdater.setInstance("ToolbarUI", this.toolbarUI);
+
+//globalUpdater.ts
+import type { GameUI } from "@/app/ui/GameUI";
+import type { ToolbarUI } from "@/app/ui/ToolbarUI";
+
+type Instances = "GameUI" | "ToolbarUI"
+const globalUpdater = new GlobalUpdater<Instances>();
+export { globalUpdater };
+
+//开始游戏
+$bus.on("play", () => {
+  globalUpdater.getInstance<GameUI>("GameUI").play();
+  globalUpdater.getInstance<ToolbarUI>("ToolbarUI").play();
+});
 ```
 

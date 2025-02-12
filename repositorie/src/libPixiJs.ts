@@ -29,6 +29,7 @@ import { libPixiFilter } from "./Utils/LibPixiFilter";
 import { libPixiShadow } from "./Utils/LibPixiShadow";
 import { libPixiTickerTimeout } from "./Utils/LibPixiTickerTimeout";
 import { LibPixiSlideInput } from "./Utils/LibPixiSlideInput";
+import { LibGlobalUpdater } from "./Utils/LibGlobalUpdater";
 
 /** @description 组件 */
 export const Components = {
@@ -198,4 +199,9 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSlideInput-滑动选择值
    */
   LibPixiSlideInput,
+
+  /** @description 事件总线更新实例汇总
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibGlobalUpdater-事件实例汇总
+   */
+  LibGlobalUpdater,
 };
