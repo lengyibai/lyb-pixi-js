@@ -31,7 +31,7 @@ export class LibPixiAudio {
    */
   playEffect(key: string, end?: number) {
     return new Promise<void>((resolve) => {
-      const id = new Date().getTime();
+      const id = Math.random();
       const url = Assets.get(key).url;
       const sound = new Howl({
         src: url,
@@ -111,7 +111,7 @@ export class LibPixiAudio {
     const url = Assets.get(key).url;
     this._playingList.forEach((item) => {
       if (item.url === url) {
-        item.audio.pause();
+        item.audio.stop();
       }
     });
     this._playingList = this._playingList.filter((item) => item.url !== url);
