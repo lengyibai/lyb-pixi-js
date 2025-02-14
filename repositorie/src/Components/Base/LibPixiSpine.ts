@@ -116,7 +116,7 @@ export class LibPixiSpine extends Spine {
   /** @description 销毁动画及挂点 */
   destroyAll() {
     Ticker.system.remove(this._loopFn);
-    this.destroy();
+    this.destroy({ children: true });
   }
 
   /** @description 更新渲染 */
