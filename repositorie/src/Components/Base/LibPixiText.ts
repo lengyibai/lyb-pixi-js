@@ -43,7 +43,7 @@ export class LibPixiText extends Text {
       stroke,
       strokeColor,
       strokeThickness,
-      fontFamily = "MicrosoftYaHei",
+      fontFamily = "Arial",
       fontWeight = "normal",
       wordWrap = false,
       wordWrapWidth = 100,
