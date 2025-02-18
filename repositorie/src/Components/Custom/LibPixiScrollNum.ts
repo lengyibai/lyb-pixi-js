@@ -149,8 +149,19 @@ export class LibPixiScrollNum extends LibPixiContainer {
   /** @description 拖动中 */
   private _onDragMove(event: PointerEvent) {
     if (!this._isDragging) return;
+
     const moveY = event.pageY - this._startY;
-    this._slideArea.y = this._offsetY + moveY;
+    let newY = this._offsetY + moveY;
+
+    // 限制滑动区域的上下边界
+    const minY = this._scrollHeight / 2;
+    const maxY = -this._pageNum * this._slideHeight + this._scrollHeight / 2;
+
+    // 如果超出上下边界，禁止拖动
+    if (newY > minY) newY = minY;
+    if (newY < maxY) newY = maxY;
+
+    this._slideArea.y = newY;
     this._scrollCallback?.(this._slideArea.y, this._currentIndex);
   }
 
