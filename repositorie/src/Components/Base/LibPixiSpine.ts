@@ -1,7 +1,6 @@
 import { type Container, Assets, Ticker } from "pixi.js";
 import { Spine, type Bone } from "@pixi-spine/runtime-3.8";
 import gsap from "gsap";
-import "pixi-spine";
 
 export interface OnUpdateParams {
   x: number;
@@ -116,11 +115,15 @@ export class LibPixiSpine extends Spine {
   /** @description 销毁动画及挂点 */
   destroyAll() {
     Ticker.system.remove(this._loopFn);
-    this.destroy();
+    this.destroy({ children: true });
   }
 
   /** @description 更新渲染 */
   private _loop() {
+    if (this.destroyed) {
+      Ticker.system.remove(this._loopFn);
+      return;
+    }
     this.update(Ticker.system.deltaMS / 1000);
     this._updateFollowPoint();
   }
@@ -150,10 +153,7 @@ export class LibPixiSpine extends Spine {
         if (item.scaleFollow) {
           item.follow.scale.set(scaleX, scaleY);
         }
-        item.follow.position.set(
-          x + 1920 / 2 - item.follow.width / 2,
-          y + 1080 / 2 - item.follow.height / 2
-        );
+        item.follow.position.set(x + 1920 / 2 - item.follow.width / 2, y + 1080 / 2 - item.follow.height / 2);
       }
     });
 
