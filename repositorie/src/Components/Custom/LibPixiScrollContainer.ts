@@ -1,240 +1,211 @@
-import { Container, Graphics } from "pixi.js";
-import gsap from "gsap";
+import {
+  Container,
+  Graphics,
+  Sprite,
+  type FederatedPointerEvent,
+} from "pixi.js";
+import { gsap } from "gsap";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
 
-export interface LibPixiScrollNumParams {
-  /** 滚动区域宽度 */
+export interface LibPixiScrollContainerParams {
+  /** 宽度 */
   width: number;
-  /** 滚动区域高度 */
+  /** 高度 */
   height: number;
-  /** 一页高度 */
-  pageHeight: number;
-  /** 滚动的容器 */
-  content: Container;
-  /** 总数 */
-  pageNum: number;
-  /** 松手回调 */
-  slideCallback?: (index: number) => void;
-  /** 滚动回调 */
-  scrollCallback?: (y: number, index: number) => void;
+  /** 滚动内容 */
+  scrollContent: Container;
+  /** 底部内边距 */
+  bottomMargin?: number;
 }
 
-/** @description 通过鼠标或手指拖动数字列选择数字
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollNum-数字滑动
+/** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainer-滚动容器
  */
-export class LibPixiScrollNum extends LibPixiContainer {
-  /** 当前幻灯片索引 */
-  private _currentIndex = 0;
-  /** 滚动区域高度 */
-  private _scrollHeight = 0;
-  /** 滑动区域高度 */
-  private _slideHeight = 0;
-  /** 记录拖动开始时的Y坐标 */
+export class LibPixiScrollContainer extends LibPixiContainer {
+  /** 开始位置 */
   private _startY = 0;
-  /** 偏移量 */
-  private _offsetY = 0;
-  /** 最大索引 */
-  private _pageNum = 0;
-  /** 记录开始时间 */
-  private _startTime = new Date().getTime();
-  /** 是否正在拖动 */
+  /** 惯性速度 */
+  private _velocity = 0;
+  /** 上一次滚动时间 */
+  private _startTime = 0;
+  /** 开始位置 */
+  private _startPosition = 0;
+  /** 滚动速度 */
+  private _scrollSpeed = 200;
+  /** 是否处于拖动状态 */
   private _isDragging = false;
 
-  /** 滑动内容 */
-  private _slideArea: Container;
+  /** 滚动容器 */
+  public _scrollContent: Container;
+  /** 遮罩 */
+  private _maskGraphics: Graphics;
+  /** 滚动的内容 */
+  private _content: Container;
 
-  /** 滑动回调 */
-  private _slideCallback?: (index: number) => void;
-  /** 滚动回调 */
-  private _scrollCallback?: (y: number, index: number) => void;
-
-  constructor(params: LibPixiScrollNumParams) {
-    const {
-      width,
-      height,
-      content,
-      slideCallback,
-      scrollCallback,
-      pageNum,
-      pageHeight,
-    } = params;
+  constructor(params: LibPixiScrollContainerParams) {
+    const { width, height, scrollContent, bottomMargin = 50 } = params;
     super(width, height);
 
-    //设置遮罩
-    const mask = new Graphics();
-    mask.beginFill(0xffffff);
-    mask.drawRect(0, 0, this.width, this.height);
-    mask.endFill();
-    this.addChild(mask);
-    this.mask = mask;
+    this._scrollContent = scrollContent;
 
-    this._scrollHeight = height;
-    this._slideHeight = pageHeight;
-    this._slideArea = content;
-    this._slideCallback = slideCallback;
-    this._scrollCallback = scrollCallback;
-    this._pageNum = pageNum - 1;
+    // 创建内容容器
+    this._content = new Container();
+    this.addChild(this._content);
+    this._content.addChild(this._scrollContent);
 
-    this.addChild(this._slideArea);
-    this._slideArea.x = width / 2;
-    this._slideArea.y = this._scrollHeight / 2;
+    // 创建底部占位
+    if (bottomMargin > 0) {
+      const bottom_box = new Sprite();
+      this._content.addChild(bottom_box);
+      bottom_box.y = this._content.height + bottomMargin;
+    }
 
-    // 监听拖动事件
+    // 创建遮罩
+    this._maskGraphics = new Graphics();
+    this.addChild(this._maskGraphics);
+    this._maskGraphics.clear();
+    this._maskGraphics.beginFill(0x000000);
+    this._maskGraphics.drawRect(0, 0, width, height);
+    this._maskGraphics.endFill();
+    this.mask = this._maskGraphics;
+
+    // 添加事件监听
     this.eventMode = "static";
-    this.cursor = "pointer";
-
-    this.on("pointerdown", this._onDragStart);
-    window.addEventListener("pointermove", this._onDragMove.bind(this));
-    window.addEventListener("pointerup", this._onDragEnd.bind(this));
+    this.on("pointerdown", this._onDragStart, this);
+    this.on("pointermove", this._onDragMove, this);
+    this.on("pointerup", this._onDragEnd, this);
+    this.on("pointerupoutside", this._onDragEnd, this);
+    this.on("wheel", this._onWheelScroll, this);
   }
 
-  /** @description 更新坐标
-   * @param y Y坐标
-   * @param index 页数索引
+  /** @description 设置滚动容器可视区宽高
+   * @param width 宽度
+   * @param height 高度
    */
-  updatePosition(y: number, index: number) {
-    this._slideArea.y = y;
-    this._currentIndex = index;
+  setDimensions(width: number, height: number) {
+    // 更新遮罩尺寸
+    this._maskGraphics.clear();
+    this._maskGraphics.beginFill(0x000000);
+    this._maskGraphics.drawRect(0, 0, width, height);
+    this._maskGraphics.endFill();
+    this.setSize(width, height);
   }
 
-  /** @description 滑动到指定索引
-   * @param index 页数索引
-   * @param animate 是否需要过渡动画
-   */
-  slideTo(index: number, animate = true) {
-    if (index < 0) {
-      // 回弹到第一张
-      gsap.to(this._slideArea, {
-        y: this._scrollHeight / 2,
-        duration: 0.25,
-        onUpdate: () => {
-          this._scrollCallback?.(this._slideArea.y, this._currentIndex);
-        },
-      });
-      this._currentIndex = 0;
-    } else if (index > this._pageNum) {
-      // 回弹到最后一张
-      gsap.to(this._slideArea, {
-        y: -this._pageNum * this._slideHeight + this._scrollHeight / 2,
-        duration: 0.5,
-        onUpdate: () => {
-          this._scrollCallback?.(this._slideArea.y, this._currentIndex);
-        },
-      });
-      this._currentIndex = this._pageNum;
-    } else {
-      // 正常滑动
-      this._currentIndex = index;
-      gsap.to(this._slideArea, {
-        y: -this._currentIndex * this._slideHeight + this._scrollHeight / 2,
-        duration: animate ? 0.25 : 0.01,
-        onUpdate: () => {
-          this._scrollCallback?.(this._slideArea.y, this._currentIndex);
-        },
-      });
-    }
-
-    this._slideCallback?.(this._currentIndex);
+  /** @description 返回顶部 */
+  scrollToTop() {
+    gsap.killTweensOf(this._content);
+    this._content.y = 0;
   }
 
-  /** @description 设置滚动景深
-   * @param containerList 元素列表
-   * @param y 拖动Y坐标
-   * @param startY 内部将y - startY进行计算
-   */
-  setDepth(containerList: Container[], y: number, startY = 0) {
-    const Y = y - startY;
-    const idx = Math.floor(Math.abs(Y) / 70);
-    const t = (Math.abs(Y) % 70) / 70;
-    const prevIdx = idx - 1;
-    const nextIdx = idx + 1;
-    const nextIdx2 = idx + 2;
-    const curItem = containerList[idx];
-
-    curItem.alpha = this.lerp(0.5, 1, 1 - t);
-    curItem.scale.y = this.lerp(0.85, 1, 1 - t);
-
-    if (nextIdx < containerList.length) {
-      const nextItem = containerList[nextIdx];
-      nextItem.alpha = this.lerp(0.5, 1, t);
-      nextItem.scale.y = this.lerp(0.85, 1, t);
-    }
-    if (nextIdx2 < containerList.length) {
-      const nextItem = containerList[nextIdx2];
-      nextItem.alpha = this.lerp(0.1, 0.5, t);
-    }
-    if (prevIdx >= 0) {
-      const prevItem = containerList[prevIdx];
-      prevItem.alpha = this.lerp(0.1, 0.5, 1 - t);
-    }
+  /** @description 往滚动内容添加元素 */
+  addContent(container: Container) {
+    this._scrollContent.addChild(container);
   }
 
-  /** @description 开始拖动 */
-  private _onDragStart(event: any) {
+  /** @description 按下 */
+  private _onDragStart(event: FederatedPointerEvent) {
+    if (this._content.height <= this._maskGraphics.height) return;
+
+    const position = event.getLocalPosition(this);
+    this._startY = position.y - this._content.y;
     this._isDragging = true;
-    this._startY = event.data.global.y;
-    this._offsetY = this._slideArea.y;
-    gsap.killTweensOf(this._slideArea);
-    this._startTime = new Date().getTime();
+    this._velocity = 0;
+    this._startTime = Date.now();
+    this._startPosition = this._content.y;
+    gsap.killTweensOf(this._content);
   }
 
-  /** @description 拖动中 */
-  private _onDragMove(event: PointerEvent) {
-    if (!this._isDragging) return;
-
-    const moveY = event.pageY - this._startY;
-    let newY = this._offsetY + moveY;
-
-    // 限制滑动区域的上下边界
-    const minY = this._scrollHeight / 2;
-    const maxY = -this._pageNum * this._slideHeight + this._scrollHeight / 2;
-
-    // 如果超出上下边界，禁止拖动
-    if (newY > minY) newY = minY;
-    if (newY < maxY) newY = maxY;
-
-    this._slideArea.y = newY;
-    this._scrollCallback?.(this._slideArea.y, this._currentIndex);
+  /** @description 拖动 */
+  private _onDragMove(event: FederatedPointerEvent) {
+    if (this._isDragging) {
+      const position = event.getLocalPosition(this);
+      const newPosition = position.y - this._startY;
+      this._content.y = newPosition;
+    }
   }
 
-  /** @description 结束拖动 */
-  private _onDragEnd(event: PointerEvent) {
-    if (!this._isDragging) return;
+  /** @description 拖动结束 */
+  private _onDragEnd() {
     this._isDragging = false;
+    const currentTime = Date.now();
+    const deltaTime = currentTime - this._startTime; // 计算停留时间
 
-    const endTime = new Date().getTime() - this._startTime;
-    const slide = this._startY - event.pageY; // 计算滑动的距离
-    const slideSpeed = Math.abs(slide) / endTime; // 计算滑动速度
-    const speedThreshold = 0.275;
-
-    // 计算滑动的页面变化数，根据滑动距离来调整页码
-    const slideThreshold = this._slideHeight / 2;
-
-    // 计算实际的翻页增量，使用 `slide / this._slideHeight` 来计算滑动的页数
-    const pageChange = Math.round(slide / this._slideHeight);
-
-    // 如果滑动速度足够快，且滑动的距离大于阈值，强制翻页
-    if (Math.abs(slide) > slideThreshold || slideSpeed > speedThreshold) {
-      this._currentIndex += pageChange; // 这里会根据滑动的方向来增加或减少当前页码
+    if (deltaTime < 250) {
+      // 如果停留时间在阈值内，计算惯性速度
+      this._velocity = (this._content.y - this._startPosition) / deltaTime;
+      this._applyInertia();
+    } else {
+      // 停留时间超出阈值，取消惯性
+      this._velocity = 0;
     }
 
-    // 防止超出页面的上下限
-    if (this._currentIndex < 0) {
-      this._currentIndex = 0; // 保证当前页码不小于 0
-    } else if (this._currentIndex > this._pageNum) {
-      this._currentIndex = this._pageNum; // 保证当前页码不大于最大页码
-    }
-
-    // 执行滑动到目标页码
-    this.slideTo(this._currentIndex);
+    this._limitScrollRange();
   }
 
-  /** @description 线性插值
-   * @param a1 当 t = 0 时，返回 a1
-   * @param a2 当 t = 1 时，返回 a2
-   * @param t 插值比例，取值范围 0~1
-   */
-  private lerp(a1: number, a2: number, t: number) {
-    return a1 * (1 - t) + a2 * t;
+  /** @description 滚轮滚动 */
+  private _onWheelScroll(event: WheelEvent) {
+    // 如果内容高度小于遮罩高度，则不滚动
+    if (this._content.height <= this._maskGraphics.height) return;
+
+    let y = this._content.y - event.deltaY * (this._scrollSpeed / 100);
+
+    //如果到达顶部，则不滚动
+    if (y > 0) {
+      y = 0;
+    }
+    //如果到达底部，则不滚动
+    else if (Math.abs(y) >= this._content.height - this._maskGraphics.height) {
+      y = -(this._content.height - this._maskGraphics.height);
+    }
+
+    gsap.to(this._content, {
+      duration: 0.25,
+      ease: "power1.out",
+      y,
+    });
+  }
+
+  /** @description 惯性动画 */
+  private _applyInertia() {
+    gsap.to(this._content, {
+      y: this._content.y + this._velocity * 250,
+      duration: 0.5,
+      ease: "power1.out",
+      onUpdate: this._limitScrollRange.bind(this),
+    });
+  }
+
+  /** @description 限制滚动范围 */
+  private _limitScrollRange() {
+    //如果内容顶部离开了滚动容器顶部，则归位
+    if (this._content.y > 0) {
+      gsap.to(this._content, {
+        duration: 0.75,
+        y: 0,
+        ease: "elastic.out",
+      });
+    }
+    // 如果滚动距离大于内容高度减去遮罩高度
+    else if (
+      Math.abs(this._content.y) >=
+      this._content.height - this._maskGraphics.height
+    ) {
+      // 如果内容高度大于遮罩高度，则滚动到底部
+      if (this._content.height > this._maskGraphics.height) {
+        const y = -(this._content.height - this._maskGraphics.height);
+        gsap.to(this._content, {
+          duration: 0.75,
+          y,
+          ease: "elastic.out",
+        });
+      }
+      // 否则静止不动
+      else {
+        gsap.to(this._content, {
+          duration: 0.25,
+          y: 0,
+        });
+      }
+    }
   }
 }

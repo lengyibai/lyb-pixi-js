@@ -1,6 +1,6 @@
 import { Container, Graphics } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiContainer } from '../Base/LibPixiContainer';
+import { LibPixiContainer } from "../Base/LibPixiContainer";
 
 export interface LibPixiScrollNumParams {
   /** 滚动区域宽度 */
@@ -137,6 +137,38 @@ export class LibPixiScrollNum extends LibPixiContainer {
     this._slideCallback?.(this._currentIndex);
   }
 
+  /** @description 设置滚动景深
+   * @param containerList 元素列表
+   * @param y 拖动Y坐标
+   * @param startY 内部将y - startY进行计算
+   */
+  setDepth(containerList: Container[], y: number, startY = 0) {
+    const Y = y - startY;
+    const idx = Math.floor(Math.abs(Y) / 70);
+    const t = (Math.abs(Y) % 70) / 70;
+    const prevIdx = idx - 1;
+    const nextIdx = idx + 1;
+    const nextIdx2 = idx + 2;
+    const curItem = containerList[idx];
+
+    curItem.alpha = this.lerp(0.5, 1, 1 - t);
+    curItem.scale.y = this.lerp(0.85, 1, 1 - t);
+
+    if (nextIdx < containerList.length) {
+      const nextItem = containerList[nextIdx];
+      nextItem.alpha = this.lerp(0.5, 1, t);
+      nextItem.scale.y = this.lerp(0.85, 1, t);
+    }
+    if (nextIdx2 < containerList.length) {
+      const nextItem = containerList[nextIdx2];
+      nextItem.alpha = this.lerp(0.1, 0.5, t);
+    }
+    if (prevIdx >= 0) {
+      const prevItem = containerList[prevIdx];
+      prevItem.alpha = this.lerp(0.1, 0.5, 1 - t);
+    }
+  }
+
   /** @description 开始拖动 */
   private _onDragStart(event: any) {
     this._isDragging = true;
@@ -195,5 +227,14 @@ export class LibPixiScrollNum extends LibPixiContainer {
 
     // 执行滑动到目标页码
     this.slideTo(this._currentIndex);
+  }
+
+  /** @description 线性插值
+   * @param a1 当 t = 0 时，返回 a1
+   * @param a2 当 t = 1 时，返回 a2
+   * @param t 插值比例，取值范围 0~1
+   */
+  private lerp(a1: number, a2: number, t: number) {
+    return a1 * (1 - t) + a2 * t;
   }
 }
