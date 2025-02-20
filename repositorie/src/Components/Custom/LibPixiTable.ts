@@ -1,10 +1,13 @@
 /** @description 表格绘制并填入数字 */
-import { Text, Container, Graphics } from "pixi.js";
-import { libPixiScaleContainer } from "../../Utils/LibPixiScaleContainer";
+
+import { Container, Graphics, Text } from "pixi.js";
+import { libPixiScaleContainer } from '../../Utils/LibPixiScaleContainer';
 
 export interface LibPixiTableParams {
   /** 表格数据 */
   data: (number | string)[][];
+  /** 是否需要表格外框 */
+  outsideBorder?: boolean;
   /** 单元格宽度 */
   cellWidth?: number;
   /** 单元格高度 */
@@ -13,6 +16,10 @@ export interface LibPixiTableParams {
   fontSize?: number;
   /** 字体颜色 */
   fontColor?: string;
+  /** 表格第一列字体颜色 */
+  firstColumnFontColor?: string;
+  /** 是否需要加粗 */
+  fontBold?: boolean;
   /** 线条厚度 */
   lineWidth?: number;
   /** 线条颜色 */
@@ -38,8 +45,15 @@ export class LibPixiTable extends Container {
 
   /** 字体颜色 */
   private _fontColor: string;
+  /** 表格第一列字体颜色 */
+  private _firstColumnFontColor: string;
   /** 线条颜色 */
   private _lineColor: string;
+
+  /** 是否需要表格外框 */
+  private _outsideBorder: boolean;
+  /** 是否需要加粗 */
+  private _fontBold: boolean;
 
   /** 二维数字数组 */
   private _data: (number | string)[][];
@@ -51,10 +65,13 @@ export class LibPixiTable extends Container {
       data,
       cellWidth = 130,
       cellHeight = 100,
-      fontColor = "#B4B4B8",
-      fontSize = 24,
-      lineWidth = 3,
-      lineColor = "#B4B4B8",
+      fontColor = "#fff",
+      firstColumnFontColor = "#fff",
+      fontSize = 30,
+      lineWidth = 2,
+      lineColor = "#5b5b5b",
+      outsideBorder = true,
+      fontBold = true,
     } = params;
 
     this._data = data;
@@ -66,6 +83,9 @@ export class LibPixiTable extends Container {
     this._fontSize = fontSize;
     this._lineWidth = lineWidth;
     this._lineColor = lineColor;
+    this._outsideBorder = outsideBorder;
+    this._fontBold = fontBold;
+    this._firstColumnFontColor = firstColumnFontColor;
 
     this._drawTable();
     this.fillNumbers();
@@ -80,7 +100,9 @@ export class LibPixiTable extends Container {
     graphics.lineStyle(this._lineWidth, this._lineColor);
 
     // 绘制表格外框
-    graphics.drawRect(0, 0, tableWidth, tableHeight);
+    if (this._outsideBorder) {
+      graphics.drawRect(0, 0, tableWidth, tableHeight);
+    }
 
     // 绘制横线
     for (let i = 1; i < this._rows; i++) {
@@ -119,7 +141,8 @@ export class LibPixiTable extends Container {
   ): void {
     const text = new Text(number.toString(), {
       _fontSize: this._fontSize,
-      fill: this._fontColor,
+      fill: col === 0 ? this._firstColumnFontColor : this._fontColor,
+      fontWeight: this._fontBold ? "bold" : "normal",
     });
 
     // 计算文本的居中位置
