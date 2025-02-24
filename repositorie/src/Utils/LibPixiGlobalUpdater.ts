@@ -1,7 +1,7 @@
 import type { Container } from "pixi.js";
 
 /** @description 事件总线更新实例汇总 */
-export class LibGlobalUpdater<Instances> {
+export class LibPixiGlobalUpdater<Instances> {
   /** 实例列表 */
   private instances: Map<Instances, Container> = new Map();
 
