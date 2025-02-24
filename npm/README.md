@@ -144,6 +144,8 @@ app.stage.addChild(box);
 
 \- [LibGlobalUpdater-事件实例汇总](#LibGlobalUpdater-事件实例汇总)
 
+\- [LibPixiPolygonDrawTool-多边形绘制](#LibPixiPolygonDrawTool-多边形绘制)
+
 ## Base-基础
 
 ### LibPixiText-文本
@@ -789,5 +791,13 @@ $bus.on("play", () => {
   globalUpdater.getInstance<GameUI>("GameUI").play();
   globalUpdater.getInstance<ToolbarUI>("ToolbarUI").play();
 });
+```
+
+### LibPixiPolygonDrawTool-多边形绘制
+
+> 多边形绘制工具，绘制时浏览器窗口需要全屏显示，空格键控制开始和结束，开始后鼠标进行点击绘制，退格删除点，空格结束绘制，绘制结果在控制台打印，不满意可再次按空格清空并重新绘制
+
+```ts
+new LibPixiPolygonDrawTool(app)
 ```
 

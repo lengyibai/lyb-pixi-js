@@ -30,6 +30,7 @@ import { libPixiShadow } from "./Utils/LibPixiShadow";
 import { libPixiTickerTimeout } from "./Utils/LibPixiTickerTimeout";
 import { LibPixiSlideInput } from "./Utils/LibPixiSlideInput";
 import { LibGlobalUpdater } from "./Utils/LibGlobalUpdater";
+import { LibPixiPolygonDrawTool } from "./Utils/LibPixiPolygonDrawTool";
 
 /** @description 组件 */
 export const Components = {
@@ -204,4 +205,9 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibGlobalUpdater-事件实例汇总
    */
   LibGlobalUpdater,
+
+  /** @description 多边形绘制工具，绘制时浏览器窗口需要全屏显示，空格键控制开始和结束，开始后鼠标进行点击绘制，退格删除点，空格结束绘制，绘制结果在控制台打印，不满意可再次按空格清空并重新绘制
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPolygonDrawTool-多边形绘制
+   */
+  LibPixiPolygonDrawTool,
 };
