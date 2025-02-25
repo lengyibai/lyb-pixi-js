@@ -4,6 +4,19 @@ import {
   type FederatedPointerEvent,
 } from "pixi.js";
 
+export interface LibPixiPolygonDrawToolParams {
+  /** 输出的数组内容格式 */
+  outFormat?: "object" | "number";
+  /** 圆点半径 */
+  dotRadius?: number;
+  /** 圆点颜色 */
+  dotColor?: string | number;
+  /** 多边形颜色 */
+  polygonColor?: string | number;
+  /** 多边形透明度 */
+  polygonAlpha?: number;
+}
+
 /** @description 多边形绘制工具，绘制时浏览器窗口需要全屏显示，空格键控制开始和结束，开始后鼠标进行点击绘制，退格删除点，空格结束绘制，绘制结果在控制台打印，不满意可再次按空格清空并重新绘制
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPolygonDrawTool-多边形绘制
  */
@@ -22,9 +35,19 @@ export class LibPixiPolygonDrawTool {
   private _realPoints: { x: number; y: number }[] = [];
   /** 点元素 */
   private _pointElements: Graphics[] = [];
+  /** 参数 */
+  private _params: Required<LibPixiPolygonDrawToolParams>;
 
-  constructor(app: Application) {
+  constructor(app: Application, params: LibPixiPolygonDrawToolParams = {}) {
     this._app = app;
+    this._params = {
+      outFormat: "number",
+      dotRadius: 2,
+      dotColor: "#fff",
+      polygonColor: "#68CCFF",
+      polygonAlpha: 0.5,
+      ...params,
+    };
     this._app.stage.sortableChildren = true;
     this._polygon = new Graphics();
     this._app.stage.addChild(this._polygon);
@@ -56,11 +79,16 @@ export class LibPixiPolygonDrawTool {
   /** @description 控制绘制开始和结束 */
   private toggleDrawing() {
     if (this._drawing) {
-      console.warn("绘制结束");
+      alert("绘制结束");
       this._points.push({ x: 0, y: 0 });
-      console.log(this._points.flat());
+
+      if (this._params.outFormat === "object") {
+        console.log(this._points);
+      } else {
+        console.log(this._points.map((item) => [item.x, item.y]).flat());
+      }
     } else {
-      console.warn("开始绘制");
+      alert("开始绘制");
       this._startPoint = [];
       this._points = [];
       this._realPoints = [];
@@ -100,10 +128,10 @@ export class LibPixiPolygonDrawTool {
   /** @description 绘制多边形 */
   private _drawPolygon() {
     this._polygon.clear();
-    this._polygon.beginFill(0x66ccff);
+    this._polygon.beginFill(this._params.polygonColor);
     this._polygon.drawPolygon(this._realPoints);
     this._polygon.endFill();
-    this._polygon.alpha = 0.5;
+    this._polygon.alpha = this._params.polygonAlpha;
 
     //渲染点
     this._pointElements.forEach((point) => point.destroy());
@@ -116,10 +144,9 @@ export class LibPixiPolygonDrawTool {
   /** @description 绘制一个点 */
   private _drawDot(x: number, y: number) {
     const pointElement = new Graphics();
-    pointElement.beginFill(0xff0000);
-    pointElement.drawCircle(x, y, 5);
+    pointElement.beginFill(this._params.dotColor);
+    pointElement.drawCircle(x, y, this._params.dotRadius || 2);
     pointElement.endFill();
-    pointElement.alpha = 0.5;
     this._app.stage.addChild(pointElement);
     pointElement.zIndex = 999999;
     return pointElement;
