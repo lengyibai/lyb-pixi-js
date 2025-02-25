@@ -99,9 +99,8 @@ export class LibPixiScrollNum extends LibPixiContainer {
 
   /** @description 滑动到指定索引
    * @param index 页数索引
-   * @param animate 是否需要过渡动画
    */
-  slideTo(index: number, animate = true) {
+  slideTo(index: number) {
     if (index < 0) {
       // 回弹到第一张
       gsap.to(this._slideArea, {
@@ -127,7 +126,7 @@ export class LibPixiScrollNum extends LibPixiContainer {
       this._currentIndex = index;
       gsap.to(this._slideArea, {
         y: -this._currentIndex * this._slideHeight + this._scrollHeight / 2,
-        duration: animate ? 0.25 : 0.01,
+        duration: 0.01,
         onUpdate: () => {
           this._scrollCallback?.(this._slideArea.y, this._currentIndex);
         },
