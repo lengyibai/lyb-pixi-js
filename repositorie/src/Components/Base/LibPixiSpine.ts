@@ -68,7 +68,7 @@ export class LibPixiSpine extends Spine {
           follow: item.follow,
           onUpdate: item.onUpdate,
           angleFollow: item.angleFollow || false,
-          scaleFollow: item.scaleFollow || true,
+          scaleFollow: item.scaleFollow === undefined ? true : item.scaleFollow,
         });
       });
     }
@@ -154,7 +154,10 @@ export class LibPixiSpine extends Spine {
         if (item.scaleFollow) {
           item.follow.scale.set(scaleX, scaleY);
         }
-        item.follow.position.set(x + 1920 / 2 - item.follow.width / 2, y + 1080 / 2 - item.follow.height / 2);
+        item.follow.position.set(
+          x + 1920 / 2 - item.follow.width / 2,
+          y + 1080 / 2 - item.follow.height / 2
+        );
       }
     });
 
