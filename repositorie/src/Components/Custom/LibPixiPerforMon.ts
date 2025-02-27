@@ -1,12 +1,12 @@
 import {
-  Text,
-  Application,
   Container,
-  UPDATE_PRIORITY,
   type IRenderer,
+  type Application,
   Ticker,
+  UPDATE_PRIORITY,
 } from "pixi.js";
-import { LibPixiText } from '../Base/LibPixiText';
+import { LibPixiRectBgColor } from "../Base/LibPixiRectBgColor";
+import { LibPixiText } from "../Base/LibPixiText";
 
 /** @description 监视帧率、Draw Call、Max Draw Call
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPerforMon-性能监视器
@@ -27,32 +27,63 @@ export class LibPixiPerforMon extends Container {
   /** 上次收集数据的时间 */
   private _lastCollectTime = 0;
 
+  /** 整体宽度 */
+  private _containerWidth = 580;
+  /** 整体高度 */
+  private _containerHeight = 50;
+
   /** 渲染器 */
   private _renderer: IRenderer;
-
-  /** 存储每个性能指标的文本对象 */
-  private _paramTxts: Text[] = [];
 
   /** 原始的 drawElements 方法 */
   private _drawElements: Function;
 
+  /** 背景 */
+  private _bg: LibPixiRectBgColor;
+  /** FPS文本 */
+  private _fpsText: TextBox;
+  /** Draw Call文本 */
+  private _drawCallText: TextBox;
+  /** Max Draw Call文本 */
+  private _maxDrawCallText: TextBox;
+
   constructor(app: Application) {
     super();
 
-    for (let i = 0; i < 3; i++) {
-      const txt = new LibPixiText({
-        text: "",
-        fontWeight: "bold",
-        fontSize: 36,
-        shadow: ["#000", 45, 3, 5],
-        fontColor: "#fff",
-      });
-      this._paramTxts[i] = txt;
-      txt.x = 0;
-      txt.y = txt.height * i;
-      this.addChild(txt);
-      txt.alpha = 0.75;
-    }
+    this.pivot.x = this._containerWidth / 2;
+    this._resize(window.innerWidth, window.innerHeight);
+    window.addEventListener("resize", () => {
+      this._resize(window.innerWidth, window.innerHeight);
+    });
+
+    //创建背景
+    this._bg = new LibPixiRectBgColor({
+      width: this._containerWidth,
+      height: this._containerHeight,
+      bgColor: "#000",
+      alpha: 0.75,
+    });
+    this.addChild(this._bg);
+
+    //创建内容容器
+    const content = new Container();
+    this.addChild(content);
+    content.x = 25;
+    content.y = this._containerHeight / 2;
+
+    //创建FPS文本
+    this._fpsText = new TextBox("FPS");
+    content.addChild(this._fpsText);
+
+    //创建Draw Call文本
+    this._drawCallText = new TextBox("Draw Call");
+    content.addChild(this._drawCallText);
+    this._drawCallText.x = 125;
+
+    //创建Max Draw Call文本
+    this._maxDrawCallText = new TextBox("Max Draw Call");
+    content.addChild(this._maxDrawCallText);
+    this._maxDrawCallText.x = 310;
 
     this._renderer = app.renderer;
     this._drawElements = (this._renderer as any)["gl"].drawElements;
@@ -72,7 +103,7 @@ export class LibPixiPerforMon extends Container {
       this._nowTime = performance.now();
 
       if (this._nowTime - this._lastTime >= 100.0) {
-        this._setTxtInfo(0, Math.floor(fps).toFixed(0));
+        this._setTextInfo("fps", Number(Math.floor(fps).toFixed(0)));
         this._lastTime = this._nowTime;
       }
 
@@ -86,47 +117,96 @@ export class LibPixiPerforMon extends Container {
         this._lastCollectTime = this._nowTime;
       }
 
-      this._setTxtInfo(1, this._drawCount);
-      this._setTxtInfo(2, this._maxDrawCount);
+      this._setTextInfo("drawCall", this._drawCount);
+      this._setTextInfo("maxDrawCall", this._maxDrawCount);
       this._drawCount = 0;
     }, UPDATE_PRIORITY.UTILITY);
   }
 
   /** @description 更新文本信息 */
-  private _setTxtInfo(p: number, v: any) {
-    const fpsColor = (v: number) => {
-      this._paramTxts[p].style.fill = "#fff";
-      if (v <= 30) {
-        this._paramTxts[p].style.fill = "yellow";
-      }
-      if (v <= 20) {
-        this._paramTxts[p].style.fill = "red";
-      }
+  private _setTextInfo(p: string, v: number) {
+    const textObj: Record<string, TextBox> = {
+      fps: this._fpsText,
+      drawCall: this._drawCallText,
+      maxDrawCall: this._maxDrawCallText,
     };
-    const drawCallColor = (v: number) => {
-      this._paramTxts[p].style.fill = "#fff";
-      if (v >= 75) {
-        this._paramTxts[p].style.fill = "yellow";
-      }
-      if (v >= 100) {
-        this._paramTxts[p].style.fill = "red";
-      }
-    };
-    const paramMapping: (() => string)[] = [
-      () => {
-        fpsColor(v);
-        return `Fps：${v}`;
-      },
-      () => {
-        drawCallColor(v);
-        return `Draw Call：${v}`;
-      },
-      () => {
-        drawCallColor(v);
-        return `Max Draw Call：${v}`;
-      },
-    ];
+    const textBox = textObj[p];
+    textBox.updateValue(v);
 
-    this._paramTxts[p].text = paramMapping[p]();
+    if (p === "fps") {
+      textBox.updateColor(this.getFpsColor(v));
+    } else {
+      textBox.updateColor(this.getDrawCallColor(v));
+    }
+  }
+
+  /** @description 获取FPS颜色 */
+  getFpsColor(v: number) {
+    let color = "#00ff04";
+    if (v < 30) {
+      color = "#ffd20a";
+    }
+    if (v < 20) {
+      color = "#ff000d";
+    }
+    return color;
+  }
+
+  /** @description 获取Draw Call颜色 */
+  getDrawCallColor(v: number) {
+    let color = "#00ff04";
+    if (v >= 75) {
+      color = "#ffd20a";
+    }
+    if (v >= 100) {
+      color = "#ff000d";
+    }
+    return color;
+  }
+
+  private _resize(w: number, h: number) {
+    if (w > h) {
+      this.x = 1920 / 2;
+    } else {
+      this.x = 1080 / 2;
+    }
+
+    console.log(this.x);
+  }
+}
+
+class TextBox extends Container {
+  /** @description 数值 */
+  private _valueText: LibPixiText;
+
+  constructor(text: string, fontSize = 26) {
+    super();
+
+    const label = new LibPixiText({
+      text,
+      fontSize,
+      fontWeight: "bold",
+    });
+    this.addChild(label);
+    label.anchor.y = 0.5;
+
+    this._valueText = new LibPixiText({
+      text: "0",
+      fontSize,
+      fontWeight: "bold",
+    });
+    this.addChild(this._valueText);
+    this._valueText.anchor.y = 0.5;
+    this._valueText.x = label.width + 10;
+  }
+
+  /** @description 更改颜色 */
+  updateColor(color: string) {
+    this._valueText.style.fill = color;
+  }
+
+  /** @description 设置数值 */
+  updateValue(value: number) {
+    this._valueText.text = value;
   }
 }
