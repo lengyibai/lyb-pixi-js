@@ -1,6 +1,6 @@
 import { Container, Graphics } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
+import { LibPixiContainer } from '../Base/LibPixiContainer';
 
 export interface LibPixiScrollNumParams {
   /** 滚动区域宽度 */
@@ -126,7 +126,7 @@ export class LibPixiScrollNum extends LibPixiContainer {
       this._currentIndex = index;
       gsap.to(this._slideArea, {
         y: -this._currentIndex * this._slideHeight + this._scrollHeight / 2,
-        duration: 0.01,
+        duration: 0.1,
         onUpdate: () => {
           this._scrollCallback?.(this._slideArea.y, this._currentIndex);
         },
