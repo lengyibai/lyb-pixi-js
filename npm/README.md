@@ -597,6 +597,12 @@ libPixiEvent(container, "pointerdown", (e) => {
   console.log("Pointer down event triggered", e);
 });
 
+//停止监听
+const offEvent = libPixiEvent(container, "pointerdown", (e) => {
+  console.log("Pointer down event triggered", e);
+  offEvent();
+});
+
 //只执行一次的事件
 libPixiEvent(
   container,
@@ -782,7 +788,7 @@ globalUpdater.setInstance("ToolbarUI", this.toolbarUI);
 import type { GameUI } from "@/app/ui/GameUI";
 import type { ToolbarUI } from "@/app/ui/ToolbarUI";
 
-type Instances = "GameUI" | "ToolbarUI"
+type Instances = "GameUI" | "ToolbarUI";
 const globalUpdater = new GlobalUpdater<Instances>();
 export { globalUpdater };
 
@@ -798,6 +804,5 @@ $bus.on("play", () => {
 > 多边形绘制工具，绘制时浏览器窗口需要全屏显示，空格键控制开始和结束，开始后鼠标进行点击绘制，退格删除点，空格结束绘制，绘制结果在控制台打印，不满意可再次按空格清空并重新绘制
 
 ```ts
-new LibPixiPolygonDrawTool(app)
+new LibPixiPolygonDrawTool(app);
 ```
-

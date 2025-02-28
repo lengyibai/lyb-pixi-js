@@ -1,7 +1,7 @@
 import gsap from "gsap";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import type { Sprite } from "pixi.js";
+import { libPixiEvent } from "../../Utils/LibPixiEvent";
+import { LibPixiContainer } from "../Base/LibPixiContainer";
 
 export interface LibPixiCloseBtnParams {
   /** 按钮素材 */
@@ -31,7 +31,7 @@ export class LibPixiCloseBtn extends LibPixiContainer {
       });
     });
 
-    libPixiEvent(this, "pointerleave", () => {
+    const offLeave = libPixiEvent(this, "pointerleave", () => {
       sprite.alpha = 1;
       gsap.to(sprite, {
         duration: 0.25,
@@ -45,6 +45,7 @@ export class LibPixiCloseBtn extends LibPixiContainer {
 
     libPixiEvent(this, "pointerup", () => {
       onClick();
+      offLeave();
     });
   }
 }
