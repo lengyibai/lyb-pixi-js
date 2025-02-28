@@ -1,7 +1,7 @@
 import {
-  Container,
   type IRenderer,
   type Application,
+  Container,
   Ticker,
   UPDATE_PRIORITY,
 } from "pixi.js";
@@ -28,7 +28,7 @@ export class LibPixiPerforMon extends Container {
   private _lastCollectTime = 0;
 
   /** 整体宽度 */
-  private _containerWidth = 580;
+  private _containerWidth = 590;
   /** 整体高度 */
   private _containerHeight = 50;
 
@@ -83,7 +83,7 @@ export class LibPixiPerforMon extends Container {
     //创建Max Draw Call文本
     this._maxDrawCallText = new TextBox("Max Draw Call");
     content.addChild(this._maxDrawCallText);
-    this._maxDrawCallText.x = 310;
+    this._maxDrawCallText.x = 320;
 
     this._renderer = app.renderer;
     this._drawElements = (this._renderer as any)["gl"].drawElements;
@@ -170,8 +170,6 @@ export class LibPixiPerforMon extends Container {
     } else {
       this.x = 1080 / 2;
     }
-
-    console.log(this.x);
   }
 }
 
