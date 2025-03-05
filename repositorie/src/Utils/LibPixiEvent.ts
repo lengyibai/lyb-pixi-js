@@ -1,4 +1,8 @@
-import type { Container, DisplayObjectEvents, FederatedPointerEvent } from "pixi.js";
+import type {
+  Container,
+  DisplayObjectEvents,
+  FederatedPointerEvent,
+} from "pixi.js";
 
 /** @description 事件注册
  * @param v 事件容器
@@ -11,8 +15,8 @@ import type { Container, DisplayObjectEvents, FederatedPointerEvent } from "pixi
 export const libPixiEvent = (
   v: Container,
   eventName: keyof DisplayObjectEvents,
-  callback: (...args: any) => void,
-  once = false,
+  callback: (event: FederatedPointerEvent) => void,
+  once = false
 ) => {
   v.cursor = "pointer";
   v.eventMode = "static";

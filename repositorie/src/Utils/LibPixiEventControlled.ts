@@ -1,4 +1,8 @@
-import type { Container, DisplayObjectEvents } from "pixi.js";
+import type {
+  Container,
+  DisplayObjectEvents,
+  FederatedPointerEvent,
+} from "pixi.js";
 
 /** @description 设置可关闭的事件监听，调用自身后不再触发
  * @param container 事件容器
@@ -9,12 +13,12 @@ import type { Container, DisplayObjectEvents } from "pixi.js";
 export const libPixiEventControlled = (
   container: Container,
   eventName: keyof DisplayObjectEvents,
-  callback: (...args: any) => void
+  callback: (e: FederatedPointerEvent) => void
 ) => {
   let isDestroy = false;
   container.cursor = "pointer";
   container.eventMode = "static";
-  container.on(eventName, (e) => {
+  container.on(eventName, (e: FederatedPointerEvent) => {
     if (isDestroy) return;
     if (e.button === 2) return;
     callback(e);
