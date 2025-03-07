@@ -122,8 +122,6 @@ app.stage.addChild(box);
 
 \- [LibPixiEvent-事件注册](#LibPixiEvent-事件注册)
 
-\- [LibPixiEventControlled-可关闭的事件](#LibPixiEventControlled-可关闭的事件)
-
 \- [LibPixiFilter-滤镜](#LibPixiFilter-滤镜)
 
 \- [LibPixiIntervalTrigger-间隔触发](#LibPixiIntervalTrigger-间隔触发)
@@ -610,21 +608,34 @@ libPixiEvent(
   (e) => {
     console.log("Pointer up event triggered", e);
   },
+  {
+    once: true,
+  }
+);
+
+//防抖
+libPixiEvent(
+  container,
+  "pointerup",
+  (e) => {
+    console.log("Pointer up event triggered", e);
+  },
+  {
+    debounce: true,
+    debounceTime: 1000,
+  }
+);
+
+//停止监听
+const off = libPixiEvent(
+  container,
+  "pointerup",
+  (e) => {
+    console.log("Pointer up event triggered", e);
+  },
   true
 );
-```
-
-### LibPixiEventControlled-可关闭的事件
-
-> 设置可关闭的事件监听，调用自身后不再触发
-
-```ts
-const closeEvent = libPixiEventControlled(container, "pointerdown", (e) => {
-  console.log("Pointer down event triggered", e);
-});
-
-//调用返回的函数关闭事件监听
-closeEvent();
+off();
 ```
 
 ### LibPixiFilter-滤镜

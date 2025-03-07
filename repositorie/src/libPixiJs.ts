@@ -19,7 +19,6 @@ import { LibPixiTable } from "./Components/Custom/LibPixiTable";
 import { LibPixiAudio } from "./Utils/LibPixiAudio";
 import { libPixiCreateNineGrid } from "./Utils/LibPixiCreateNineGrid";
 import { libPixiEvent } from "./Utils/LibPixiEvent";
-import { libPixiEventControlled } from "./Utils/LibPixiEventControlled";
 import { libPixiIntervalTrigger } from "./Utils/LibPixiIntervalTrigger";
 import { libPixiOutsideClick } from "./Utils/LibPixiOutsideClick";
 import { libPixiOverflowHidden } from "./Utils/LibPixiOverflowHidden";
@@ -130,14 +129,6 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiEvent-事件注册
    */
   libPixiEvent,
-
-  /** @description 设置可关闭的事件监听，调用自身后不再触发
-   * @param container 事件容器
-   * @param eventName 事件名称
-   * @param callback 事件回调
-   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiEventControlled-可关闭的事件
-   */
-  libPixiEventControlled,
 
   /** @description 滤镜
    * @param filterName 滤镜名称

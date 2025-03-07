@@ -1,8 +1,11 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.4.11",
+  "version": "1.5.0",
   "description": "自用Pixi.JS方法库",
   "license": "ISC",
+  "scripts": {
+    "publish": "npm publish"
+  },
   "exports": {
     ".": "./index.js",
     "./Components/Base/*": "./Components/Base/*",
