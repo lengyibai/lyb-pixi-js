@@ -1,6 +1,6 @@
 import { Container, Graphics } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiContainer } from '../Base/LibPixiContainer';
+import { LibPixiContainer } from "../Base/LibPixiContainer";
 
 export interface LibPixiScrollNumParams {
   /** 滚动区域宽度 */
@@ -143,8 +143,8 @@ export class LibPixiScrollNum extends LibPixiContainer {
    */
   setDepth(containerList: Container[], y: number, startY = 0) {
     const Y = y - startY;
-    const idx = Math.floor(Math.abs(Y) / 70);
-    const t = (Math.abs(Y) % 70) / 70;
+    const idx = Math.floor(Math.abs(Y) / this._slideHeight);
+    const t = (Math.abs(Y) % this._slideHeight) / this._slideHeight;
     const prevIdx = idx - 1;
     const nextIdx = idx + 1;
     const nextIdx2 = idx + 2;
