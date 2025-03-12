@@ -457,14 +457,15 @@ const slideContent = new Container();
 //slideContent.addChild(someImageOrText);
 
 //创建幻灯片
-const slider = new LibPixiSlider(
-  400, //宽度
-  300, //高度
+const slider = new LibPixiSlider({
+  width: 400,
+  height: 300,
   slideContent,
-  (pageIndex, pageNum) => {
+  enableDepth: true,
+  slideCallback: (pageIndex, pageNum) => {
     console.log(`当前页: ${pageIndex + 1} / ${pageNum + 1}`);
-  }
-);
+  },
+});
 
 //将幻灯片添加到场景
 app.stage.addChild(slider);
