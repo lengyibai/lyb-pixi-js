@@ -43,7 +43,7 @@ export class LibPixiCloseBtn extends LibPixiContainer {
       sprite.alpha = 0.5;
     });
 
-    libPixiEvent(this, "pointerup", () => {
+    libPixiEvent(this, "pointertap", () => {
       onClick();
       offLeave();
     });
