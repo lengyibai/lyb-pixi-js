@@ -826,7 +826,7 @@ new LibPixiPolygonDrawTool(app);
 > 内部通过 Ticker 每秒调用10次循环判断被监听的属性是否发生改变，当元素被销毁时自动销毁 Ticker，取决于是否传递了元素
 
 ```ts
-watchPropertyChange(
+LibPixiWatchProperty(
   gameStore,
   ["a", "b"],
   () => {
