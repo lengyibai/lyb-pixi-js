@@ -1,11 +1,11 @@
 import { Container, ParticleContainer, Ticker } from "pixi.js";
-import { Emitter, type EmitterConfigV3 } from "@pixi/particle-emitter";
+import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
 import gsap from "gsap";
 import { LibPixiText } from "./LibPixiText";
 
 export interface LibPixiParticleMoveParams {
   /** 粒子JSON资源 */
-  json: EmitterConfigV3;
+  container: Container;
   /** 运动时长 */
   duration: number;
   /** 粒子开始位置 */
@@ -20,13 +20,73 @@ export interface LibPixiParticleMoveParams {
   showControl?: boolean;
   /** 是否循环，调试使用 */
   loop?: boolean;
+  /** 是否启用粒子容器 */
+  enableParticleContainer?: boolean;
+  /** 粒子配置 */
+  particleConfig: {
+    /** 随机时长 */
+    lifetime: {
+      /** 最小时长 */
+      min: number;
+      /** 最大时长 */
+      max: number;
+    };
+    /** 混合模式 */
+    blendMode?: string;
+    /** 频率，秒/个 */
+    frequency?: number;
+    /** 透明度变化 */
+    alpha?: {
+      /** 开始透明度 */
+      start: number;
+      /** 结束透明度 */
+      end: number;
+    };
+    /** 颜色变化 */
+    color?: {
+      /** 开始颜色 */
+      start: string;
+      /** 结束颜色 */
+      end: string;
+    };
+    /** 随机缩放变化 */
+    scale?: {
+      /** 最小 */
+      start: number;
+      /** 最大 */
+      end: number;
+    };
+    /** 随机偏移角度变化 */
+    rotation?: {
+      /** 最小角度 */
+      min: number;
+      /** 最大角度 */
+      max: number;
+    };
+    /** 随机自身旋转角度变化 */
+    rotate?: {
+      /** 最小角度 */
+      min: number;
+      /** 最大角度 */
+      max: number;
+    };
+    /** 移动速度，像素 */
+    speed?: {
+      /** 开始速度，不能为0，可无限接近0 */
+      start: number;
+      /** 结束速度，开始速度会衰减到结束速度 */
+      end: number;
+    };
+  };
+  /** 头部粒子到达终点后触发，可在此设置隐藏动画，隐藏动画结束后调用 destroy 参数进行销毁 */
+  onDestroy?: (destroy: () => void) => void;
 }
 
 /** @description 利用贝塞尔曲线实现粒子移动
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiParticleMove-粒子容器
  */
 export class LibPixiParticleMove extends Container {
-  private _particleContainer: ParticleContainer;
+  private _particleContainer: Container | ParticleContainer;
 
   constructor(params: LibPixiParticleMoveParams) {
     super();
@@ -35,18 +95,45 @@ export class LibPixiParticleMove extends Container {
       start,
       control,
       end,
-      json,
+      container,
       duration,
       ease = "power1.out",
       showControl = false,
       loop = false,
+      enableParticleContainer = false,
+      particleConfig,
+      onDestroy,
     } = params;
 
-    this._particleContainer = new ParticleContainer();
+    const config = upgradeConfig(
+      {
+        lifetime: particleConfig.lifetime,
+        blendMode: particleConfig.blendMode,
+        frequency: particleConfig.frequency || 0.01,
+        maxParticles: 1 / (particleConfig.frequency || 0.01),
+        alpha: particleConfig.alpha,
+        scale: particleConfig.scale,
+        color: particleConfig.color,
+        startRotation: particleConfig.rotation,
+        rotationSpeed: particleConfig.rotate,
+        speed: particleConfig.speed,
+        pos: {
+          x: 0,
+          y: 0,
+        },
+      },
+      [container]
+    );
+
+    if (enableParticleContainer) {
+      this._particleContainer = new ParticleContainer();
+    } else {
+      this._particleContainer = new Container();
+    }
     this.addChild(this._particleContainer);
 
     // 初始化粒子发射器
-    const flyParticle = new Emitter(this._particleContainer, json);
+    const flyParticle = new Emitter(this._particleContainer, config);
 
     // 创建贝塞尔曲线的路径
     const path = this._createBezierPoints(
@@ -62,6 +149,7 @@ export class LibPixiParticleMove extends Container {
       duration,
       pathThrough: path.length - 1,
       repeat: loop ? -1 : 0,
+      repeatDelay: loop ? 1 : 0,
       ease,
       onStart: () => {
         flyParticle.emit = true;
@@ -72,25 +160,34 @@ export class LibPixiParticleMove extends Container {
         flyParticle.updateOwnerPos(p.x, p.y);
       },
       onComplete: () => {
-        gsap.to(this, {
-          alpha: 0,
-          duration: 0.5,
-          onComplete: () => {
+        if (onDestroy) {
+          onDestroy(() => {
             flyParticle.emit = false;
             ticker.destroy();
-            this.removeFromParent();
-          },
-        });
+            this.destroy({ children: true });
+          });
+        } else {
+          gsap.to(this, {
+            alpha: 0,
+            duration: 1,
+            onComplete: () => {
+              flyParticle.emit = false;
+              ticker.destroy();
+              this.destroy({ children: true });
+            },
+          });
+        }
       },
     });
 
     const ticker = new Ticker();
     ticker.add(() => {
-      flyParticle.update(1 / 75);
+      flyParticle.update(ticker.deltaMS / 1000);
     });
     ticker.start();
   }
 
+  /** @description 创建贝塞尔曲线路径点组 */
   private _createBezierPoints(
     anchorPoints: { x: number; y: number }[],
     pointsAmount: number,
@@ -104,7 +201,10 @@ export class LibPixiParticleMove extends Container {
         //创建一个小圆点
         const text = new LibPixiText({
           text: index + 1,
-          fontSize: 16,
+          fontSize: 20,
+          stroke: true,
+          strokeColor: "#000",
+          strokeThickness: 1,
         });
         text.position.set(item.x, item.y);
         this.addChild(text);
@@ -120,6 +220,7 @@ export class LibPixiParticleMove extends Container {
     return points;
   }
 
+  /** @description 计算贝塞尔曲线单个路径衔接点 */
   private _multiPointBezier(points: { x: number; y: number }[], t: number) {
     const len = points.length;
     let x = 0,
@@ -144,6 +245,7 @@ export class LibPixiParticleMove extends Container {
     return { x, y };
   }
 
+  /** @description 计算组合数 */
   private _binomial(n: number, k: number) {
     if (k === 0 || k === n) return 1;
     let res = 1;

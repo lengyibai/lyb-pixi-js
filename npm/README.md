@@ -114,6 +114,8 @@ app.stage.addChild(box);
 
 \- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
 
+\- [LibPixiParticleMove-粒子移动特效](#LibPixiParticleMove-粒子移动特效)
+
 ### 方法
 
 \- [LibPixiAudio-音频播放器](#LibPixiAudio-音频播放器)
@@ -153,12 +155,39 @@ app.stage.addChild(box);
 > 自定义文本类
 
 ```ts
-const text = new LibPixiJs.Base.LibPixiText({
-  text: "Hello World!",
-  fontSize: 50,
-  fontColor: "red",
-});
+const text = new LibPixiJs.Base.LibPixiText(LibPixiTextParams);
 this.addChild(text);
+
+interface LibPixiTextParams {
+  /** 文本内容 */
+  text: string | number;
+  /**  字体大小 */
+  fontSize?: number;
+  /** 字体颜色 */
+  fontColor?: any;
+  /** 是否描边 */
+  stroke?: boolean;
+  /** 描边颜色 */
+  strokeColor?: string | number;
+  /** 描边宽度 */
+  strokeThickness?: number;
+  /** 字体样式 */
+  fontFamily?: string;
+  /** 字体粗细 */
+  fontWeight?: TextStyleFontWeight;
+  /** 是否换行 */
+  wordWrap?: boolean;
+  /** 换行宽度 */
+  wordWrapWidth?: number;
+  /** 行高 */
+  lineHeight?: number;
+  /** 对齐方式 */
+  align?: TextStyleAlign;
+  /** 缩进，单位为字数 */
+  indent?: number;
+  /** 阴影-颜色 角度 模糊度 阴影距离 */
+  shadow?: [string, number, number, number];
+}
 ```
 
 ### LibPixiBitText-位图
@@ -166,6 +195,11 @@ this.addChild(text);
 > 自定义位图文本
 
 ```ts
+/**
+* @param fontName 字体名称
+* @param defaultFontSize 默认字体大小
+*/
+
 //所有文字使用同一个字体大小
 const font = new LibPixiBitText("FontName", 16);
 const fontText = font.createText("10");
@@ -184,6 +218,12 @@ this.addChild(fontText2);
 > 自定义容器大小及背景色
 
 ```ts
+/**
+* @param width 容器宽度
+* @param height 容器高度
+* @param bgColor 背景色
+* @param overHidden 是否溢出裁剪
+*/
 const box = new LibPixiJs.Base.LibPixiContainer(100, 100, "#fff", true);
 this.addChild(box);
 ```
@@ -193,12 +233,27 @@ this.addChild(box);
 > 自定义矩形背景色
 
 ```ts
-const rect = new LibPixiRectBgColor({
-  width: 100,
-  height: 100,
-  bgColor: "red",
-});
+const rect = new LibPixiRectBgColor(LibPixiRectBgColorParams);
 this.addChild(rect);
+
+interface LibPixiRectBgColorParams {
+  /** 宽度 */
+  width: number;
+  /** 高度 */
+  height: number;
+  /** 背景颜色 */
+  bgColor?: string | number;
+  /** 透明度 */
+  alpha?: number;
+  /** 圆角半径 */
+  radius?: number | number[];
+  /** 边框宽度 */
+  borderWidth?: number;
+  /** 边框颜色 */
+  borderColor?: string;
+  /** 是否启用变色功能 */
+  enableTint?: boolean;
+}
 ```
 
 ### LibPixiSpine-动画
@@ -233,6 +288,31 @@ this.bgSpine = new LibPixiSpine("spine_buyfree", {
     },
   ],
 });
+
+interface OnUpdateParams {
+  x: number;
+  y: number;
+  rotate: number;
+  scaleX: number;
+  scaleY: number;
+}
+interface LibPixiSpineParams {
+  /** 默认是否可见 */
+  visible?: boolean;
+  /** 挂点列表 */
+  followPointList?: {
+    /** 挂点名称 */
+    boneName: string;
+    /** 跟随的精灵或容器 */
+    follow: Container;
+    /** 是否启用角度 */
+    angleFollow?: boolean;
+    /** 是否启用缩放 */
+    scaleFollow?: boolean;
+    /** 更新回调,不传则接受内置挂点更新 */
+    onUpdate?: (config: OnUpdateParams) => void;
+  }[];
+}
 ```
 
 ### LibPixiParticleMove-粒子容器
@@ -240,19 +320,139 @@ this.bgSpine = new LibPixiSpine("spine_buyfree", {
 > 利用贝塞尔曲线实现粒子移动
 
 ```ts
-const libPixiParticleMove = new LibPixiJs.Base.LibPixiParticleMove({
-  start: { x: 300, y: 600 },
-  control: [
-    { x: 600, y: 500 },
-    { x: 500, y: 100 },
-  ],
-  end: { x: 0, y: 0 },
-  json: PIXI.Assets.get("fly.json"),
-  duration: 1,
-  showControl: true,
-  ease: "power1.in",
-  loop: true,
-});
+  const libParticleMove = new LibPixiJs.Components.Base.LibPixiParticleMove({
+    start: { x: 0, y: window.innerHeight },
+    control: [
+      { x: 1000, y: 750 },
+      { x: 500, y: 250 },
+    ],
+    end: { x: 0, y: 0 },
+    container: PIXI.Assets.get("fly.png"),
+    duration: 1,
+    showControl: true,
+    ease: "power1.in",
+    particleConfig: {
+      frequency: 0.001,
+      blendMode: "add",
+      lifetime: {
+        min: 0.01,
+        max: 1,
+      },
+      alpha: {
+        start: 1,
+        end: 0,
+      },
+      color: {
+        start: "#fff96c",
+        end: "#ff837f",
+      },
+      scale: {
+        start: 2,
+        end: 3,
+      },
+      rotation: {
+        min: 0,
+        max: 360,
+      },
+      rotate: {
+        min: 0,
+        max: 360,
+      },
+      speed: {
+        start: 0,
+        end: 0,
+      },
+    },
+
+    onDestroy: (destroy) => {
+      gsap.to(libParticleMove, {
+        alpha: 0,
+        onComplete: () => {
+          destroy()
+        }
+      })
+    }
+  });
+  app.stage.addChild(libParticleMove);
+
+export interface LibPixiParticleMoveParams {
+  /** 粒子JSON资源 */
+  container: Container;
+  /** 运动时长 */
+  duration: number;
+  /** 粒子开始位置 */
+  start: { x: number; y: number };
+  /** 粒子控制点 */
+  control: { x: number; y: number }[];
+  /** 粒子结束点 */
+  end: { x: number; y: number };
+  /** 运动曲线 */
+  ease?: gsap.EaseString;
+  /** 是否显示控制点，调试使用 */
+  showControl?: boolean;
+  /** 是否循环，调试使用 */
+  loop?: boolean;
+  /** 是否启用粒子容器 */
+  enableParticleContainer?: boolean;
+  /** 粒子配置 */
+  particleConfig: {
+    /** 随机时长 */
+    lifetime: {
+      /** 最小时长 */
+      min: number;
+      /** 最大时长 */
+      max: number;
+    };
+    /** 混合模式 */
+    blendMode?: string;
+    /** 频率，秒/个 */
+    frequency?: number;
+    /** 透明度变化 */
+    alpha?: {
+      /** 开始透明度 */
+      start: number;
+      /** 结束透明度 */
+      end: number;
+    };
+    /** 颜色变化 */
+    color?: {
+      /** 开始颜色 */
+      start: string;
+      /** 结束颜色 */
+      end: string;
+    };
+    /** 随机缩放变化 */
+    scale?: {
+      /** 最小 */
+      start: number;
+      /** 最大 */
+      end: number;
+    };
+    /** 随机偏移角度变化 */
+    rotation?: {
+      /** 最小角度 */
+      min: number;
+      /** 最大角度 */
+      max: number;
+    };
+    /** 随机自身旋转角度变化 */
+    rotate?: {
+      /** 最小角度 */
+      min: number;
+      /** 最大角度 */
+      max: number;
+    };
+    /** 移动速度，像素 */
+    speed?: {
+      /** 开始速度，不能为0，可无限接近0 */
+      start: number;
+      /** 结束速度，开始速度会衰减到结束速度 */
+      end: number;
+    };
+  };
+  /** 头部粒子到达终点后触发，可在此设置隐藏动画，隐藏动画结束后调用 destroy 参数进行销毁 */
+  onDestroy?: (destroy: () => void) => void;
+}
 ```
 
 ## Custom-定制

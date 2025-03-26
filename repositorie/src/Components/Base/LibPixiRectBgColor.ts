@@ -3,15 +3,11 @@ import gsap from "gsap";
 
 export interface LibPixiRectBgColorParams {
   /** 宽度 */
-  width?: number;
+  width: number;
   /** 高度 */
-  height?: number;
+  height: number;
   /** 背景颜色 */
   bgColor?: string | number;
-  /** x轴偏移 */
-  x?: number;
-  /** y轴偏移 */
-  y?: number;
   /** 透明度 */
   alpha?: number;
   /** 圆角半径 */
@@ -45,10 +41,8 @@ export class LibPixiRectBgColor extends Graphics {
     super();
 
     const {
-      x = 0,
-      y = 0,
-      width = 0,
-      height = 0,
+      width,
+      height,
       bgColor = "#fff",
       alpha = 1,
       radius = 0,
@@ -57,8 +51,6 @@ export class LibPixiRectBgColor extends Graphics {
       enableTint = true,
     } = options;
 
-    this.x = x;
-    this.y = y;
     this.bgAlpha = alpha;
     this.radius = radius;
     this.enableTint = enableTint;

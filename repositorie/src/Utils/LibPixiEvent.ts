@@ -37,6 +37,7 @@ export interface LibPixiEventParams {
  * @param eventName 事件名称
  * @param callback 回调函数
  * @returns 停止监听
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiEvent-事件注册
  */
 export const libPixiEvent = (
   v: Container,

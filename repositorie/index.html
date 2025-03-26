@@ -1,79 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>冷弋白的网页</title>
-    <script src="resource/pixi.min.js"></script>
-    <script src="resource/pixi-spine.js"></script>
-    <script src="https://unpkg.com/lyb-pixi-js/lyb-pixi.js"></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        color: #fff;
-      }
 
-      html,
-      body,
-      #app {
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>冷弋白的网页</title>
+  <script src="resource/pixi.min.js"></script>
+  <script src="resource/pixi-spine.js"></script>
+  <script src="../npm/lyb-pixi.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
 
-      #app {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #1a1a1a;
-      }
-    </style>
-  </head>
+    html,
+    body,
+    #app {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
 
-  <body>
-    <!-- JS -->
-    <script type="text/javascript">
-      const app = new PIXI.Application({
-        resizeTo: window,
-        antialias: false,
-        resolution: window.devicePixelRatio || 1,
-        autoDensity: true,
-        powerPreference: "high-performance",
-        premultipliedAlpha: false,
+    #app {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #1a1a1a;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- JS -->
+  <script type="text/javascript">
+    const app = new PIXI.Application({
+      resizeTo: window,
+      antialias: false,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
+      powerPreference: "high-performance",
+      premultipliedAlpha: false,
+    });
+
+    document.body.appendChild(app.view);
+
+    PIXI.Assets.addBundle("gameManifest", {
+      "fly.png": "resource/particle/fly.png",
+      "logo": "resource/spine/Bl_logo.json",
+    });
+    PIXI.Assets.loadBundle("gameManifest").then(() => {
+
+      const libParticleMove = new LibPixiJs.Components.Base.LibPixiParticleMove({
+        start: { x: 0, y: window.innerHeight },
+        control: [
+          { x: 1000, y: 750 },
+          { x: 500, y: 250 },
+        ],
+        end: { x: 0, y: 0 },
+        container: PIXI.Assets.get("fly.png"),
+        duration: 1,
+        showControl: true,
+        ease: "power1.in",
+        particleConfig: {
+          frequency: 0.001,
+          blendMode: "add",
+          lifetime: {
+            min: 0.01,
+            max: 1,
+          },
+          alpha: {
+            start: 1,
+            end: 0,
+          },
+          color: {
+            start: "#fff96c",
+            end: "#ff837f",
+          },
+          scale: {
+            start: 2,
+            end: 3,
+          },
+          rotation: {
+            min: 0,
+            max: 360,
+          },
+          rotate: {
+            min: 0,
+            max: 360,
+          },
+          speed: {
+            start: 0,
+            end: 0,
+          },
+        },
+
+        onDestroy: (destroy) => {
+          destroy()
+        }
       });
+      app.stage.addChild(libParticleMove);
 
-      document.body.appendChild(app.view);
+      const spine = new LibPixiJs.Components.Base.LibPixiSpine(PIXI.Assets.get("logo"));
+      spine.setAnimation("in");
+      spine.addAnimation("idle", true);
+      app.stage.addChild(spine);
+      spine.position.set(window.innerWidth / 2, window.innerHeight / 2);
+      spine.scale.set(0.25);
+    });
+  </script>
+</body>
 
-      PIXI.Assets.addBundle("gameManifest", {
-        "fly.png": "resource/particle/fly.png",
-        "fly.json": "resource/particle/fly.json",
-        "logo": "resource/spine/Bl_logo.json",
-      });
-      PIXI.Assets.loadBundle("gameManifest").then(() => {
-        const libParticleMove = new LibPixiJs.Base.LibPixiParticleMove({
-          start: { x: 300, y: 600 },
-          control: [
-            { x: 600, y: 500 },
-            { x: 500, y: 100 },
-          ],
-          end: { x: 0, y: 0 },
-          json: PIXI.Assets.get("fly.json"),
-          duration: 1,
-          showControl: true,
-          ease: "power1.in",
-          loop: true,
-        });
-        app.stage.addChild(libParticleMove);
-
-        const spine = new LibPixiJs.Base.LibPixiSpine(PIXI.Assets.get("logo"));
-        spine.setAnimation("in");
-        spine.addAnimation("idle", true);
-        app.stage.addChild(spine);
-        spine.position.set(window.innerWidth / 2, window.innerHeight / 2);
-        spine.scale.set(0.25);
-      });
-    </script>
-  </body>
 </html>

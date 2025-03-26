@@ -2,6 +2,7 @@ import { Container, type FederatedPointerEvent } from "pixi.js";
 import gsap from "gsap";
 import { libPixiOverflowHidden } from "../../Utils/LibPixiOverflowHidden";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
+import { LibJsLerp } from 'lyb-js/Math/LibJsLerp';
 
 interface LibPixiSliderParams {
   /** 滑动区域宽度 */
@@ -205,22 +206,18 @@ export class LibPixiSlider extends LibPixiContainer {
     const nextIdx = idx + 1;
     const curItem = this._slideList[idx];
 
-    curItem.alpha = this.lerp(this._depthAlpha, 1, 1 - t);
-    curItem.scale.set(this.lerp(this._depthScale, 1, 1 - t));
+    curItem.alpha = LibJsLerp(this._depthAlpha, 1, 1 - t);
+    curItem.scale.set(LibJsLerp(this._depthScale, 1, 1 - t));
 
     if (nextIdx < this._slideList.length) {
       const nextItem = this._slideList[nextIdx];
-      nextItem.alpha = this.lerp(this._depthAlpha, 1, t);
-      nextItem.scale.set(this.lerp(this._depthScale, 1, t));
+      nextItem.alpha = LibJsLerp(this._depthAlpha, 1, t);
+      nextItem.scale.set(LibJsLerp(this._depthScale, 1, t));
     }
     if (prevIdx >= 0) {
       const prevItem = this._slideList[prevIdx];
-      prevItem.alpha = this.lerp(this._depthAlpha, 1, 1 - t);
-      prevItem.scale.set(this.lerp(this._depthScale, 1, 1 - t));
+      prevItem.alpha = LibJsLerp(this._depthAlpha, 1, 1 - t);
+      prevItem.scale.set(LibJsLerp(this._depthScale, 1, 1 - t));
     }
-  }
-
-  lerp(a1: number, a2: number, t: number) {
-    return a1 * (1 - t) + a2 * t;
   }
 }
