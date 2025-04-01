@@ -1,8 +1,9 @@
 import { Container, type FederatedPointerEvent } from "pixi.js";
 import gsap from "gsap";
+import { LibJsLerp } from "lyb-js/Math/LibJsLerp.js";
 import { libPixiOverflowHidden } from "../../Utils/LibPixiOverflowHidden";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { LibJsLerp } from 'lyb-js/Math/LibJsLerp';
+import { libPixiEvent } from "../../Utils/LibPixiEvent";
 
 interface LibPixiSliderParams {
   /** 滑动区域宽度 */
@@ -11,6 +12,8 @@ interface LibPixiSliderParams {
   height: number;
   /** 滑动页列表 */
   slideList: Container[];
+  /** 是否启用循环滑动 */
+  loop?: boolean;
   /** 是否启用景深 */
   enableDepth?: boolean;
   /** 景深透明度 */
@@ -31,6 +34,8 @@ export class LibPixiSlider extends LibPixiContainer {
   private _slideWidth = 0;
   /** 滑动区域高度 */
   private _slideHeight = 0;
+  /** 是否启用循环 */
+  private _loop = false;
   /** 记录拖动开始时的X坐标 */
   private _startX = 0;
   /** 偏移量 */
@@ -69,6 +74,7 @@ export class LibPixiSlider extends LibPixiContainer {
       height,
       slideList,
       slideCallback,
+      loop = false,
       enableDepth = false,
       depthAlpha = 0.5,
       depthScale = 0.5,
@@ -80,6 +86,7 @@ export class LibPixiSlider extends LibPixiContainer {
     this._slideArea = new Container();
     this._slideWidth = width;
     this._slideHeight = height;
+    this._loop = loop;
     this._slideList = slideList;
     this._enableDepth = enableDepth;
     this._depthAlpha = depthAlpha;
@@ -95,11 +102,7 @@ export class LibPixiSlider extends LibPixiContainer {
     });
     this.addChild(this._slideArea);
 
-    // 监听拖动事件
-    this.eventMode = "static";
-    this.cursor = "pointer";
-
-    this.on("pointerdown", this._onDragStart);
+    libPixiEvent(this, "pointerdown", this._onDragStart.bind(this));
     window.addEventListener("pointermove", this._onDragMove.bind(this));
     window.addEventListener("pointerup", this._onDragEnd.bind(this));
   }
@@ -118,37 +121,34 @@ export class LibPixiSlider extends LibPixiContainer {
    * @param index 索引
    */
   private _slideTo(index: number) {
-    if (index < 0) {
-      // 回弹到第一张
-      gsap.to(this._slideArea, {
-        x: 0,
-        duration: 0.25,
-        onUpdate: () => {
-          this._setDepth();
-        },
-      });
-      this._currentIndex = 0;
-    } else if (index > this._pageNum) {
-      // 回弹到最后一张
-      gsap.to(this._slideArea, {
-        x: -this._pageNum * this._slideWidth,
-        duration: 0.5,
-        onUpdate: () => {
-          this._setDepth();
-        },
-      });
-      this._currentIndex = this._pageNum;
+    let x = 0;
+    if (this._loop) {
+      this._currentIndex =
+        (index + this._slideList.length) % this._slideList.length;
+      x = -this._currentIndex * this._slideWidth;
     } else {
-      // 正常滑动
-      this._currentIndex = index;
-      gsap.to(this._slideArea, {
-        x: -this._currentIndex * this._slideWidth,
-        duration: 0.25,
-        onUpdate: () => {
-          this._setDepth();
-        },
-      });
+      if (index < 0) {
+        // 回弹到第一张
+        x = 0;
+        this._currentIndex = 0;
+      } else if (index > this._pageNum) {
+        // 回弹到最后一张
+        x = -this._pageNum * this._slideWidth;
+        this._currentIndex = this._pageNum;
+      } else {
+        // 正常滑动
+        x = -index * this._slideWidth;
+        this._currentIndex = index;
+      }
     }
+
+    gsap.to(this._slideArea, {
+      x,
+      duration: 0.25,
+      onUpdate: () => {
+        this._setDepth();
+      },
+    });
 
     this.slideCallback(this._currentIndex, this._pageNum);
   }
