@@ -146,8 +146,6 @@ app.stage.addChild(box);
 
 \- [LibPixiPolygonDrawTool-多边形绘制](#LibPixiPolygonDrawTool-多边形绘制)
 
-\- [LibPixiWatchProperty-对象属性监听](#LibPixiWatchProperty-对象属性监听)
-
 ## Base-基础
 
 ### LibPixiText-文本
@@ -1020,20 +1018,3 @@ $bus.on("play", () => {
 ```ts
 new LibPixiPolygonDrawTool(app);
 ```
-
-### LibPixiWatchProperty-对象属性监听
-
-> 内部通过 Ticker 每秒调用10次循环判断被监听的属性是否发生改变，当元素被销毁时自动销毁 Ticker，取决于是否传递了元素
-
-```ts
-LibPixiWatchProperty(
-  gameStore,
-  ["a", "b"],
-  () => {
-    warningContainer.visible = a;
-    useBtn.eventMode = a || b ? "none" : "static";
-  },
-  this
-);
-```
-
