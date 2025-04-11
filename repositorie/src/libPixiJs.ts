@@ -10,7 +10,8 @@ import { LibPixiCloseBtn } from "./Components/Custom/LibPixiCloseBtn";
 import { LibPixiDrawer } from "./Components/Custom/LibPixiDrawer";
 import { LibPixiPerforMon } from "./Components/Custom/LibPixiPerforMon";
 import { LibPixiProgress } from "./Components/Custom/LibPixiProgress";
-import { LibPixiScrollContainer } from "./Components/Custom/LibPixiScrollContainer";
+import { LibPixiScrollContainerX } from "./Components/Custom/LibPixiScrollContainerX";
+import { LibPixiScrollContainerY } from "./Components/Custom/LibPixiScrollContainerY";
 import { LibPixiScrollNum } from "./Components/Custom/LibPixiScrollNum";
 import { LibPixiSlider } from "./Components/Custom/LibPixiSlider";
 import { LibPixiSubAddMinMax } from "./Components/Custom/LibPixiSubAddMinMax";
@@ -87,9 +88,13 @@ export const Components = {
      */
     LibPixiProgress,
     /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
-     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainer-滚动容器
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerX-X轴滚动容器
      */
-    LibPixiScrollContainer,
+    LibPixiScrollContainerX,
+    /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerY-Y轴滚动容器
+     */
+    LibPixiScrollContainerY,
     /** @description 通过鼠标或手指拖动数字列选择数字
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollNum-数字滑动
      */

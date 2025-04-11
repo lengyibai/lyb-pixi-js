@@ -104,7 +104,9 @@ app.stage.addChild(box);
 
 \- [LibPixiProgress-进度条](#LibPixiProgress-进度条)
 
-\- [LibPixiScrollContainer-滚动容器](#LibPixiScrollContainer-滚动容器)
+\- [LibPixiScrollContainerX-X轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
+
+\- [LibPixiScrollContainerY-Y轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
 
 \- [LibPixiScrollNum-数字滑动](#LibPixiScrollNum-数字滑动)
 
@@ -577,13 +579,13 @@ progress.setProgress(0.5); //50% 完成
 app.stage.addChild(progress);
 ```
 
-### LibPixiScrollContainer-滚动容器
+### LibPixiScrollContainerX-X轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
 ```ts
 import { Container } from "pixi.js";
-import { LibPixiScrollContainer } from "./path/to/LibPixiScrollContainer";
+import { LibPixiScrollContainerX } from "./path/to/LibPixiScrollContainerX";
 
 //创建滚动内容容器
 const scrollContent = new Container();
@@ -591,7 +593,38 @@ const scrollContent = new Container();
 //scrollContent.addChild(someOtherPixiElement);
 
 //创建滚动容器实例
-const scrollContainer = new LibPixiScrollContainer({
+const scrollContainer = new LibPixiScrollContainerX({
+  width: 800,
+  height: 600,
+  scrollContent: scrollContent,
+  bottomMargin: 50, //可选：底部内边距
+});
+
+//添加到Pixi.js场景
+app.stage.addChild(scrollContainer);
+
+//设置容器大小
+scrollContainer.setDimensions(800, 600);
+
+//将内容添加到滚动容器
+scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
+```
+
+### LibPixiScrollContainerY-Y轴滚动容器
+
+> 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
+
+```ts
+import { Container } from "pixi.js";
+import { LibPixiScrollContainerY } from "./path/to/LibPixiScrollContainerY";
+
+//创建滚动内容容器
+const scrollContent = new Container();
+//在这里添加滚动内容，例如图片、文本等
+//scrollContent.addChild(someOtherPixiElement);
+
+//创建滚动容器实例
+const scrollContainer = new LibPixiScrollContainerY({
   width: 800,
   height: 600,
   scrollContent: scrollContent,

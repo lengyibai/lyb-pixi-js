@@ -7,7 +7,7 @@ import {
 import { gsap } from "gsap";
 import { LibPixiContainer } from '../Base/LibPixiContainer';
 
-export interface LibPixiScrollContainerParams {
+export interface LibPixiScrollContainerYParams {
   /** 宽度 */
   width: number;
   /** 高度 */
@@ -16,14 +16,12 @@ export interface LibPixiScrollContainerParams {
   scrollContent: Container;
   /** 底部内边距 */
   bottomMargin?: number;
-  /** 滚动方向，vertical | horizontal，默认vertical */
-  direction?: "vertical" | "horizontal";
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainer-滚动容器
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerY-Y轴滚动容器
  */
-export class LibPixiScrollContainer extends LibPixiContainer {
+export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 开始位置 */
   private _startY = 0;
   /** 惯性速度 */
@@ -36,8 +34,6 @@ export class LibPixiScrollContainer extends LibPixiContainer {
   private _scrollSpeed = 200;
   /** 是否处于拖动状态 */
   private _isDragging = false;
-  /** 滚动方向 */
-  private _direction: "vertical" | "horizontal" = "vertical";
 
   /** 滚动容器 */
   public _scrollContent: Container;
@@ -46,12 +42,11 @@ export class LibPixiScrollContainer extends LibPixiContainer {
   /** 滚动的内容 */
   private _content: Container;
 
-  constructor(params: LibPixiScrollContainerParams) {
+  constructor(params: LibPixiScrollContainerYParams) {
     const { width, height, scrollContent, bottomMargin = 50 } = params;
     super(width, height);
 
     this._scrollContent = scrollContent;
-    this._direction = params.direction ?? "vertical";
 
     // 创建内容容器
     this._content = new Container();
@@ -112,10 +107,7 @@ export class LibPixiScrollContainer extends LibPixiContainer {
     if (this._content.height <= this._maskGraphics.height) return;
 
     const position = event.getLocalPosition(this);
-    this._startY =
-      this._direction === "vertical"
-        ? position.y - this._content.y
-        : position.x - this._content.x;
+    this._startY = position.y - this._content.y;
     this._isDragging = true;
     this._velocity = 0;
     this._startTime = Date.now();
@@ -127,15 +119,8 @@ export class LibPixiScrollContainer extends LibPixiContainer {
   private _onDragMove(event: FederatedPointerEvent) {
     if (this._isDragging) {
       const position = event.getLocalPosition(this);
-      const newPosition =
-        this._direction === "vertical"
-          ? position.y - this._startY
-          : position.x - this._startY;
-      if (this._direction === "vertical") {
-        this._content.y = newPosition;
-      } else {
-        this._content.x = newPosition;
-      }
+      const newPosition = position.y - this._startY;
+      this._content.y = newPosition;
     }
   }
 
@@ -159,58 +144,67 @@ export class LibPixiScrollContainer extends LibPixiContainer {
 
   /** @description 滚轮滚动 */
   private _onWheelScroll(event: WheelEvent) {
-    if (this._direction === "vertical") {
-      if (this._content.height <= this._maskGraphics.height) return;
-      let y = this._content.y - event.deltaY * (this._scrollSpeed / 100);
-      y = Math.min(
-        0,
-        Math.max(y, -(this._content.height - this._maskGraphics.height))
-      );
-      gsap.to(this._content, { duration: 0.25, ease: "power1.out", y });
-    } else {
-      if (this._content.width <= this._maskGraphics.width) return;
-      let x = this._content.x - event.deltaY * (this._scrollSpeed / 100);
-      x = Math.min(
-        0,
-        Math.max(x, -(this._content.width - this._maskGraphics.width))
-      );
-      gsap.to(this._content, { duration: 0.25, ease: "power1.out", x });
+    // 如果内容高度小于遮罩高度，则不滚动
+    if (this._content.height <= this._maskGraphics.height) return;
+
+    let y = this._content.y - event.deltaY * (this._scrollSpeed / 100);
+
+    //如果到达顶部，则不滚动
+    if (y > 0) {
+      y = 0;
     }
+    //如果到达底部，则不滚动
+    else if (Math.abs(y) >= this._content.height - this._maskGraphics.height) {
+      y = -(this._content.height - this._maskGraphics.height);
+    }
+
+    gsap.to(this._content, {
+      duration: 0.25,
+      ease: "power1.out",
+      y,
+    });
   }
 
   /** @description 惯性动画 */
   private _applyInertia() {
     gsap.to(this._content, {
+      y: this._content.y + this._velocity * 250,
       duration: 0.5,
       ease: "power1.out",
       onUpdate: this._limitScrollRange.bind(this),
-      ...(this._direction === "vertical"
-        ? { y: this._content.y + this._velocity * 250 }
-        : { x: this._content.x + this._velocity * 250 }),
     });
   }
 
   /** @description 限制滚动范围 */
   private _limitScrollRange() {
-    if (this._direction === "vertical") {
-      if (this._content.y > 0) {
-        gsap.to(this._content, { duration: 0.75, y: 0, ease: "elastic.out" });
-      } else if (
-        Math.abs(this._content.y) >=
-        this._content.height - this._maskGraphics.height
-      ) {
+    //如果内容顶部离开了滚动容器顶部，则归位
+    if (this._content.y > 0) {
+      gsap.to(this._content, {
+        duration: 0.75,
+        y: 0,
+        ease: "elastic.out",
+      });
+    }
+    // 如果滚动距离大于内容高度减去遮罩高度
+    else if (
+      Math.abs(this._content.y) >=
+      this._content.height - this._maskGraphics.height
+    ) {
+      // 如果内容高度大于遮罩高度，则滚动到底部
+      if (this._content.height > this._maskGraphics.height) {
         const y = -(this._content.height - this._maskGraphics.height);
-        gsap.to(this._content, { duration: 0.75, y, ease: "elastic.out" });
+        gsap.to(this._content, {
+          duration: 0.75,
+          y,
+          ease: "elastic.out",
+        });
       }
-    } else {
-      if (this._content.x > 0) {
-        gsap.to(this._content, { duration: 0.75, x: 0, ease: "elastic.out" });
-      } else if (
-        Math.abs(this._content.x) >=
-        this._content.width - this._maskGraphics.width
-      ) {
-        const x = -(this._content.width - this._maskGraphics.width);
-        gsap.to(this._content, { duration: 0.75, x, ease: "elastic.out" });
+      // 否则静止不动
+      else {
+        gsap.to(this._content, {
+          duration: 0.25,
+          y: 0,
+        });
       }
     }
   }
