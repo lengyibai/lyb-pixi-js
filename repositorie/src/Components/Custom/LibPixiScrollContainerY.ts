@@ -9,8 +9,6 @@ export interface LibPixiScrollContainerYParams {
   height: number;
   /** 滚动内容 */
   scrollContent: Container;
-  /** 底部内边距 */
-  bottomMargin?: number;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
