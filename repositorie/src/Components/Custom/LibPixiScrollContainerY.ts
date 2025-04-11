@@ -1,11 +1,6 @@
-import {
-  Container,
-  Graphics,
-  Sprite,
-  type FederatedPointerEvent,
-} from "pixi.js";
+import { Container, Graphics, type FederatedPointerEvent } from "pixi.js";
 import { gsap } from "gsap";
-import { LibPixiContainer } from '../Base/LibPixiContainer';
+import { LibPixiContainer } from "../Base/LibPixiContainer";
 
 export interface LibPixiScrollContainerYParams {
   /** 宽度 */
@@ -43,7 +38,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   private _content: Container;
 
   constructor(params: LibPixiScrollContainerYParams) {
-    const { width, height, scrollContent, bottomMargin = 50 } = params;
+    const { width, height, scrollContent } = params;
     super(width, height);
 
     this._scrollContent = scrollContent;
@@ -52,13 +47,6 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._content = new Container();
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
-
-    // 创建底部占位
-    if (bottomMargin > 0) {
-      const bottom_box = new Sprite();
-      this._content.addChild(bottom_box);
-      bottom_box.y = this._content.height + bottomMargin;
-    }
 
     // 创建遮罩
     this._maskGraphics = new Graphics();

@@ -597,7 +597,6 @@ const scrollContainer = new LibPixiScrollContainerX({
   width: 800,
   height: 600,
   scrollContent: scrollContent,
-  bottomMargin: 50, //可选：底部内边距
 });
 
 //添加到Pixi.js场景
@@ -628,7 +627,6 @@ const scrollContainer = new LibPixiScrollContainerY({
   width: 800,
   height: 600,
   scrollContent: scrollContent,
-  bottomMargin: 50, //可选：底部内边距
 });
 
 //添加到Pixi.js场景

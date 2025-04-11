@@ -1,11 +1,6 @@
-import {
-  Container,
-  Graphics,
-  Sprite,
-  type FederatedPointerEvent,
-} from "pixi.js";
+import { Container, Graphics, type FederatedPointerEvent } from "pixi.js";
 import { gsap } from "gsap";
-import { LibPixiContainer } from '../Base/LibPixiContainer';
+import { LibPixiContainer } from "../Base/LibPixiContainer";
 
 export interface LibPixiScrollContainerXParams {
   /** 宽度 */
@@ -14,8 +9,6 @@ export interface LibPixiScrollContainerXParams {
   height: number;
   /** 滚动内容 */
   scrollContent: Container;
-  /** 底部内边距 */
-  bottomMargin?: number;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
@@ -43,7 +36,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   private _content: Container;
 
   constructor(params: LibPixiScrollContainerXParams) {
-    const { width, height, scrollContent, bottomMargin = 50 } = params;
+    const { width, height, scrollContent } = params;
     super(width, height);
 
     this._scrollContent = scrollContent;
@@ -52,13 +45,6 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     this._content = new Container();
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
-
-    // 创建底部占位
-    if (bottomMargin > 0) {
-      const bottom_box = new Sprite();
-      this._content.addChild(bottom_box);
-      bottom_box.x = this._content.width + bottomMargin;
-    }
 
     // 创建遮罩
     this._maskGraphics = new Graphics();
