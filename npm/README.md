@@ -84,6 +84,8 @@ app.stage.addChild(box);
 
 \- [LibPixiText-文本](#LibPixiText-文本)
 
+\- [LibPixiHtmlText-富文本](#LibPixiHtmlText-富文本)
+
 \- [LibPixiBitText-位图](#LibPixiBitText-位图)
 
 \- [LibPixiContainer-容器](#LibPixiContainer-容器)
@@ -104,9 +106,9 @@ app.stage.addChild(box);
 
 \- [LibPixiProgress-进度条](#LibPixiProgress-进度条)
 
-\- [LibPixiScrollContainerX-X轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
+\- [LibPixiScrollContainerX-X 轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
 
-\- [LibPixiScrollContainerY-Y轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
+\- [LibPixiScrollContainerY-Y 轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
 
 \- [LibPixiScrollNum-数字滑动](#LibPixiScrollNum-数字滑动)
 
@@ -190,15 +192,53 @@ interface LibPixiTextParams {
 }
 ```
 
+### LibPixiHtmlText-富文本
+
+> 自定义富文本类
+
+```ts
+const text = new LibPixiHtmlText(LibPixiTextParams);
+this.addChild(text);
+
+interface LibPixiHtmlTextParams {
+  /** 文本内容 */
+  text: string | number;
+  /**  字体大小 */
+  fontSize?: number;
+  /** 字体颜色 */
+  fontColor?: any;
+  /** 是否描边 */
+  stroke?: boolean;
+  /** 描边颜色 */
+  strokeColor?: string | number;
+  /** 描边宽度 */
+  strokeThickness?: number;
+  /** 字体样式 */
+  fontFamily?: string;
+  /** 字体粗细 */
+  fontWeight?: TextStyleFontWeight;
+  /** 是否换行 */
+  wordWrap?: boolean;
+  /** 换行宽度 */
+  wordWrapWidth?: number;
+  /** 行高 */
+  lineHeight?: number;
+  /** 对齐方式 */
+  align?: TextStyleAlign;
+  /** 阴影-颜色 角度 模糊度 阴影距离 */
+  shadow?: [string, number, number, number];
+}
+```
+
 ### LibPixiBitText-位图
 
 > 自定义位图文本
 
 ```ts
 /**
-* @param fontName 字体名称
-* @param defaultFontSize 默认字体大小
-*/
+ * @param fontName 字体名称
+ * @param defaultFontSize 默认字体大小
+ */
 
 //所有文字使用同一个字体大小
 const font = new LibPixiBitText("FontName", 16);
@@ -219,11 +259,11 @@ this.addChild(fontText2);
 
 ```ts
 /**
-* @param width 容器宽度
-* @param height 容器高度
-* @param bgColor 背景色
-* @param overHidden 是否溢出裁剪
-*/
+ * @param width 容器宽度
+ * @param height 容器高度
+ * @param bgColor 背景色
+ * @param overHidden 是否溢出裁剪
+ */
 const box = new LibPixiJs.Base.LibPixiContainer(100, 100, "#fff", true);
 this.addChild(box);
 ```
@@ -320,60 +360,60 @@ interface LibPixiSpineParams {
 > 利用贝塞尔曲线实现粒子移动
 
 ```ts
-  const libParticleMove = new LibPixiJs.Components.Base.LibPixiParticleMove({
-    start: { x: 0, y: window.innerHeight },
-    control: [
-      { x: 1000, y: 750 },
-      { x: 500, y: 250 },
-    ],
-    end: { x: 0, y: 0 },
-    container: PIXI.Assets.get("fly.png"),
-    duration: 1,
-    showControl: true,
-    ease: "power1.in",
-    particleConfig: {
-      frequency: 0.001,
-      blendMode: "add",
-      lifetime: {
-        min: 0.01,
-        max: 1,
-      },
-      alpha: {
-        start: 1,
-        end: 0,
-      },
-      color: {
-        start: "#fff96c",
-        end: "#ff837f",
-      },
-      scale: {
-        start: 2,
-        end: 3,
-      },
-      rotation: {
-        min: 0,
-        max: 360,
-      },
-      rotate: {
-        min: 0,
-        max: 360,
-      },
-      speed: {
-        start: 0,
-        end: 0,
-      },
+const libParticleMove = new LibPixiJs.Components.Base.LibPixiParticleMove({
+  start: { x: 0, y: window.innerHeight },
+  control: [
+    { x: 1000, y: 750 },
+    { x: 500, y: 250 },
+  ],
+  end: { x: 0, y: 0 },
+  container: PIXI.Assets.get("fly.png"),
+  duration: 1,
+  showControl: true,
+  ease: "power1.in",
+  particleConfig: {
+    frequency: 0.001,
+    blendMode: "add",
+    lifetime: {
+      min: 0.01,
+      max: 1,
     },
+    alpha: {
+      start: 1,
+      end: 0,
+    },
+    color: {
+      start: "#fff96c",
+      end: "#ff837f",
+    },
+    scale: {
+      start: 2,
+      end: 3,
+    },
+    rotation: {
+      min: 0,
+      max: 360,
+    },
+    rotate: {
+      min: 0,
+      max: 360,
+    },
+    speed: {
+      start: 0,
+      end: 0,
+    },
+  },
 
-    onDestroy: (destroy) => {
-      gsap.to(libParticleMove, {
-        alpha: 0,
-        onComplete: () => {
-          destroy()
-        }
-      })
-    }
-  });
-  app.stage.addChild(libParticleMove);
+  onDestroy: (destroy) => {
+    gsap.to(libParticleMove, {
+      alpha: 0,
+      onComplete: () => {
+        destroy();
+      },
+    });
+  },
+});
+app.stage.addChild(libParticleMove);
 
 export interface LibPixiParticleMoveParams {
   /** 粒子JSON资源 */
@@ -579,7 +619,7 @@ progress.setProgress(0.5); //50% 完成
 app.stage.addChild(progress);
 ```
 
-### LibPixiScrollContainerX-X轴滚动容器
+### LibPixiScrollContainerX-X 轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
@@ -609,7 +649,7 @@ scrollContainer.setDimensions(800, 600);
 scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
 ```
 
-### LibPixiScrollContainerY-Y轴滚动容器
+### LibPixiScrollContainerY-Y 轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 

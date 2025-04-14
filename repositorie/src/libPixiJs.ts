@@ -31,6 +31,7 @@ import { libPixiTickerTimeout } from "./Utils/LibPixiTickerTimeout";
 import { LibPixiSlideInput } from "./Utils/LibPixiSlideInput";
 import { LibPixiGlobalUpdater } from "./Utils/LibPixiGlobalUpdater";
 import { LibPixiPolygonDrawTool } from "./Utils/LibPixiPolygonDrawTool";
+import { LibPixiHtmlText } from './Components/Base/LibPixiHtmlText';
 
 /** @description 组件 */
 export const Components = {
@@ -64,6 +65,11 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiText-文本
      */
     LibPixiText,
+
+    /** @description 自定义富文本类
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiHtmlText-自定义富文本类
+     */
+    LibPixiHtmlText,
   },
 
   Custom: {
