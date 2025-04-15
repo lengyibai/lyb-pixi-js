@@ -92,6 +92,12 @@ app.stage.addChild(box);
 
 \- [LibPixiRectBgColor-矩形](#LibPixiRectBgColor-矩形)
 
+\- [LibPixiRectangle-矩形](#LibPixiRectangle-矩形)
+
+\- [LibPixiCircular-圆形](#LibPixiCircular-圆形)
+
+\- [LibPixiPolygon-多边形](#LibPixiPolygon-多边形)
+
 \- [LibPixiSpine-动画](#LibPixiSpine-动画)
 
 \- [LibPixiParticleMove-粒子容器](#LibPixiParticleMove-粒子容器)
@@ -294,6 +300,35 @@ interface LibPixiRectBgColorParams {
   /** 是否启用变色功能 */
   enableTint?: boolean;
 }
+```
+
+### LibPixiRectangle-矩形
+
+> `LibPixiRectBgColor`精简版，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
+
+```ts
+const libPixiRectangle = new LibPixiRectangle(100, 100, "#fff");
+```
+
+### LibPixiPolygon-多边形
+
+> 多边形类，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
+
+```ts
+const polygonVertices = new LibPixiPolygon([
+    0, 0, 604, 0, 596, 32, 616, 30, 611, 62, 644, 57, 643, 87, 697, 82, 702, 102, 724, 86, 744, 83, 753, 91, 756, 83,
+    772, 85, 793, 100, 797, 114, 794, 316, 798, 336, 799, 476, 796, 491, 801, 507, 797, 635, 742, 656, 723, 683, 659,
+    687, 638, 678, 646, 712, 617, 707, 611, 717, 618, 741, 596, 734, 595, 746, 601, 762, 14, 763, 18, 739, -4, 741, 4,
+    712, -5, 705, -28, 711, -22, 686, -34, 679, -47, 686, -195, 686, -189, 667, -192, 647, -195, 506, -192, 499, -194,
+    476, -192, 331, -187, 323, -193, 307, -194, 110, -188, 103, -189, 93, -172, 81, -112, 82, -98, 95, -93, 80, -56,
+    82, -40, 89, -36, 80, -41, 57, -30, 57, -16, 62, -8, 58, -16, 29, 1, 35, 8, 25, 0, 0,
+], "#000");
+```
+
+### LibPixiCircular-圆形
+
+```ts
+const libPixiCircular = new LibPixiCircular(100, "#fff");
 ```
 
 ### LibPixiSpine-动画

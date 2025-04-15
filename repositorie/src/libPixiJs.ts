@@ -31,7 +31,10 @@ import { libPixiTickerTimeout } from "./Utils/LibPixiTickerTimeout";
 import { LibPixiSlideInput } from "./Utils/LibPixiSlideInput";
 import { LibPixiGlobalUpdater } from "./Utils/LibPixiGlobalUpdater";
 import { LibPixiPolygonDrawTool } from "./Utils/LibPixiPolygonDrawTool";
-import { LibPixiHtmlText } from './Components/Base/LibPixiHtmlText';
+import { LibPixiHtmlText } from "./Components/Base/LibPixiHtmlText";
+import { LibPixiRectangle } from "./Components/Base/LibPixiRectangle";
+import { LibPixiPolygon } from "./Components/Base/LibPixiPolygon";
+import { LibPixiCircular } from "./Components/Base/LibPixiCircular";
 
 /** @description 组件 */
 export const Components = {
@@ -55,6 +58,21 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiRectBgColor-矩形
      */
     LibPixiRectBgColor,
+
+    /** @description 矩形类，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiRectangle-矩形
+     */
+    LibPixiRectangle,
+
+    /** @description 圆形
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiCircular-圆形
+     */
+    LibPixiCircular,
+
+    /** @description 多边形类
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPolygon-多边形
+     */
+    LibPixiPolygon,
 
     /** @description 自定义 Spine 动画
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSpine-动画

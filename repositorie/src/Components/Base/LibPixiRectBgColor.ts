@@ -74,7 +74,6 @@ export class LibPixiRectBgColor extends Graphics {
       this.tint = this.bgColor;
     } else {
       this.beginFill(this.bgColor, this.bgAlpha);
-      this.borderWidth && this.lineStyle(this.borderWidth, this.borderColor, 1);
     }
 
     this.borderWidth && this.lineStyle(this.borderWidth, this.borderColor, 1);
