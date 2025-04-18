@@ -1,8 +1,8 @@
 import { Container, FederatedPointerEvent } from "pixi.js";
+import { gsap } from "gsap";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle";
 import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { LibPixiRectangle } from "../Base/LibPixiRectangle";
-import { gsap } from "gsap";
 
 export interface LibPixiScrollContainerYParams {
   /** 宽度 */
@@ -87,13 +87,27 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._scrollbar.x = width - (scrollbarRgiht || scrollbarWidth);
     this.addChild(this._scrollbar);
     this._scrollbar.visible = scrollbar;
-    this._updateScrollbar();
+    this._scrollbar.alpha = 0;
+    this._updateScrollbarSize();
 
+    //是否已经离开滚动条
     libPixiEvent(
       this._scrollbar,
       "pointerdown",
       this._onScrollbarDragStart.bind(this)
     );
+    libPixiEvent(this._scrollbar, "pointerenter", () => {
+      gsap.killTweensOf(this._scrollbar);
+      this._scrollbar.alpha = 1;
+      this._updateScrollbarSize();
+    });
+    libPixiEvent(this._scrollbar, "pointerleave", () => {
+      gsap.to(this._scrollbar, {
+        duration: 0.5,
+        alpha: 0,
+        delay: 1,
+      });
+    });
 
     // 添加事件监听
     this.eventMode = "static";
@@ -101,6 +115,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
     libPixiEvent(this, "pointerdown", (event) => {
       this._onDragStart(event);
+      this._updateScrollbarSize();
     });
     libPixiEvent(this, "pointermove", (event) => {
       this._onScrollbarDragMove(event);
@@ -112,6 +127,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     });
     libPixiEvent(this, "wheel", (event) => {
       this._onWheelScroll(event as unknown as WheelEvent);
+      this._updateScrollbarSize();
     });
     libPixiEvent(this, "pointerupoutside", () => {
       this._onDragEnd();
@@ -129,6 +145,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._maskGraphics.drawRect(0, 0, width, height);
     this._maskGraphics.endFill();
     this.setSize(width, height);
+    this._scrollbar.x = width - 50;
   }
 
   /** @description 返回顶部 */
@@ -161,9 +178,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       const position = event.getLocalPosition(this);
       const newPosition = position.y - this._startY;
       this._content.y = newPosition;
+      this._updateScrollbar();
     }
-
-    this._updateScrollbar();
   }
 
   /** @description 拖动结束 */
@@ -183,6 +199,12 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     }
 
     this._limitScrollRange();
+
+    gsap.to(this._scrollbar, {
+      duration: 0.5,
+      alpha: 0,
+      delay: 0.25,
+    });
   }
 
   /** @description 滚轮滚动 */
@@ -208,6 +230,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       onUpdate: () => {
         this._updateScrollbar();
       },
+      onComplete: () => {
+        this._hideScrollbar();
+      },
     });
   }
 
@@ -220,6 +245,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       onUpdate: () => {
         this._limitScrollRange();
         this._updateScrollbar();
+      },
+      onComplete: () => {
+        this._hideScrollbar();
       },
     });
   }
@@ -234,6 +262,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
         ease: "elastic.out",
         onUpdate: () => {
           this._updateScrollbar();
+        },
+        onComplete: () => {
+          this._hideScrollbar();
         },
       });
     }
@@ -252,6 +283,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
           onUpdate: () => {
             this._updateScrollbar();
           },
+          onComplete: () => {
+            this._hideScrollbar();
+          },
         });
       }
       // 否则静止不动
@@ -262,6 +296,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
           onUpdate: () => {
             this._updateScrollbar();
           },
+          onComplete: () => {
+            this._hideScrollbar();
+          },
         });
       }
     }
@@ -269,15 +306,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
   /** @description 更新滚动位置 */
   private _updateScrollbar() {
+    this._scrollbar.alpha = 1;
+    gsap.killTweensOf(this._scrollbar);
+
     const viewHeight = this._maskGraphics.height;
     const contentHeight = this._content.height;
-
-    if (contentHeight <= viewHeight) {
-      this._scrollbar.alpha = 0;
-      return;
-    }
-
-    this._scrollbar.alpha = 1;
 
     const ratio = viewHeight / contentHeight;
     const barHeight = viewHeight * ratio;
@@ -285,11 +318,21 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     const scrollY = Math.min(Math.max(-this._content.y, 0), maxScrollY);
     const barY = (scrollY / maxScrollY) * (viewHeight - barHeight);
 
+    this._scrollbar.y = barY;
+  }
+
+  /** @description 更新滚动条大小 */
+  private _updateScrollbarSize() {
+    const viewHeight = this._maskGraphics.height;
+    const contentHeight = this._content.height;
+
+    const ratio = viewHeight / contentHeight;
+    const barHeight = viewHeight * ratio;
+
     this._scrollbar.clear();
     this._scrollbar.beginFill(this._scrollbarColor);
     this._scrollbar.drawRect(0, 0, 10, barHeight);
     this._scrollbar.endFill();
-    this._scrollbar.y = barY;
   }
 
   /** @description 滚动条按下 */
@@ -325,5 +368,14 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   private _onScrollbarDragEnd(event: FederatedPointerEvent) {
     event.stopPropagation();
     this._scrollbarDragging = false;
+  }
+
+  /** @description 滚动结束一秒后隐藏滚动条 */
+  private _hideScrollbar() {
+    gsap.to(this._scrollbar, {
+      duration: 0.5,
+      alpha: 0,
+      delay: 0.25,
+    });
   }
 }
