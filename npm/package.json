@@ -1,6 +1,6 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.8.9",
+  "version": "1.8.10",
   "description": "自用Pixi.JS方法库",
   "license": "ISC",
   "exports": {
