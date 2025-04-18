@@ -112,9 +112,9 @@ app.stage.addChild(box);
 
 \- [LibPixiProgress-进度条](#LibPixiProgress-进度条)
 
-\- [LibPixiScrollContainerX-X 轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
+\- [LibPixiScrollContainerX-X 轴滚动容器](#LibPixiScrollContainerX-X 轴滚动容器)
 
-\- [LibPixiScrollContainerY-Y 轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
+\- [LibPixiScrollContainerY-Y 轴滚动容器](#LibPixiScrollContainerY-Y 轴滚动容器)
 
 \- [LibPixiScrollNum-数字滑动](#LibPixiScrollNum-数字滑动)
 
@@ -654,7 +654,7 @@ progress.setProgress(0.5); //50% 完成
 app.stage.addChild(progress);
 ```
 
-### LibPixiScrollContainerX-X轴滚动容器
+### LibPixiScrollContainerX-X 轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
@@ -684,7 +684,7 @@ scrollContainer.setDimensions(800, 600);
 scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
 ```
 
-### LibPixiScrollContainerY-Y轴滚动容器
+### LibPixiScrollContainerY-Y 轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
