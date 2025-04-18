@@ -61,7 +61,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       scrollContent,
       scrollbarRgiht,
       scrollbarWidth = 10,
-      scrollbarColor = "#F8A500",
+      scrollbarColor = "#ffffff",
     } = params;
     super(width, height);
 
