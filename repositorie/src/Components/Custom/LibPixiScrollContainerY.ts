@@ -273,11 +273,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     const contentHeight = this._content.height;
 
     if (contentHeight <= viewHeight) {
-      this._scrollbar.visible = false;
+      this._scrollbar.alpha = 0;
       return;
     }
 
-    this._scrollbar.visible = true;
+    this._scrollbar.alpha = 1;
 
     const ratio = viewHeight / contentHeight;
     const barHeight = viewHeight * ratio;
