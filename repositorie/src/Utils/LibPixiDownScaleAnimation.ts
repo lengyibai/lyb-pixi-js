@@ -1,5 +1,6 @@
 import { Container } from "pixi.js";
 import { libPixiEvent } from "./LibPixiEvent";
+import gsap from "gsap";
 
 /** @description 按下放大
  * @param container 要放大的容器

@@ -1,4 +1,5 @@
 import { libJsNumComma } from "lyb-js/Formatter/LibJsNumComma.js";
+import gsap from "gsap";
 
 export interface LibPixiDigitalIncreasingAnimationParams {
   /** 目标值 */
