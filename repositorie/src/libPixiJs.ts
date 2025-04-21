@@ -35,6 +35,9 @@ import { LibPixiHtmlText } from "./Components/Base/LibPixiHtmlText";
 import { LibPixiRectangle } from "./Components/Base/LibPixiRectangle";
 import { LibPixiPolygon } from "./Components/Base/LibPixiPolygon";
 import { LibPixiCircular } from "./Components/Base/LibPixiCircular";
+import { LibPixiDigitalIncreasingAnimation } from "./Utils/LibPixiDigitalIncreasingAnimation";
+import { LibPixiDownScaleAnimation } from "./Utils/LibPixiDownScaleAnimation";
+import { LibPixiGridLayout } from "./Utils/LibPixiGridLayout";
 
 /** @description 组件 */
 export const Components = {
@@ -230,4 +233,26 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPolygonDrawTool-多边形绘制
    */
   LibPixiPolygonDrawTool,
+
+  /** @description 数值递增动画
+   * @param params 动画参数
+   * @returns 设置为目标值并停止动画
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiDigitalIncreasingAnimation-递增动画
+   */
+  LibPixiDigitalIncreasingAnimation,
+
+  /** @description 按下放大
+   * @param container 要放大的容器
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiDownScaleAnimation-按下放大
+   */
+  LibPixiDownScaleAnimation,
+
+  /**
+   * @description 将元素按照指定的列数和间隔排列成网格布局。
+   * @param items 要排列的元素数组
+   * @param gap 每个元素之间的间隔
+   * @param cols 网格的列数，默认为元素数量
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiGridLayout-网格布局
+   */
+  LibPixiGridLayout,
 };

@@ -156,6 +156,12 @@ app.stage.addChild(box);
 
 \- [LibPixiPolygonDrawTool-多边形绘制](#LibPixiPolygonDrawTool-多边形绘制)
 
+\- [LibPixiDigitalIncreasingAnimation-递增动画](#LibPixiDigitalIncreasingAnimation-递增动画)
+
+\- [LibPixiDownScaleAnimation-按下放大](#LibPixiDownScaleAnimation-按下放大)
+
+\- [LibPixiGridLayout-网格布局](#LibPixiGridLayout-网格布局)
+
 ## Base-基础
 
 ### LibPixiText-文本
@@ -1124,3 +1130,37 @@ $bus.on("play", () => {
 ```ts
 new LibPixiPolygonDrawTool(app);
 ```
+
+### LibPixiDigitalIncreasingAnimation-递增动画
+
+> 数值递增动画
+
+```ts
+const amountAnimation = _digitalIncreasingAnimation({
+  startValue: 0,
+  value: 100,
+  duration: 1,
+  onChange: (v) => {
+    this._winAmountText.text = v;
+  },
+  onComplete: () => {
+  },
+});
+```
+
+### LibPixiDownScaleAnimation-按下放大
+
+> 鼠标按下放大
+
+```ts
+LibPixiDownScaleAnimation(sprite);
+```
+
+### LibPixiGridLayout-网格布局
+
+> 将元素按照指定的列数和间隔排列成网格布局
+
+```ts
+LibPixiGridLayout(cardList, 20, 3); //间隔20，一行三个
+```
+
