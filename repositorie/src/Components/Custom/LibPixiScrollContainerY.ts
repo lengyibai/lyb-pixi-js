@@ -21,7 +21,7 @@ export interface LibPixiScrollContainerYParams {
   scrollbarColor?: string;
 
   /** 滚动触发 */
-  onScroll: (y: number) => void;
+  onScroll?: (y: number) => void;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
@@ -57,7 +57,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   private _scrollbarColor: string;
 
   /** 滚动触发 */
-  private _onScroll: (y: number) => void;
+  private _onScroll?: (y: number) => void;
 
   constructor(params: LibPixiScrollContainerYParams) {
     const {
@@ -327,7 +327,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     const barY = (scrollY / maxScrollY) * (viewHeight - barHeight);
 
     this._scrollbar.y = barY;
-    this._onScroll(this._content.y);
+    this._onScroll?.(this._content.y);
   }
 
   /** @description 更新滚动条大小 */
