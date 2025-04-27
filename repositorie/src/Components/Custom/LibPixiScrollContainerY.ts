@@ -1,8 +1,8 @@
 import { Container, FederatedPointerEvent } from "pixi.js";
 import { gsap } from "gsap";
-import { LibPixiRectangle } from "../Base/LibPixiRectangle";
 import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle";
 
 export interface LibPixiScrollContainerYParams {
   /** 宽度 */
@@ -19,6 +19,9 @@ export interface LibPixiScrollContainerYParams {
   scrollbarWidth?: number;
   /** 滚动条颜色 */
   scrollbarColor?: string;
+
+  /** 滚动触发 */
+  onScroll: (y: number) => void;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
@@ -53,6 +56,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 滚动条颜色 */
   private _scrollbarColor: string;
 
+  /** 滚动触发 */
+  private _onScroll: (y: number) => void;
+
   constructor(params: LibPixiScrollContainerYParams) {
     const {
       width,
@@ -62,11 +68,13 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       scrollbarRgiht,
       scrollbarWidth = 10,
       scrollbarColor = "#ffffff",
+      onScroll,
     } = params;
     super(width, height);
 
     this._scrollContent = scrollContent;
     this._scrollbarColor = scrollbarColor;
+    this._onScroll = onScroll;
 
     // 创建内容容器
     this._content = new Container();
@@ -319,6 +327,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     const barY = (scrollY / maxScrollY) * (viewHeight - barHeight);
 
     this._scrollbar.y = barY;
+    this._onScroll(this._content.y);
   }
 
   /** @description 更新滚动条大小 */
