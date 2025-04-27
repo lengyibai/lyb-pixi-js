@@ -56,7 +56,7 @@ export class LibPixiSpine extends Spine {
     }
 
     super(spineData);
-    this.visible = visible;
+    this.alpha = visible ? 1 : 0;
     this.autoUpdate = false;
 
     //如果存在挂点
@@ -83,12 +83,14 @@ export class LibPixiSpine extends Spine {
    */
   setAnimation(animationName = "animation", loop = false) {
     return new Promise<void>((resolve) => {
-      this.visible = true;
       this.state.setAnimation(0, animationName, loop).listener = {
         complete: () => {
           resolve();
         },
       };
+      setTimeout(() => {
+        this.alpha = 1;
+      });
     });
   }
 
@@ -99,7 +101,6 @@ export class LibPixiSpine extends Spine {
    */
   addAnimation(animationName = "animation", loop = false, delay = 0) {
     return new Promise<void>((resolve) => {
-      this.visible = true;
       this.state.addAnimation(0, animationName, loop, delay).listener = {
         complete: () => {
           resolve();
