@@ -5,9 +5,9 @@ import { Container } from "pixi.js";
  * @param items 要排列的元素数组。
  * @param gap 元素之间的间隔，可以是固定间隔或自定义的间隔数组。
  * @param direction 排列方向，"x"表示水平，"y"表示垂直，默认为水平。
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibArrangeLinear-间隔布局
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiArrangeLinear-间隔布局
  */
-export const LibArrangeLinear = (
+export const LibPixiArrangeLinear = (
   items: Container[],
   gap: number | number[],
   direction: "x" | "y" = "x"

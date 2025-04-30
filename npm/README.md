@@ -164,7 +164,7 @@ app.stage.addChild(box);
 
 \- [LibPixiGridLayout-网格布局](#LibPixiGridLayout-网格布局)
 
-\- [LibArrangeLinear-间隔布局](#LibArrangeLinear-间隔布局)
+\- [LibPixiArrangeLinear-间隔布局](#LibPixiArrangeLinear-间隔布局)
 
 ## Base-基础
 
@@ -1194,11 +1194,11 @@ LibPixiDownScaleAnimation(sprite);
 LibPixiGridLayout(cardList, 20, 3); //间隔20，一行三个
 ```
 
-### LibArrangeLinear-间隔布局
+### LibPixiArrangeLinear-间隔布局
 
 > 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔
 
 ```ts
-LibArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
+LibPixiArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
 ```
 

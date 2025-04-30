@@ -38,7 +38,7 @@ import { LibPixiCircular } from "./Components/Base/LibPixiCircular";
 import { LibPixiDigitalIncreasingAnimation } from "./Utils/LibPixiDigitalIncreasingAnimation";
 import { LibPixiDownScaleAnimation } from "./Utils/LibPixiDownScaleAnimation";
 import { LibPixiGridLayout } from "./Utils/LibPixiGridLayout";
-import { LibArrangeLinear } from "./Utils/LibArrangeLinear";
+import { LibPixiArrangeLinear } from "./Utils/LibPixiArrangeLinear";
 import { LibPixiSlide } from "./Components/Custom/LibPixiSlide";
 
 /** @description 组件 */
@@ -269,7 +269,7 @@ export const Utils = {
    * @param items 要排列的元素数组。
    * @param gap 元素之间的间隔，可以是固定间隔或自定义的间隔数组。
    * @param direction 排列方向，"x"表示水平，"y"表示垂直，默认为水平。
-   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibArrangeLinear-间隔布局
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiArrangeLinear-间隔布局
    */
-  LibArrangeLinear,
+  LibPixiArrangeLinear,
 };
