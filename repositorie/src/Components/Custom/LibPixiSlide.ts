@@ -36,7 +36,7 @@ export interface LibPixiSlideParams {
 }
 
 /** @description 滑动页
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollNum-数字滑动
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSlide-滑动页
  */
 export class LibPixiSlide extends LibPixiContainer {
   /** 滑动加速度触发翻页 */

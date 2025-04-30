@@ -120,6 +120,8 @@ app.stage.addChild(box);
 
 \- [LibPixiSlider-横向滑动图](#LibPixiSlider-横向滑动图)
 
+\- [LibPixiSlide-滑动页](#LibPixiSlide-滑动页)
+
 \- [LibPixiSubAddMinMax-数字控制器](#LibPixiSubAddMinMax-数字控制器)
 
 \- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
@@ -161,6 +163,8 @@ app.stage.addChild(box);
 \- [LibPixiDownScaleAnimation-按下放大](#LibPixiDownScaleAnimation-按下放大)
 
 \- [LibPixiGridLayout-网格布局](#LibPixiGridLayout-网格布局)
+
+\- [LibArrangeLinear-间隔布局](#LibArrangeLinear-间隔布局)
 
 ## Base-基础
 
@@ -787,6 +791,32 @@ slider.prev();
 slider.next();
 ```
 
+### LibPixiSlide-滑动页
+
+> `LibPixiSlider-横向滑动图`和`LibPixiScrollNum-数字滑动`的替代品，支持`X`和`Y`配置，景深
+
+```ts
+const three = new LibPixiSlide({
+  stage: gameMount.gameStage,
+  direction: "y",
+  width: 255,
+  height: 320,
+  pageHeight: 70,
+  content: threeList,
+  itemList: threeTextList,
+
+  scrollCallback: (y, index) => {
+    two.updatePosition(y, index);
+  },
+  depthCallback(container, getValue) {
+    const alpha = getValue(0.4);
+    const scaleY = getValue(0.1);
+    container.alpha = alpha;
+    container.scale.y = scaleY;
+  },
+});
+```
+
 ### LibPixiSubAddMinMax-数字控制器
 
 > 最小、最大按钮和增减按钮功能及置灰逻辑
@@ -1162,5 +1192,13 @@ LibPixiDownScaleAnimation(sprite);
 
 ```ts
 LibPixiGridLayout(cardList, 20, 3); //间隔20，一行三个
+```
+
+### LibArrangeLinear-间隔布局
+
+> 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔
+
+```ts
+LibArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
 ```
 
