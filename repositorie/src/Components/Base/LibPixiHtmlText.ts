@@ -63,7 +63,7 @@ export class LibPixiHtmlText extends HTMLText {
       breakWords: wordWrap,
       fill: fontColor,
       align,
-      whiteSpace: "normal",
+      whiteSpace: "pre-line",
       fontFamily: fontFamily,
       stroke: stroke ? strokeColor : "transparent",
       strokeThickness: stroke ? strokeThickness : 0,

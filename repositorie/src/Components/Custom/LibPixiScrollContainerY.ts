@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent } from "pixi.js";
+import { Container, FederatedPointerEvent, Sprite } from "pixi.js";
 import { gsap } from "gsap";
 import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
@@ -11,6 +11,10 @@ export interface LibPixiScrollContainerYParams {
   height: number;
   /** 滚动内容 */
   scrollContent: Container;
+  /** 底部边距 */
+  bottomMargin?: number;
+  /** 背景色，用于定位 */
+  bgColor?: string;
   /** 是否需要滚动条 */
   scrollbar?: boolean;
   /** 滚动靠右坐标 */
@@ -69,8 +73,10 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       scrollbarWidth = 10,
       scrollbarColor = "#ffffff",
       onScroll,
+      bgColor,
+      bottomMargin = 0,
     } = params;
-    super(width, height);
+    super(width, height, bgColor);
 
     this._scrollContent = scrollContent;
     this._scrollbarColor = scrollbarColor;
@@ -80,6 +86,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._content = new Container();
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
+
+    //创建底部边距
+    const bottomMarginBox = new Sprite();
+    this._content.addChild(bottomMarginBox);
+    bottomMarginBox.height = this._content.height + bottomMargin;
 
     // 创建遮罩
     this._maskGraphics = new LibPixiRectangle(width, height, "#000");

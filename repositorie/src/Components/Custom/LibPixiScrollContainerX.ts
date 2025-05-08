@@ -1,4 +1,9 @@
-import { Container, Graphics, type FederatedPointerEvent } from "pixi.js";
+import {
+  Container,
+  Graphics,
+  Sprite,
+  type FederatedPointerEvent,
+} from "pixi.js";
 import { gsap } from "gsap";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
 
@@ -9,6 +14,10 @@ export interface LibPixiScrollContainerXParams {
   height: number;
   /** 滚动内容 */
   scrollContent: Container;
+  /** 背景色，用于定位 */
+  bgColor?: string;
+  /** 右边距 */
+  rightMargin?: number;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
@@ -36,8 +45,8 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   private _content: Container;
 
   constructor(params: LibPixiScrollContainerXParams) {
-    const { width, height, scrollContent } = params;
-    super(width, height);
+    const { width, height, scrollContent, bgColor, rightMargin = 0 } = params;
+    super(width, height, bgColor);
 
     this._scrollContent = scrollContent;
 
@@ -45,6 +54,11 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     this._content = new Container();
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
+
+    //创建右边距
+    const rightMarginBox = new Sprite();
+    this._content.addChild(rightMarginBox);
+    rightMarginBox.height = this._content.width + rightMargin;
 
     // 创建遮罩
     this._maskGraphics = new Graphics();
