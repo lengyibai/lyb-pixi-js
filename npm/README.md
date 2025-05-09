@@ -193,8 +193,6 @@ interface LibPixiTextParams {
   fontFamily?: string;
   /** 字体粗细 */
   fontWeight?: TextStyleFontWeight;
-  /** 是否换行 */
-  wordWrap?: boolean;
   /** 换行宽度 */
   wordWrapWidth?: number;
   /** 行高 */
@@ -233,8 +231,6 @@ interface LibPixiHtmlTextParams {
   fontFamily?: string;
   /** 字体粗细 */
   fontWeight?: TextStyleFontWeight;
-  /** 是否换行 */
-  wordWrap?: boolean;
   /** 换行宽度 */
   wordWrapWidth?: number;
   /** 行高 */

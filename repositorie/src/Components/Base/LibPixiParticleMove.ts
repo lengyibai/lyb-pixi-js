@@ -202,8 +202,7 @@ export class LibPixiParticleMove extends Container {
         const text = new LibPixiText({
           text: index + 1,
           fontSize: 20,
-          stroke: true,
-          strokeColor: "#000",
+          stroke: "#000",
           strokeThickness: 1,
         });
         text.position.set(item.x, item.y);

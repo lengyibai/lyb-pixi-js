@@ -11,18 +11,14 @@ export interface LibPixiHtmlTextParams {
   fontSize?: number;
   /** 字体颜色 */
   fontColor?: any;
-  /** 是否描边 */
-  stroke?: boolean;
   /** 描边颜色 */
-  strokeColor?: string | number;
+  stroke?: string | number;
   /** 描边宽度 */
   strokeThickness?: number;
   /** 字体样式 */
   fontFamily?: string;
   /** 字体粗细 */
   fontWeight?: TextStyleFontWeight;
-  /** 是否换行 */
-  wordWrap?: boolean;
   /** 换行宽度 */
   wordWrapWidth?: number;
   /** 行高 */
@@ -43,12 +39,10 @@ export class LibPixiHtmlText extends HTMLText {
       fontSize = 36,
       fontColor = 0xffffff,
       stroke,
-      strokeColor,
       strokeThickness,
       fontFamily = "Arial",
       fontWeight = "normal",
-      wordWrap = false,
-      wordWrapWidth = 100,
+      wordWrapWidth,
       lineHeight = 1.25,
       align = "left",
       shadow,
@@ -56,17 +50,17 @@ export class LibPixiHtmlText extends HTMLText {
 
     super(text.toString(), {
       fontSize,
-      wordWrap,
+      wordWrap: !!wordWrapWidth,
       wordWrapWidth,
       fontWeight,
       lineHeight: lineHeight * fontSize,
-      breakWords: wordWrap,
+      breakWords: !!wordWrapWidth,
       fill: fontColor,
       align,
       whiteSpace: "pre-line",
       fontFamily: fontFamily,
-      stroke: stroke ? strokeColor : "transparent",
-      strokeThickness: stroke ? strokeThickness : 0,
+      stroke: stroke ? stroke : "transparent",
+      strokeThickness: strokeThickness ? strokeThickness : 0,
     });
 
     if (shadow) {

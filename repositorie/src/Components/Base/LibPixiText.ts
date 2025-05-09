@@ -1,4 +1,9 @@
-import { Text, TextStyle, type TextStyleAlign, type TextStyleFontWeight } from "pixi.js";
+import {
+  Text,
+  TextStyle,
+  type TextStyleAlign,
+  type TextStyleFontWeight,
+} from "pixi.js";
 
 export interface LibPixiTextParams {
   /** 文本内容 */
@@ -7,18 +12,14 @@ export interface LibPixiTextParams {
   fontSize?: number;
   /** 字体颜色 */
   fontColor?: any;
-  /** 是否描边 */
-  stroke?: boolean;
   /** 描边颜色 */
-  strokeColor?: string | number;
+  stroke?: string | number;
   /** 描边宽度 */
   strokeThickness?: number;
   /** 字体样式 */
   fontFamily?: string;
   /** 字体粗细 */
   fontWeight?: TextStyleFontWeight;
-  /** 是否换行 */
-  wordWrap?: boolean;
   /** 换行宽度 */
   wordWrapWidth?: number;
   /** 行高 */
@@ -41,12 +42,10 @@ export class LibPixiText extends Text {
       fontSize = 36,
       fontColor = 0xffffff,
       stroke,
-      strokeColor,
       strokeThickness,
       fontFamily = "Arial",
       fontWeight = "normal",
-      wordWrap = false,
-      wordWrapWidth = 100,
+      wordWrapWidth,
       lineHeight = 1.25,
       align = "left",
       indent = 0,
@@ -55,16 +54,16 @@ export class LibPixiText extends Text {
 
     const style = new TextStyle({
       fontSize,
-      wordWrap,
+      wordWrap: !!wordWrapWidth,
       wordWrapWidth,
       fontWeight,
       lineHeight: lineHeight * fontSize,
-      breakWords: wordWrap,
+      breakWords: !!wordWrapWidth,
       fill: fontColor,
       align,
       fontFamily: fontFamily,
-      stroke: stroke ? strokeColor : "transparent",
-      strokeThickness: stroke ? strokeThickness : 0,
+      stroke: stroke ? stroke : "transparent",
+      strokeThickness: strokeThickness ? strokeThickness : 0,
       lineJoin: "round",
     });
 
