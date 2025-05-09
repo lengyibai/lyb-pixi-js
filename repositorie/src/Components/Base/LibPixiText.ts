@@ -46,7 +46,7 @@ export class LibPixiText extends Text {
       fontFamily = "Arial",
       fontWeight = "normal",
       wordWrapWidth,
-      lineHeight = 1.25,
+      lineHeight = 1,
       align = "left",
       indent = 0,
       shadow,
