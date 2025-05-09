@@ -3,7 +3,6 @@ import type { LibPixiBaseContainer } from "./ui/LibPixiBaseContainer";
 export { LibPixiBaseContainer } from "./ui/LibPixiBaseContainer";
 export { LibPixiDialog } from "./ui/LibPixiDialog";
 
-
 interface IViewCtor {
   new (...args: any[]): LibPixiBaseContainer;
 }
@@ -16,19 +15,25 @@ export class LibPixiDialogManager {
   private lastOrientation: "h" | "v" = "h";
   /** open时显示的元素的父容器 */
   private _openContainer: Container;
+  /** 是否适配横竖屏 */
+  private _hv = false;
 
-  constructor(parent: Container) {
+  constructor(parent: Container, hv = false) {
     this._openContainer = parent;
-    window.addEventListener("resize", () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const orientation = w > h ? "h" : "v";
+    this._hv = hv;
 
-      if (orientation !== this.lastOrientation) {
-        this.resize?.(window.innerWidth, window.innerHeight);
-        this.lastOrientation = orientation;
-      }
-    });
+    if (hv) {
+      window.addEventListener("resize", () => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const orientation = w > h ? "h" : "v";
+
+        if (orientation !== this.lastOrientation) {
+          this.resize?.(window.innerWidth, window.innerHeight);
+          this.lastOrientation = orientation;
+        }
+      });
+    }
   }
 
   /**
@@ -43,7 +48,13 @@ export class LibPixiDialogManager {
   ): InstanceType<T> {
     const view = new View(...args);
     this._openContainer.addChild(view);
-    view.resize?.(window.innerWidth, window.innerHeight);
+
+    if (this._hv) {
+      view.resize?.(window.innerWidth, window.innerHeight);
+    } else {
+      view.resize?.(1920, 1080);
+    }
+
     this.views[id] = view;
     return view as InstanceType<T>;
   }

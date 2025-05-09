@@ -1,8 +1,8 @@
 import { Container } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
 import { LibPixiRectBgColor } from "../../../Components/Base/LibPixiRectBgColor";
-import { libPixiEvent } from '../../LibPixiEvent';
+import { libPixiEvent } from "../../LibPixiEvent";
+import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
 
 interface Params {
   /** 是否需要显示黑色背景 */
@@ -17,8 +17,6 @@ interface Params {
 export class LibPixiDialog extends LibPixiBaseContainer {
   /** 蒙版UI */
   private maskUI: LibPixiRectBgColor;
-  /** 居中容器 */
-  private centerContainer: Container;
   /** 内容容器 */
   private dialogContainer: Container;
   /** 当前大小 */
@@ -37,9 +35,9 @@ export class LibPixiDialog extends LibPixiBaseContainer {
 
     //蒙版
     this.maskUI = new LibPixiRectBgColor({
-      bgColor: "#000",
       width: 2700,
       height: 1080,
+      bgColor: "#000",
     });
     this.addChild(this.maskUI);
     this.maskUI.alpha = 0;
@@ -53,25 +51,20 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       });
     }
 
-    //居中容器
-    this.centerContainer = new Container();
-    this.addChild(this.centerContainer);
-    this.centerContainer.eventMode = "static";
-
     //弹窗内容容器
     this.dialogContainer = new Container();
+    this.addChild(this.dialogContainer);
+    this.dialogContainer.eventMode = "static";
   }
 
   /** @description 设置弹窗内容 */
   setDialogContent(content: Container) {
     this.dialogContainer.addChild(content);
-    this.centerContainer.addChild(this.dialogContainer);
     const w = this.dialogContainer.width / 2;
     const h = this.dialogContainer.height / 2;
     this.dialogContainer.pivot.set(w, h);
     this.dialogContainer.scale.set(0);
     this.dialogContainer.alpha = 0;
-    // this.dialogContainer.y = -55;
 
     gsap.to(this.maskUI, {
       duration: 0.5,
@@ -89,7 +82,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       if (w > h) {
         this.maskUI.renderBg(2700, 1080);
         this.maskUI.x = -(2700 - 1920) / 2;
-        this.centerContainer.position.set(halfW, halfH);
+        this.dialogContainer.position.set(halfW, halfH);
         this.size = 1;
 
         if (this.dialogContainer.scale.x === this.initialSize) {
@@ -98,7 +91,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       } else {
         this.maskUI.renderBg(1080, 2700);
         this.maskUI.x = 0;
-        this.centerContainer.position.set(halfH, halfW);
+        this.dialogContainer.position.set(halfH, halfW);
         this.size = this.initialSize;
 
         if (this.dialogContainer.scale.x === 1) {
