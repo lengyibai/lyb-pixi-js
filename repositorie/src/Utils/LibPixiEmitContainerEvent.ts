@@ -5,7 +5,7 @@ import { Container } from "pixi.js";
  * @param event 事件名称
  * @param payload 事件携带数据
  */
-export const LibEmitContainerEvent = (
+export const LibPixiEmitContainerEvent = (
   container: Container,
   event: string,
   payload?: any
@@ -13,7 +13,7 @@ export const LibEmitContainerEvent = (
   container.children.forEach((child) => {
     child.emit(event, payload);
     if ("children" in child) {
-      LibEmitContainerEvent(child as Container, event, payload);
+      LibPixiEmitContainerEvent(child as Container, event, payload);
     }
   });
 };

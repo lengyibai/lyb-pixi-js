@@ -166,7 +166,7 @@ app.stage.addChild(box);
 
 \- [LibPixiArrangeLinear-间隔布局](#LibPixiArrangeLinear-间隔布局)
 
-\- [LibEmitContainerEvent-触发后代监听](#LibEmitContainerEvent-触发后代监听)
+\- [LibPixiEmitContainerEvent-触发后代监听](#LibPixiEmitContainerEvent-触发后代监听)
 
 ## Base-基础
 
@@ -1200,11 +1200,11 @@ LibPixiGridLayout(cardList, 20, 3); //间隔20，一行三个
 LibPixiArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
 ```
 
-### LibEmitContainerEvent-触发后代监听
+### LibPixiEmitContainerEvent-触发后代监听
 
 > 递归调用后代的事件发射器
 
 ```ts
-LibEmitContainerEvent(this, "EVENT_NAME", {})
+LibPixiEmitContainerEvent(this, "EVENT_NAME", {})
 ```
 

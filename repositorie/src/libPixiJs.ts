@@ -40,7 +40,7 @@ import { LibPixiDownScaleAnimation } from "./Utils/LibPixiDownScaleAnimation";
 import { LibPixiGridLayout } from "./Utils/LibPixiGridLayout";
 import { LibPixiArrangeLinear } from "./Utils/LibPixiArrangeLinear";
 import { LibPixiSlide } from "./Components/Custom/LibPixiSlide";
-import { LibEmitContainerEvent } from "./Utils/LibEmitContainerEvent";
+import { LibPixiEmitContainerEvent } from "./Utils/LibPixiEmitContainerEvent";
 
 /** @description 组件 */
 export const Components = {
@@ -279,5 +279,5 @@ export const Utils = {
    * @param event 事件名称
    * @param payload 事件携带数据
    */
-  LibEmitContainerEvent,
+  LibPixiEmitContainerEvent,
 };
