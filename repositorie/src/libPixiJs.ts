@@ -40,6 +40,7 @@ import { LibPixiDownScaleAnimation } from "./Utils/LibPixiDownScaleAnimation";
 import { LibPixiGridLayout } from "./Utils/LibPixiGridLayout";
 import { LibPixiArrangeLinear } from "./Utils/LibPixiArrangeLinear";
 import { LibPixiSlide } from "./Components/Custom/LibPixiSlide";
+import { LibEmitContainerEvent } from "./Utils/LibEmitContainerEvent";
 
 /** @description 组件 */
 export const Components = {
@@ -272,4 +273,11 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiArrangeLinear-间隔布局
    */
   LibPixiArrangeLinear,
+
+  /** @description 触发后代监听
+   * @param container 容器
+   * @param event 事件名称
+   * @param payload 事件携带数据
+   */
+  LibEmitContainerEvent,
 };
