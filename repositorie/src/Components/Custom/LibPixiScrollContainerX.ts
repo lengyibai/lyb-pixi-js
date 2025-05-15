@@ -58,7 +58,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     //创建右边距
     const rightMarginBox = new Sprite();
     this._content.addChild(rightMarginBox);
-    rightMarginBox.height = this._content.width + rightMargin;
+    rightMarginBox.width = this._content.width + rightMargin;
 
     // 创建遮罩
     this._maskGraphics = new Graphics();
