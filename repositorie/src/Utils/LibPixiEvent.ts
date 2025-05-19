@@ -1,12 +1,8 @@
-import type {
-  Container,
-  DisplayObjectEvents,
-  FederatedPointerEvent,
-} from "pixi.js";
+import type { Container, DisplayObjectEvents, FederatedPointerEvent } from "pixi.js";
 
 const debounceImmediate = <T extends (...args: any[]) => void>(
   func: T,
-  wait: number
+  wait: number,
 ): ((...args: Parameters<T>) => void) => {
   let timer: ReturnType<typeof setTimeout> | null = null;
   let invoked = false;
@@ -30,6 +26,8 @@ export interface LibPixiEventParams {
   debounce?: boolean;
   /** 防抖时长 */
   debounceTime?: number;
+  /** 是否阻止拖动点击 */
+  preventDragClick?: boolean;
 }
 
 /** @description 事件注册
@@ -43,13 +41,25 @@ export const libPixiEvent = (
   v: Container,
   eventName: keyof DisplayObjectEvents,
   callback: (event: FederatedPointerEvent) => void,
-  params: LibPixiEventParams = {}
+  params: LibPixiEventParams = {},
 ) => {
-  const { once = false, debounce = false, debounceTime = 1000 } = params;
+  const { once = false, debounce = false, debounceTime = 1000, preventDragClick = false } = params;
   v.cursor = "pointer";
   v.eventMode = "static";
 
+  let isDragging = false;
+  if (preventDragClick) {
+    v.on("pointerdown", () => {
+      isDragging = false;
+    });
+    v.on("pointermove", () => {
+      isDragging = true;
+      console.log(555);
+    });
+  }
+
   const fn = (e: FederatedPointerEvent) => {
+    if (isDragging && eventName === "pointertap") return;
     if (e.button === 2) return;
     callback(e);
   };
