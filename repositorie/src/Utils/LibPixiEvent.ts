@@ -54,7 +54,6 @@ export const libPixiEvent = (
     });
     v.on("pointermove", () => {
       isDragging = true;
-      console.log(555);
     });
   }
 
