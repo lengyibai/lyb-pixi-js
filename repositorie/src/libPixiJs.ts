@@ -41,6 +41,7 @@ import { LibPixiGridLayout } from "./Utils/LibPixiGridLayout";
 import { LibPixiArrangeLinear } from "./Utils/LibPixiArrangeLinear";
 import { LibPixiSlide } from "./Components/Custom/LibPixiSlide";
 import { LibPixiEmitContainerEvent } from "./Utils/LibPixiEmitContainerEvent";
+import { LibPixiLabelValue } from "./Components/Custom/LibPixiLabelValue";
 
 /** @description 组件 */
 export const Components = {
@@ -143,10 +144,16 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSubAddMinMax-数字控制器
      */
     LibPixiSubAddMinMax,
+
     /** @description 绘制表格并填充数字
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiTable-数字表格
      */
     LibPixiTable,
+
+    /** @description 自适应宽度的标签和值组件
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiLabelValue-标签值
+     */
+    LibPixiLabelValue,
   },
 };
 

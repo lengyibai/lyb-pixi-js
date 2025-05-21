@@ -112,9 +112,9 @@ app.stage.addChild(box);
 
 \- [LibPixiProgress-进度条](#LibPixiProgress-进度条)
 
-\- [LibPixiScrollContainerX-X 轴滚动容器](#LibPixiScrollContainerX-X 轴滚动容器)
+\- [LibPixiScrollContainerX-X轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
 
-\- [LibPixiScrollContainerY-Y 轴滚动容器](#LibPixiScrollContainerY-Y 轴滚动容器)
+\- [LibPixiScrollContainerY-Y轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
 
 \- [LibPixiScrollNum-数字滑动](#LibPixiScrollNum-数字滑动)
 
@@ -126,7 +126,7 @@ app.stage.addChild(box);
 
 \- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
 
-\- [LibPixiParticleMove-粒子移动特效](#LibPixiParticleMove-粒子移动特效)
+\- [LibPixiLabelValue-标签值](#LibPixiLabelValue-标签值)
 
 ### 方法
 
@@ -662,7 +662,7 @@ progress.setProgress(0.5); //50% 完成
 app.stage.addChild(progress);
 ```
 
-### LibPixiScrollContainerX-X 轴滚动容器
+### LibPixiScrollContainerX-X轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
@@ -692,7 +692,7 @@ scrollContainer.setDimensions(800, 600);
 scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
 ```
 
-### LibPixiScrollContainerY-Y 轴滚动容器
+### LibPixiScrollContainerY-Y轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
@@ -879,6 +879,37 @@ const table = new LibPixiTable({
 
 //将表格添加到舞台
 stage.addChild(table);
+```
+
+### LibPixiLabelValue-标签值
+
+> 适用于左边图标右边动态数值锚点在容器正中间的场景
+
+```ts
+//单位
+const unit = new LibPixiText({
+  text: "Rp",
+  fontSize: 40,
+  fontColor: "#fff551",
+  strokeThickness: 4,
+  stroke: "#cc5114",
+});
+
+//金额
+const amount = new LibPixiText({
+  text: value,
+  fontSize: 40,
+  fontColor: "#fff551",
+  strokeThickness: 4,
+  stroke: "#cc5114",
+});
+
+//容器
+const amountContainer = new LibLabelValue({
+  label: unit,
+  value: amount,
+  gap: 10,
+});
 ```
 
 ## Utils-工具方法
