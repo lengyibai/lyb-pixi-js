@@ -42,6 +42,7 @@ import { LibPixiArrangeLinear } from "./Utils/LibPixiArrangeLinear";
 import { LibPixiSlide } from "./Components/Custom/LibPixiSlide";
 import { LibPixiEmitContainerEvent } from "./Utils/LibPixiEmitContainerEvent";
 import { LibPixiLabelValue } from "./Components/Custom/LibPixiLabelValue";
+import { LibPixiPuzzleBg } from "./Components/Custom/LibPixiPuzzleBg";
 
 /** @description 组件 */
 export const Components = {
@@ -154,6 +155,11 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiLabelValue-标签值
      */
     LibPixiLabelValue,
+
+    /** @description 设计图背景拼接
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPuzzleBg-设计图背景拼接
+     */
+    LibPixiPuzzleBg,
   },
 };
 

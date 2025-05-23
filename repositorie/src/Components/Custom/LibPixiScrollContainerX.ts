@@ -21,7 +21,7 @@ export interface LibPixiScrollContainerXParams {
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerX-X 轴滚动容器
+ * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerX-X轴滚动容器
  */
 export class LibPixiScrollContainerX extends LibPixiContainer {
   /** 开始位置 */
