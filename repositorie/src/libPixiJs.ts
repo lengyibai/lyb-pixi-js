@@ -43,6 +43,9 @@ import { LibPixiSlide } from "./Components/Custom/LibPixiSlide";
 import { LibPixiEmitContainerEvent } from "./Utils/LibPixiEmitContainerEvent";
 import { LibPixiLabelValue } from "./Components/Custom/LibPixiLabelValue";
 import { LibPixiPuzzleBg } from "./Components/Custom/LibPixiPuzzleBg";
+import { libContainerCenter } from "./Utils/LibContainerCenter";
+import { libPixiHVCenter } from "./Utils/LibPixiHVCenter";
+import { libPixiHVGap } from "./Utils/LibPixiHVGap";
 
 /** @description 组件 */
 export const Components = {
@@ -293,4 +296,22 @@ export const Utils = {
    * @param payload 事件携带数据
    */
   LibPixiEmitContainerEvent,
+
+  /** @description 当前容器在父容器居中 */
+  libContainerCenter,
+
+  /** @description 列表居中
+   * @param parent 父容器
+   * @param items 子元素数组
+   * @param direction 方向数组，"x"表示水平，"y"表示垂直
+   */
+  libPixiHVCenter,
+
+  /**
+   * @description 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔。
+   * @param items 要排列的元素数组。
+   * @param gap 元素之间的间隔，可以是固定间隔或自定义的间隔数组。
+   * @param direction 排列方向，"x"表示水平，"y"表示垂直，默认为水平。
+   */
+  libPixiHVGap,
 };
