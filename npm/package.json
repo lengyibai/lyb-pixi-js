@@ -1,6 +1,6 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "自用Pixi.JS方法库",
   "license": "ISC",
   "exports": {
@@ -22,22 +22,5 @@
     "lengyibai",
     "lyb",
     "lyb-pixi-js"
-  ],
-  "devDependencies": {
-    "@types/howler": "^2.2.12"
-  },
-  "dependencies": {
-    "@pixi-spine/runtime-3.8": "^4.0.3",
-    "@pixi/filter-drop-shadow": "^5.2.0",
-    "@pixi/particle-emitter": "^5.0.8",
-    "@pixi/sound": "^5.2.3",
-    "dayjs": "^1.11.13",
-    "decimal.js": "^10.4.3",
-    "gsap": "^3.12.5",
-    "howler": "^2.2.4",
-    "lyb-js": "^1.4.1",
-    "pixi-spine": "^4.0.4",
-    "pixi.js": "^7.4.2",
-    "vite": "^4.5.5"
-  }
+  ]
 }

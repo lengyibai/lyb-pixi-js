@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { LibPixiRectBgColor } from "../../../Components/Base/LibPixiRectBgColor";
 import { libPixiEvent } from "../../LibPixiEvent";
 import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
+import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher";
 
 interface Params {
   /** 是否需要显示黑色背景 */
@@ -32,6 +33,9 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   /** 是否处于关闭动画状态 */
   private _isCloseAnimating = false;
 
+  /** 停止监听窗口 */
+  private _offResize: () => void;
+
   constructor(params?: Params) {
     super();
 
@@ -54,6 +58,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       libPixiEvent(this._maskUI, "pointertap", () => {
         if (this._isCloseAnimating) return;
         onClickMask?.();
+        this._offResize();
       });
     }
 
@@ -61,27 +66,9 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     this._dialogContainer = new Container();
     this.addChild(this._dialogContainer);
     this._dialogContainer.eventMode = "static";
-  }
 
-  /** @description 设置弹窗内容 */
-  setDialogContent(content: Container) {
-    this._dialogContainer.addChild(content);
-    const w = this._dialogContainer.width / 2;
-    const h = this._dialogContainer.height / 2;
-    this._dialogContainer.pivot.set(w, h);
-    this._dialogContainer.scale.set(0);
-    this._dialogContainer.alpha = 0;
-
-    gsap.to(this._maskUI, {
-      duration: LibPixiDialog.durationIn,
-      alpha: LibPixiDialog.bgAlpha,
-    });
-    gsap.to(this._dialogContainer, {
-      duration: LibPixiDialog.durationIn,
-      alpha: 1,
-    });
-
-    this._onResize((w, h) => {
+    const resize = new LibJsResizeWatcher();
+    this._offResize = resize.on((w, h) => {
       const halfW = 1920 / 2;
       const halfH = 1080 / 2;
 
@@ -114,9 +101,29 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     });
   }
 
+  /** @description 设置弹窗内容 */
+  setDialogContent(content: Container) {
+    this._dialogContainer.addChild(content);
+    const w = this._dialogContainer.width / 2;
+    const h = this._dialogContainer.height / 2;
+    this._dialogContainer.pivot.set(w, h);
+    this._dialogContainer.scale.set(0);
+    this._dialogContainer.alpha = 0;
+
+    gsap.to(this._maskUI, {
+      duration: LibPixiDialog.durationIn,
+      alpha: LibPixiDialog.bgAlpha,
+    });
+    gsap.to(this._dialogContainer, {
+      duration: LibPixiDialog.durationIn,
+      alpha: 1,
+    });
+  }
+
   /** @description 关闭 */
   async close() {
     if (this._isCloseAnimating) return;
+    this._offResize();
     this._isCloseAnimating = true;
     gsap.to(this._dialogContainer.scale, {
       duration: LibPixiDialog.durationOut,

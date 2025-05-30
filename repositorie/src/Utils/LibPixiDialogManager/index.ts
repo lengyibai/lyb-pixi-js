@@ -11,29 +11,11 @@ interface IViewCtor {
 export class LibPixiDialogManager {
   /** 视图表 */
   private views: Record<string, LibPixiBaseContainer> = {};
-  /** 上一次方向 */
-  private lastOrientation: "h" | "v" = "h";
   /** open时显示的元素的父容器 */
   private _openContainer: Container;
-  /** 是否适配横竖屏 */
-  private _hv = false;
 
-  constructor(parent: Container, hv = false) {
+  constructor(parent: Container) {
     this._openContainer = parent;
-    this._hv = hv;
-
-    if (hv) {
-      window.addEventListener("resize", () => {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const orientation = w > h ? "h" : "v";
-
-        if (orientation !== this.lastOrientation) {
-          this.resize?.(window.innerWidth, window.innerHeight);
-          this.lastOrientation = orientation;
-        }
-      });
-    }
   }
 
   /**
@@ -49,12 +31,6 @@ export class LibPixiDialogManager {
     const view = new View(...args);
     this._openContainer.addChild(view);
 
-    if (this._hv) {
-      view.resize?.(window.innerWidth, window.innerHeight);
-    } else {
-      view.resize?.(1920, 1080);
-    }
-
     this.views[id] = view;
     return view as InstanceType<T>;
   }
@@ -62,28 +38,11 @@ export class LibPixiDialogManager {
   /** @description 关闭页面，会调用页面的 onBeforeUnmount 事件，里面会做关闭动画，动画结束后会自动销毁
    * @param id 页面名称
    */
-  close(id: string) {
+  async close(id: string) {
     const view = this.views[id];
     if (view) {
-      if (view.beforeUnmount) {
-        view.beforeUnmount(() => {
-          requestAnimationFrame(() => {
-            view.destroy({ children: true });
-          });
-        });
-      } else {
-        requestAnimationFrame(() => {
-          view.destroy({ children: true });
-        });
-      }
-
+      await view.destroy?.();
       delete this.views[id];
     }
-  }
-
-  private resize(w: number, h: number) {
-    Object.values(this.views).forEach((view) => {
-      view.resize?.(w, h);
-    });
   }
 }
