@@ -1,7 +1,7 @@
 import { Container, FederatedPointerEvent, Graphics } from "pixi.js";
 import gsap from "gsap";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
 import { libPixiEvent } from "../../Utils/LibPixiEvent";
+import { LibPixiContainer } from "../Base/LibPixiContainer";
 
 export interface LibPixiSlideParams {
   /** 舞台 */
@@ -39,6 +39,9 @@ export interface LibPixiSlideParams {
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSlide-滑动页
  */
 export class LibPixiSlide extends LibPixiContainer {
+  /** 舞台 */
+  private _stage: Container;
+
   /** 滑动加速度触发翻页 */
   private _SPEED_THRESHOLD = 0.35;
   /** 滑动比例翻页 */
@@ -103,6 +106,8 @@ export class LibPixiSlide extends LibPixiContainer {
     } = params;
     super(width, height);
 
+    this._stage = stage;
+
     const mask = new Graphics();
     mask.beginFill(0xffffff);
     mask.drawRect(0, 0, this.width, this.height);
@@ -137,7 +142,7 @@ export class LibPixiSlide extends LibPixiContainer {
     this._setDepth();
     libPixiEvent(this, "pointerdown", this._onDragStart.bind(this));
     libPixiEvent(stage, "pointermove", this._onDragMove.bind(this));
-    window.addEventListener("pointerup", this._onDragEnd.bind(this));
+    libPixiEvent(stage, "pointerup", this._onDragEnd.bind(this));
   }
 
   /** @description 更新坐标 */
@@ -260,15 +265,17 @@ export class LibPixiSlide extends LibPixiContainer {
 
   /** @description 开始拖动 */
   private _onDragStart(event: FederatedPointerEvent) {
+    const { x, y } = this._stage.toLocal(event.global);
+
     this._isDragging = true;
     gsap.killTweensOf(this._slideArea);
     this._startTime = new Date().getTime();
 
     if (this._direction === "x") {
-      this._startX = event.global.x;
+      this._startX = x;
       this._offsetX = this._slideArea.x;
     } else {
-      this._startY = event.global.y;
+      this._startY = y;
       this._offsetY = this._slideArea.y;
     }
   }
@@ -276,12 +283,13 @@ export class LibPixiSlide extends LibPixiContainer {
   /** @description 拖动中 */
   private _onDragMove(event: FederatedPointerEvent) {
     if (!this._isDragging) return;
+    const { x, y } = this._stage.toLocal(event.global);
 
     if (this._direction === "x") {
-      const moveX = event.pageX - this._startX;
+      const moveX = x - this._startX;
       this._slideArea.x = this._offsetX + moveX;
     } else {
-      const moveY = event.pageY - this._startY;
+      const moveY = y - this._startY;
       this._slideArea.y = this._offsetY + moveY;
     }
 
@@ -300,7 +308,9 @@ export class LibPixiSlide extends LibPixiContainer {
   }
 
   /** @description 结束拖动 */
-  private _onDragEnd(event: PointerEvent) {
+  private _onDragEnd(event: FederatedPointerEvent) {
+    const { x, y } = this._stage.toLocal(event.global);
+
     if (this._direction === "x") {
       if (!this._isDragging) return;
       this._isDragging = false;
@@ -308,7 +318,7 @@ export class LibPixiSlide extends LibPixiContainer {
       //滑动耗时
       const slideTime = new Date().getTime() - this._startTime;
       //滑动距离
-      const slide = this._startX - event.pageX;
+      const slide = this._startX - x;
       //滑动速度
       const slideSpeed = Math.abs(slide) / slideTime;
       //要滑动的页数
@@ -337,7 +347,7 @@ export class LibPixiSlide extends LibPixiContainer {
       //滑动耗时
       const slideTime = new Date().getTime() - this._startTime;
       //滑动距离
-      const slide = this._startY - event.pageY;
+      const slide = this._startY - y;
       //滑动速度
       const slideSpeed = Math.abs(slide) / slideTime;
       //要滑动的页数
