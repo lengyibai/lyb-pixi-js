@@ -47,13 +47,19 @@ export const libPixiEvent = (
   v.cursor = "pointer";
   v.eventMode = "static";
 
+  let lastX = 0;
+  let lastY = 0;
   let isDragging = false;
   if (preventDragClick) {
-    v.on("pointerdown", () => {
+    v.on("pointerdown", (e) => {
       isDragging = false;
+      lastX = e.globalX;
+      lastY = e.globalY;
     });
-    v.on("pointermove", () => {
-      isDragging = true;
+    v.on("pointermove", (e) => {
+      if (e.globalX !== lastX || e.globalY !== lastY) {
+        isDragging = true;
+      }
     });
   }
 
