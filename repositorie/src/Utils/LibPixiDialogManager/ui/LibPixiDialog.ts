@@ -22,7 +22,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   static durationIn = 0.5;
   static durationOut = 0.5;
   /** 是否支持横竖版 */
-  static adaptation = true;
+  static adaptation: "hv" | "h" | "v" = "hv";
 
   /** 蒙版UI */
   private _maskUI: LibPixiRectBgColor;
@@ -88,9 +88,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       alpha: 1,
     });
 
-    const resize = new LibJsResizeWatcher(
-      LibPixiDialog.adaptation ? "hv" : "h"
-    );
+    const resize = new LibJsResizeWatcher(LibPixiDialog.adaptation);
     this._offResize = resize.on((w, h) => {
       const halfW = 1920 / 2;
       const halfH = 1080 / 2;
