@@ -46,6 +46,7 @@ import { LibPixiPuzzleBg } from "./Components/Custom/LibPixiPuzzleBg";
 import { libContainerCenter } from "./Utils/LibContainerCenter";
 import { libPixiHVCenter } from "./Utils/LibPixiHVCenter";
 import { libPixiHVGap } from "./Utils/LibPixiHVGap";
+import { LibDestroyContainer } from "./Components/Base/LibDestroyContainer";
 
 /** @description 组件 */
 export const Components = {
@@ -99,6 +100,9 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiHtmlText-自定义富文本类
      */
     LibPixiHtmlText,
+
+    /** @description 带销毁的容器 */
+    LibDestroyContainer,
   },
 
   Custom: {
