@@ -36,6 +36,9 @@ export interface LibPixiTextParams {
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiText-文本
  */
 export class LibPixiText extends Text {
+  /** 字体 */
+  static fontFamily: string;
+
   constructor(options: LibPixiTextParams) {
     const {
       text,
@@ -61,7 +64,7 @@ export class LibPixiText extends Text {
       breakWords: !!wordWrapWidth,
       fill: fontColor,
       align,
-      fontFamily: fontFamily,
+      fontFamily: LibPixiText.fontFamily || fontFamily,
       stroke: stroke ? stroke : "transparent",
       strokeThickness: strokeThickness ? strokeThickness : 0,
       lineJoin: "round",
