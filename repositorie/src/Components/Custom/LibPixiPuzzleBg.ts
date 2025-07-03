@@ -23,7 +23,8 @@ export class LibPixiPuzzleBg extends Container {
 
     //监听鼠标空格事件
     document.addEventListener("keydown", (e) => {
-      if (e.code === "Space") {
+      if (e.ctrlKey && e.key.toLowerCase() === "q" && !e.shiftKey) {
+        e.preventDefault();
         bg.visible = !bg.visible;
       } else if (e.code === "ArrowUp") {
         bg.y -= 2;
@@ -41,7 +42,10 @@ export class LibPixiPuzzleBg extends Container {
         bg.alpha = libJsDecimal(bg.alpha, 0.1, "-");
       }
 
-      localStorage.setItem("puzzle_bg_config", JSON.stringify({ alpha: bg.alpha, x: bg.x, y: bg.y }));
+      localStorage.setItem(
+        "puzzle_bg_config",
+        JSON.stringify({ alpha: bg.alpha, x: bg.x, y: bg.y })
+      );
     });
   }
 }

@@ -47,6 +47,7 @@ import { libContainerCenter } from "./Utils/LibContainerCenter";
 import { libPixiHVCenter } from "./Utils/LibPixiHVCenter";
 import { libPixiHVGap } from "./Utils/LibPixiHVGap";
 import { LibDestroyContainer } from "./Components/Base/LibDestroyContainer";
+import { LibPixiDragLocate } from "./Components/Custom/LibPixiDragLocate";
 
 /** @description 组件 */
 export const Components = {
@@ -163,10 +164,11 @@ export const Components = {
      */
     LibPixiLabelValue,
 
-    /** @description 设计图背景拼接
-     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPuzzleBg-设计图背景拼接
-     */
+    /** @description 设计图背景拼接 */
     LibPixiPuzzleBg,
+
+    /** @description 元素拖拽定位 */
+    LibPixiDragLocate,
   },
 };
 
