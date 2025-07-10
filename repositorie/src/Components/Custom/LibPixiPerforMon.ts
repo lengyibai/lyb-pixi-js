@@ -12,6 +12,9 @@ import { LibPixiText } from "../Base/LibPixiText";
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPerforMon-性能监视器
  */
 export class LibPixiPerforMon extends Container {
+  /** 当前适配模式 */
+  static ADAPT_MODE: "h" | "v" | "hv" = "hv";
+
   /** 数据收集时间间隔 (5秒) */
   private readonly COLLECT_TIME = 5 * 1000;
   /** 当前时间 */
@@ -165,10 +168,16 @@ export class LibPixiPerforMon extends Container {
   }
 
   private _resize(w: number, h: number) {
-    if (w > h) {
+    if (LibPixiPerforMon.ADAPT_MODE === "h") {
       this.x = 1920 / 2;
-    } else {
+    } else if (LibPixiPerforMon.ADAPT_MODE === "v") {
       this.x = 1080 / 2;
+    } else {
+      if (w > h) {
+        this.x = 1920 / 2;
+      } else {
+        this.x = 1080 / 2;
+      }
     }
   }
 }
