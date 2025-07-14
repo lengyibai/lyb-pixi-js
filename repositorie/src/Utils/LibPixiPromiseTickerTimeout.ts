@@ -5,22 +5,20 @@ import { Ticker } from "pixi.js";
  * @param callback 延迟后执行的函数
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPromiseTickerTimeout-TickerPromise定时器
  */
-export const libPixiPromiseTickerTimeout = (
-  delay = 1,
-  callback?: () => void
-) => {
+export const libPixiPromiseTickerTimeout = (delay = 1, callback?: () => void) => {
   return new Promise<void>((resolve) => {
     let elapsedTime = 0;
-    const ticker = new Ticker();
+    const ticker = Ticker.shared;
 
     const tickerCallback = () => {
       elapsedTime += ticker.deltaMS;
       if (elapsedTime >= delay) {
         callback?.();
-        ticker.destroy();
+        ticker.remove(tickerCallback);
         resolve();
       }
     };
+
     ticker.add(tickerCallback);
     ticker.start();
   });

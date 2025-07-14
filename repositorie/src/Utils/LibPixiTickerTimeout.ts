@@ -7,22 +7,20 @@ import { Ticker } from "pixi.js";
  */
 export const libPixiTickerTimeout = (callback: () => void, delay = 1) => {
   let elapsedTime = 0;
-  const ticker = new Ticker();
+  const ticker = Ticker.shared;
+
   const tickerCallback = () => {
     elapsedTime += ticker.deltaMS;
     if (elapsedTime >= delay) {
       callback?.();
-      try {
-        ticker.destroy();
-      } catch (error) {}
+      ticker.remove(tickerCallback);
     }
   };
+
   ticker.add(tickerCallback);
   ticker.start();
 
   return () => {
-    try {
-      ticker.destroy();
-    } catch (error) {}
+    ticker.remove(tickerCallback);
   };
 };
