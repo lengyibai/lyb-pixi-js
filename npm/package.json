@@ -1,6 +1,6 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.11.5",
+  "version": "1.11.24",
   "description": "自用Pixi.JS方法库",
   "license": "ISC",
   "exports": {
@@ -37,7 +37,7 @@
     "decimal.js": "^10.4.3",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
-    "lyb-js": "^1.6.4",
+    "lyb-js": "^1.6.5",
     "pixi-spine": "^4.0.4",
     "pixi.js": "^7.4.2",
     "vite": "^4.5.5"

@@ -1,14 +1,16 @@
-import { Ticker } from "pixi.js";//@ts-ignore
+import { Ticker } from "pixi.js"; //@ts-ignore
 import { libJsRandom } from "lyb-js/Random/LibJsRandom.js";
 
 /** @description 间隔触发
  * @param callback 回调函数
  * @param interval 间隔毫秒，或随机范围
+ * @param immediately 是否立即执行一次
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiIntervalTrigger-间隔触发
  */
 export const libPixiIntervalTrigger = (
   callback: () => void,
-  interval: number | [number, number]
+  interval: number | [number, number],
+  immediately = true
 ) => {
   let elapsedTime = 0;
 
@@ -31,9 +33,9 @@ export const libPixiIntervalTrigger = (
       elapsedTime = 0;
     }
   };
+  immediately && callback();
 
   ticker.add(tickerCallback);
-
   ticker.start();
 
   return () => {
