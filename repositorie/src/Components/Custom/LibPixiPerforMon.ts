@@ -51,10 +51,6 @@ export class LibPixiPerforMon extends Container {
     super();
 
     this.pivot.x = this._containerWidth / 2;
-    this._resize(window.innerWidth, window.innerHeight);
-    window.addEventListener("resize", () => {
-      this._resize(window.innerWidth, window.innerHeight);
-    });
 
     //创建背景
     this._bg = new LibPixiRectBgColor({
@@ -162,14 +158,6 @@ export class LibPixiPerforMon extends Container {
       color = "#ff000d";
     }
     return color;
-  }
-
-  private _resize(w: number, h: number) {
-    if (w > h) {
-      this.x = 1920 / 2;
-    } else {
-      this.x = 1080 / 2;
-    }
   }
 }
 

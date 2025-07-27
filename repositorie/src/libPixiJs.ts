@@ -46,6 +46,8 @@ import { LibPixiPuzzleBg } from "./Components/Custom/LibPixiPuzzleBg";
 import { libContainerCenter } from "./Utils/LibContainerCenter";
 import { libPixiHVCenter } from "./Utils/LibPixiHVCenter";
 import { libPixiHVGap } from "./Utils/LibPixiHVGap";
+import { LibPixiTriangle } from "./Components/Custom/LibPixiTriangle";
+import { LibPixiCapsule } from "./Components/Custom/LibPixiCapsule";
 
 /** @description 组件 */
 export const Components = {
@@ -163,6 +165,12 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPuzzleBg-设计图背景拼接
      */
     LibPixiPuzzleBg,
+
+    /** @description 胶囊体 */
+    LibPixiCapsule,
+
+    /** @description 三角形 */
+    LibPixiTriangle,
   },
 };
 
