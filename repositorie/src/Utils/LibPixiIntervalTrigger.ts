@@ -10,7 +10,7 @@ import { libJsRandom } from "lyb-js/Random/LibJsRandom.js";
 export const libPixiIntervalTrigger = (
   callback: () => void,
   interval: number | [number, number],
-  immediately = true
+  immediately = true,
 ) => {
   let elapsedTime = 0;
 
@@ -18,8 +18,8 @@ export const libPixiIntervalTrigger = (
   const ticker = new Ticker();
 
   // 创建回调函数
-  const tickerCallback = (deltaTime: number) => {
-    elapsedTime += deltaTime * ticker.deltaMS;
+  const tickerCallback = () => {
+    elapsedTime += ticker.elapsedMS;
 
     let intervalNum = 0;
     if (Array.isArray(interval)) {
@@ -33,6 +33,7 @@ export const libPixiIntervalTrigger = (
       elapsedTime = 0;
     }
   };
+
   immediately && callback();
 
   ticker.add(tickerCallback);
