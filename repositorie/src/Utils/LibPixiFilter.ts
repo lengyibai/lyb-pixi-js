@@ -30,6 +30,9 @@ export const libPixiFilter = (
   } else if (filterName === "contrast") {
     filter = new ColorMatrixFilter();
     filter.contrast(v!, false);
+  } else if (filterName === "saturate") {
+    filter = new ColorMatrixFilter();
+    filter.saturate(v!, false);
   } else {
     throw new Error("未知滤镜名称");
   }
