@@ -6,7 +6,8 @@ export type LibPixiSetFilterFilterName =
   | "brightness"
   | "blur"
   | "desaturate"
-  | "contrast";
+  | "contrast"
+  | "saturate";
 
 /** @description 滤镜
  * @param filterName 滤镜名称
