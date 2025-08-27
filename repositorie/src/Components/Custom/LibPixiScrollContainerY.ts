@@ -49,6 +49,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 滚动条拖动偏移量 */
   private _scrollbarDragOffset = 0;
 
+  /** 滚动条右边距 */
+  private _scrollbarRgiht: number;
+  /** 滚动条宽度 */
+  private _scrollbarWidth: number;
+
   /** 滚动容器 */
   public _scrollContent: Container;
   /** 遮罩 */
@@ -69,7 +74,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       height,
       scrollbar = false,
       scrollContent,
-      scrollbarRgiht,
+      scrollbarRgiht = 0,
       scrollbarWidth = 10,
       scrollbarColor = "#ffffff",
       onScroll,
@@ -78,6 +83,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     } = params;
     super(width, height, bgColor);
 
+    this._scrollbarRgiht = scrollbarRgiht;
+    this._scrollbarWidth = scrollbarWidth;
     this._scrollContent = scrollContent;
     this._scrollbarColor = scrollbarColor;
     this._onScroll = onScroll;
@@ -164,7 +171,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._maskGraphics.drawRect(0, 0, width, height);
     this._maskGraphics.endFill();
     this.setSize(width, height);
-    this._scrollbar.x = width - 50;
+    this._scrollbar.x = width - (this._scrollbarRgiht || this._scrollbarWidth);
   }
 
   /** @description 返回顶部 */
