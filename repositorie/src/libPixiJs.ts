@@ -14,7 +14,6 @@ import { LibPixiScrollContainerX } from "./Components/Custom/LibPixiScrollContai
 import { LibPixiScrollContainerY } from "./Components/Custom/LibPixiScrollContainerY";
 import { LibPixiScrollNum } from "./Components/Custom/LibPixiScrollNum";
 import { LibPixiSlider } from "./Components/Custom/LibPixiSlider";
-import { LibPixiSubAddMinMax } from "./Components/Custom/LibPixiSubAddMinMax";
 import { LibPixiTable } from "./Components/Custom/LibPixiTable";
 
 import { LibPixiAudio } from "./Utils/LibPixiAudio";
@@ -150,11 +149,6 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSlide-滑动页
      */
     LibPixiSlide,
-
-    /** @description 最小、最大按钮和增减按钮功能及置灰逻辑
-     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSubAddMinMax-数字控制器
-     */
-    LibPixiSubAddMinMax,
 
     /** @description 绘制表格并填充数字
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiTable-数字表格

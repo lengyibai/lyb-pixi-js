@@ -112,17 +112,15 @@ app.stage.addChild(box);
 
 \- [LibPixiProgress-进度条](#LibPixiProgress-进度条)
 
-\- [LibPixiScrollContainerX-X轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
+\- [LibPixiScrollContainerX-X 轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
 
-\- [LibPixiScrollContainerY-Y轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
+\- [LibPixiScrollContainerY-Y 轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
 
 \- [LibPixiScrollNum-数字滑动](#LibPixiScrollNum-数字滑动)
 
 \- [LibPixiSlider-横向滑动图](#LibPixiSlider-横向滑动图)
 
 \- [LibPixiSlide-滑动页](#LibPixiSlide-滑动页)
-
-\- [LibPixiSubAddMinMax-数字控制器](#LibPixiSubAddMinMax-数字控制器)
 
 \- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
 
@@ -323,14 +321,20 @@ const libPixiRectangle = new LibPixiRectangle(100, 100, "#fff");
 > 多边形类，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
 
 ```ts
-const polygonVertices = new LibPixiPolygon([
-    0, 0, 604, 0, 596, 32, 616, 30, 611, 62, 644, 57, 643, 87, 697, 82, 702, 102, 724, 86, 744, 83, 753, 91, 756, 83,
-    772, 85, 793, 100, 797, 114, 794, 316, 798, 336, 799, 476, 796, 491, 801, 507, 797, 635, 742, 656, 723, 683, 659,
-    687, 638, 678, 646, 712, 617, 707, 611, 717, 618, 741, 596, 734, 595, 746, 601, 762, 14, 763, 18, 739, -4, 741, 4,
-    712, -5, 705, -28, 711, -22, 686, -34, 679, -47, 686, -195, 686, -189, 667, -192, 647, -195, 506, -192, 499, -194,
-    476, -192, 331, -187, 323, -193, 307, -194, 110, -188, 103, -189, 93, -172, 81, -112, 82, -98, 95, -93, 80, -56,
-    82, -40, 89, -36, 80, -41, 57, -30, 57, -16, 62, -8, 58, -16, 29, 1, 35, 8, 25, 0, 0,
-], "#000");
+const polygonVertices = new LibPixiPolygon(
+  [
+    0, 0, 604, 0, 596, 32, 616, 30, 611, 62, 644, 57, 643, 87, 697, 82, 702,
+    102, 724, 86, 744, 83, 753, 91, 756, 83, 772, 85, 793, 100, 797, 114, 794,
+    316, 798, 336, 799, 476, 796, 491, 801, 507, 797, 635, 742, 656, 723, 683,
+    659, 687, 638, 678, 646, 712, 617, 707, 611, 717, 618, 741, 596, 734, 595,
+    746, 601, 762, 14, 763, 18, 739, -4, 741, 4, 712, -5, 705, -28, 711, -22,
+    686, -34, 679, -47, 686, -195, 686, -189, 667, -192, 647, -195, 506, -192,
+    499, -194, 476, -192, 331, -187, 323, -193, 307, -194, 110, -188, 103, -189,
+    93, -172, 81, -112, 82, -98, 95, -93, 80, -56, 82, -40, 89, -36, 80, -41,
+    57, -30, 57, -16, 62, -8, 58, -16, 29, 1, 35, 8, 25, 0, 0,
+  ],
+  "#000"
+);
 ```
 
 ### LibPixiCircular-圆形
@@ -662,7 +666,7 @@ progress.setProgress(0.5); //50% 完成
 app.stage.addChild(progress);
 ```
 
-### LibPixiScrollContainerX-X轴滚动容器
+### LibPixiScrollContainerX-X 轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
@@ -692,7 +696,7 @@ scrollContainer.setDimensions(800, 600);
 scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
 ```
 
-### LibPixiScrollContainerY-Y轴滚动容器
+### LibPixiScrollContainerY-Y 轴滚动容器
 
 > 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
 
@@ -813,42 +817,6 @@ const three = new LibPixiSlide({
     container.scale.y = scaleY;
   },
 });
-```
-
-### LibPixiSubAddMinMax-数字控制器
-
-> 最小、最大按钮和增减按钮功能及置灰逻辑
-
-```ts
-import { LibPixiSubAddMinMax } from "lyb-pixi-js";
-
-//创建按钮实例
-const betControl = new LibPixiSubAddMinMax({
-  initialBetIndex: 0, //初始下注索引
-  betAmountListLength: 10, //下注金额列表长度
-  onAmountIndex: (index) => {
-    console.log("当前下注金额索引:", index);
-  },
-  onDisabled: (type) => {
-    if (type === "min") {
-      minButton.tint = 0x999999; //禁用最小按钮
-    } else if (type === "max") {
-      maxButton.tint = 0x999999; //禁用最大按钮
-    } else {
-      minButton.tint = 0xffffff; //启用最小按钮
-      maxButton.tint = 0xffffff; //启用最大按钮
-    }
-  },
-});
-
-//设置初始状态
-betControl.min(); //设置为最小值
-betControl.max(); //设置为最大值
-betControl.sub(); //减少下注
-betControl.add(); //增加下注
-
-//添加到Pixi舞台
-app.stage.addChild(minButton, maxButton, subButton, addButton);
 ```
 
 ### LibPixiTable-数字表格
@@ -1202,8 +1170,7 @@ const amountAnimation = _digitalIncreasingAnimation({
   onChange: (v) => {
     this._winAmountText.text = v;
   },
-  onComplete: () => {
-  },
+  onComplete: () => {},
 });
 ```
 
@@ -1236,6 +1203,5 @@ LibPixiArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
 > 递归调用后代的事件发射器
 
 ```ts
-LibPixiEmitContainerEvent(this, "EVENT_NAME", {})
+LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ```
-
