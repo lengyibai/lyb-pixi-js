@@ -14,7 +14,9 @@ export class LibDestroyContainer extends Container {
   /** @description 销毁 */
   async destroy() {
     await this._onBeforeDestroy?.();
-    super.destroy({ children: true });
-    this._onDestroyed?.();
+    requestAnimationFrame(() => {
+      super.destroy({ children: true });
+      this._onDestroyed?.();
+    });
   }
 }
