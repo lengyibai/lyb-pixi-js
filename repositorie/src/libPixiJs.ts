@@ -49,6 +49,7 @@ import { LibPixiTriangle } from "./Components/Custom/LibPixiTriangle";
 import { LibPixiCapsule } from "./Components/Custom/LibPixiCapsule";
 import { LibDestroyContainer } from "./Components/Base/LibDestroyContainer";
 import { LibPixiDragLocate } from "./Components/Custom/LibPixiDragLocate";
+import { LibPixiTurntable } from "./Components/Custom/LibPixiTurntable";
 
 /** @description 组件 */
 export const Components = {
@@ -171,6 +172,9 @@ export const Components = {
 
     /** @description 元素拖拽定位 */
     LibPixiDragLocate,
+
+    /** @description 转盘布局 */
+    LibPixiTurntable,
   },
 };
 
