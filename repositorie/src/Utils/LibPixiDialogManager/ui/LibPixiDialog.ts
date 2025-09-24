@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { LibPixiRectBgColor } from "../../../Components/Base/LibPixiRectBgColor";
 import { libPixiEvent } from "../../LibPixiEvent";
 import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
-import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher";
+import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
 
 interface Params {
   /** 是否需要显示黑色背景 */

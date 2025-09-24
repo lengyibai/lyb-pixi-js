@@ -1,7 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 import gsap from "gsap";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { LibJsLerp } from "lyb-js/Math/LibJsLerp";
+import { LibJsLerp } from "lyb-js/Math/LibJsLerp.js";
 
 export interface LibPixiScrollNumParams {
   /** 滚动区域宽度 */
