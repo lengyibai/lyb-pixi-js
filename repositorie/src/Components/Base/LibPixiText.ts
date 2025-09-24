@@ -1,5 +1,6 @@
 import {
   Text,
+  TEXT_GRADIENT,
   TextStyle,
   type TextStyleAlign,
   type TextStyleFontWeight,
@@ -12,6 +13,8 @@ export interface LibPixiTextParams {
   fontSize?: number;
   /** 字体颜色 */
   fontColor?: any;
+  /** 渐变方向 */
+  gradientDirection?: "v" | "h";
   /** 描边颜色 */
   stroke?: string | number;
   /** 描边宽度 */
@@ -53,6 +56,7 @@ export class LibPixiText extends Text {
       align = "left",
       indent = 0,
       shadow,
+      gradientDirection,
     } = options;
 
     const style = new TextStyle({
@@ -68,6 +72,10 @@ export class LibPixiText extends Text {
       stroke: stroke ? stroke : "transparent",
       strokeThickness: strokeThickness ? strokeThickness : 0,
       lineJoin: "round",
+      fillGradientType:
+        gradientDirection === "h"
+          ? TEXT_GRADIENT.LINEAR_HORIZONTAL
+          : TEXT_GRADIENT.LINEAR_VERTICAL,
     });
 
     if (shadow) {
