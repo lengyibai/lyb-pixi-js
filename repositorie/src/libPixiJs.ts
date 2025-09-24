@@ -53,6 +53,7 @@ import { LibPixiArc } from "./Components/Base/LibPixiArc";
 import { LibPixiOval } from "./Components/Base/LibPixiOval";
 import { LibPixiRound } from "./Components/Base/LibPixiRound";
 import { LibPixiRoundedRect } from "./Components/Base/LibPixiRoundedRect";
+import { LibPixiInput } from "./Components/Custom/LibPixiInput";
 
 /** @description 组件 */
 export const Components = {
@@ -189,6 +190,9 @@ export const Components = {
 
     /** @description 转盘布局 */
     LibPixiTurntable,
+
+    /** @description 输入框 */
+    LibPixiInput,
   },
 };
 

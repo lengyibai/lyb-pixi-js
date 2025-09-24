@@ -915,6 +915,10 @@ const amountContainer = new LibLabelValue({
 
 > 转盘上的元素布局
 
+### LibPixiInput-输入框
+
+> 基于 `HTML` 输入框实现，失焦时隐藏
+
 ## Utils-工具方法
 
 ### LibPixiAudio-音频播放器
