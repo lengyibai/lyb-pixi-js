@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "vite build & tsc"
+    "build": "tsc & vite build"
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
@@ -16,7 +16,7 @@
     "decimal.js": "^10.4.3",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
-    "lyb-js": "^1.6.5",
+    "lyb-js": "^1.6.13",
     "pixi-spine": "^4.0.4",
     "pixi.js": "^7.4.2",
     "vite": "^4.5.5"

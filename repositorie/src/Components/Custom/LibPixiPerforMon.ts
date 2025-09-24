@@ -1,3 +1,4 @@
+import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
 import {
   type IRenderer,
   type Application,
@@ -5,7 +6,7 @@ import {
   Ticker,
   UPDATE_PRIORITY,
 } from "pixi.js";
-import { LibPixiRectBgColor } from "../Base/LibPixiRectBgColor";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle";
 import { LibPixiText } from "../Base/LibPixiText";
 
 /** @description 监视帧率、Draw Call、Max Draw Call
@@ -42,7 +43,7 @@ export class LibPixiPerforMon extends Container {
   private _drawElements: Function;
 
   /** 背景 */
-  private _bg: LibPixiRectBgColor;
+  private _bg: LibPixiRectangle;
   /** FPS文本 */
   private _fpsText: TextBox;
   /** Draw Call文本 */
@@ -56,12 +57,11 @@ export class LibPixiPerforMon extends Container {
     this.pivot.x = this._containerWidth / 2;
 
     //创建背景
-    this._bg = new LibPixiRectBgColor({
-      width: this._containerWidth,
-      height: this._containerHeight,
-      bgColor: "#000",
-      alpha: 0.75,
-    });
+    this._bg = new LibPixiRectangle(
+      this._containerWidth,
+      this._containerHeight,
+      "#0000007e"
+    );
     this.addChild(this._bg);
 
     //创建内容容器
@@ -88,6 +88,21 @@ export class LibPixiPerforMon extends Container {
     this._drawElements = (this._renderer as any)["gl"].drawElements;
 
     this.init();
+
+    if (LibPixiPerforMon.ADAPT_MODE === "h") {
+      this.x = 1920 / 2;
+    } else if (LibPixiPerforMon.ADAPT_MODE === "v") {
+      this.x = 1080 / 2;
+    } else {
+      const resize = new LibJsResizeWatcher();
+      resize.on((w, h) => {
+        if (w > h) {
+          this.x = 1920 / 2;
+        } else {
+          this.x = 1080 / 2;
+        }
+      });
+    }
   }
 
   /** @description 初始化显示性能数据 */
