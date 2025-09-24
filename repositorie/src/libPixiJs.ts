@@ -49,29 +49,35 @@ import { LibPixiTriangle } from "./Components/Custom/LibPixiTriangle";
 import { LibPixiCapsule } from "./Components/Custom/LibPixiCapsule";
 import { LibPixiDragLocate } from "./Components/Custom/LibPixiDragLocate";
 import { LibPixiTurntable } from "./Components/Custom/LibPixiTurntable";
+import { LibPixiArc } from "./Components/Base/LibPixiArc";
+import { LibPixiOval } from "./Components/Base/LibPixiOval";
+import { LibPixiRound } from "./Components/Base/LibPixiRound";
+import { LibPixiRoundedRect } from "./Components/Base/LibPixiRoundedRect";
 
 /** @description 组件 */
 export const Components = {
   Base: {
+    /** （已废弃）
+     * @description 自定义容器大小及背景色
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiContainer-容器
+     */
+    LibPixiContainer,
+
+    /** （已废弃）
+     * @description 自定义矩形背景色
+     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiRectBgColor-矩形
+     */
+    LibPixiRectBgColor,
+
     /** @description 自定义位图文本
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiBitText-位图
      */
     LibPixiBitText,
 
-    /** @description 自定义容器大小及背景色
-     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiContainer-容器
-     */
-    LibPixiContainer,
-
     /** @description 利用贝塞尔曲线实现粒子移动
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiParticleMove-粒子容器
      */
     LibPixiParticleMove,
-
-    /** @description 自定义矩形背景色
-     * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiRectBgColor-矩形
-     */
-    LibPixiRectBgColor,
 
     /** @description 矩形类，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiRectangle-矩形
@@ -87,6 +93,24 @@ export const Components = {
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPolygon-多边形
      */
     LibPixiPolygon,
+
+    /** @description 胶囊体 */
+    LibPixiCapsule,
+
+    /** @description 三角形 */
+    LibPixiTriangle,
+
+    /** @description 弧形 */
+    LibPixiArc,
+
+    /** @description 椭圆 */
+    LibPixiOval,
+
+    /** @description 圆圈 */
+    LibPixiRound,
+
+    /** @description 圆角矩形 */
+    LibPixiRoundedRect,
 
     /** @description 自定义 Spine 动画
      * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiSpine-动画
@@ -160,12 +184,6 @@ export const Components = {
     /** @description 设计图背景拼接 */
     LibPixiPuzzleBg,
 
-    /** @description 胶囊体 */
-    LibPixiCapsule,
-
-    /** @description 三角形 */
-    LibPixiTriangle,
-
     /** @description 元素拖拽定位 */
     LibPixiDragLocate,
 
@@ -176,6 +194,34 @@ export const Components = {
 
 /** @description 方法 */
 export const Utils = {
+  /** （已废弃）
+   * @description 为容器创建并应用一个矩形遮罩，用于隐藏溢出的内容，函数会返回遮罩，可控制是否显示遮罩
+   * @param container 需要设置遮罩裁剪的容器
+   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiOverflowHidden-溢出裁剪
+   */
+  libPixiOverflowHidden,
+
+  /** （已废弃）
+   * @description 当前容器在父容器居中
+   */
+  libContainerCenter,
+
+  /** （已废弃）
+   * @description 列表居中
+   * @param parent 父容器
+   * @param items 子元素数组
+   * @param direction 方向数组，"x"表示水平，"y"表示垂直
+   */
+  libPixiHVCenter,
+
+  /**（已废弃）
+   * @description 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔
+   * @param items 要排列的元素数组。
+   * @param gap 元素之间的间隔，可以是固定间隔或自定义的间隔数组。
+   * @param direction 排列方向，"x"表示水平，"y"表示垂直，默认为水平。
+   */
+  libPixiHVGap,
+
   /** @description 音频播放器
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiAudio-音频播放器
    */
@@ -216,12 +262,6 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiOutsideClick-失焦隐藏
    */
   libPixiOutsideClick,
-
-  /** @description 为容器创建并应用一个矩形遮罩，用于隐藏溢出的内容，函数会返回遮罩，可控制是否显示遮罩
-   * @param container 需要设置遮罩裁剪的容器
-   * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiOverflowHidden-溢出裁剪
-   */
-  libPixiOverflowHidden,
 
   /** @description 基于 Ticker 和 Promise 的定时器
    * @param delay 延迟时间
@@ -304,22 +344,4 @@ export const Utils = {
    * @param payload 事件携带数据
    */
   LibPixiEmitContainerEvent,
-
-  /** @description 当前容器在父容器居中 */
-  libContainerCenter,
-
-  /** @description 列表居中
-   * @param parent 父容器
-   * @param items 子元素数组
-   * @param direction 方向数组，"x"表示水平，"y"表示垂直
-   */
-  libPixiHVCenter,
-
-  /**
-   * @description 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔。
-   * @param items 要排列的元素数组。
-   * @param gap 元素之间的间隔，可以是固定间隔或自定义的间隔数组。
-   * @param direction 排列方向，"x"表示水平，"y"表示垂直，默认为水平。
-   */
-  libPixiHVGap,
 };

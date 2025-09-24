@@ -343,6 +343,28 @@ const polygonVertices = new LibPixiPolygon(
 const libPixiCircular = new LibPixiCircular(100, "#fff");
 ```
 
+### LibPixiCapsule-胶囊体
+
+> 胶囊形状图形
+
+### LibPixiTriangle-三角形
+
+> 三角形
+
+### LibPixiArc-弧形
+
+> 扇形
+
+### LibPixiOval-椭圆
+
+> 椭圆
+
+### LibPixiRound-圆圈
+
+> 圆圈
+
+### LibPixiRoundedRect-圆角矩形
+
 ### LibPixiSpine-动画
 
 > 自定义 Spine 动画，内置挂点
@@ -765,33 +787,34 @@ scrollNum.slideTo(2);
 
 > 类似轮播图，但是不会自动轮播
 
-```ts
-import { Container } from "pixi.js";
-import { LibPixiSlider } from "./path/to/LibPixiSlider";
-
-//创建滑动内容容器
-const slideContent = new Container();
-//在这里添加幻灯片内容，例如图片、文本等
-//slideContent.addChild(someImageOrText);
-
-//创建幻灯片
-const slider = new LibPixiSlider({
-  width: 400,
-  height: 300,
-  slideContent,
-  enableDepth: true,
-  slideCallback: (pageIndex, pageNum) => {
-    console.log(`当前页: ${pageIndex + 1} / ${pageNum + 1}`);
-  },
-});
-
-//将幻灯片添加到场景
-app.stage.addChild(slider);
-
-//手动滑动到上一页或下一页
-slider.prev();
-slider.next();
-```
+> ```ts
+> import { Container } from "pixi.js";
+> import { LibPixiSlider } from "./path/to/LibPixiSlider";
+> 
+> //创建滑动内容容器
+> const slideContent = new Container();
+> //在这里添加幻灯片内容，例如图片、文本等
+> //slideContent.addChild(someImageOrText);
+> 
+> //创建幻灯片
+> const slider = new LibPixiSlider({
+>   width: 400,
+>   height: 300,
+>   slideContent,
+>   enableDepth: true,
+>   slideCallback: (pageIndex, pageNum) => {
+>     console.log(`当前页: ${pageIndex + 1} / ${pageNum + 1}`);
+>   },
+> });
+> 
+> //将幻灯片添加到场景
+> app.stage.addChild(slider);
+> 
+> //手动滑动到上一页或下一页
+> slider.prev();
+> slider.next();
+> ```
+>
 
 ### LibPixiSlide-滑动页
 
@@ -879,6 +902,18 @@ const amountContainer = new LibLabelValue({
   gap: 10,
 });
 ```
+
+### LibPixiPuzzleBg-设计图背景拼接
+
+> 将设计图盖在游戏上层，对游戏内的元素进行对齐
+
+### LibPixiDragLocate-元素拖拽定位
+
+> 可通过快捷键呼出输入框搜索组件类名或 `name`，选中后可进行拖拽定位
+
+### LibPixiTurntable-转盘布局
+
+> 转盘上的元素布局
 
 ## Utils-工具方法
 
