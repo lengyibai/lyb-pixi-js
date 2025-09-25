@@ -1,8 +1,12 @@
-import type { Container, DisplayObjectEvents, FederatedPointerEvent } from "pixi.js";
+import type {
+  Container,
+  DisplayObjectEvents,
+  FederatedPointerEvent,
+} from "pixi.js";
 
 const debounceImmediate = <T extends (...args: any[]) => void>(
   func: T,
-  wait: number,
+  wait: number
 ): ((...args: Parameters<T>) => void) => {
   let timer: ReturnType<typeof setTimeout> | null = null;
   let invoked = false;
@@ -41,9 +45,14 @@ export const libPixiEvent = (
   v: Container,
   eventName: keyof DisplayObjectEvents,
   callback: (event: FederatedPointerEvent) => void,
-  params: LibPixiEventParams = {},
+  params: LibPixiEventParams = {}
 ) => {
-  const { once = false, debounce = false, debounceTime = 1000, preventDragClick = false } = params;
+  const {
+    once = false,
+    debounce = false,
+    debounceTime = 1000,
+    preventDragClick = false,
+  } = params;
   v.cursor = "pointer";
   v.eventMode = "static";
 
@@ -56,8 +65,12 @@ export const libPixiEvent = (
       lastX = e.globalX;
       lastY = e.globalY;
 
+      const threshold = 10; // 阈值像素
+
       const moveHandler = (ev: FederatedPointerEvent) => {
-        if (ev.globalX !== lastX || ev.globalY !== lastY) {
+        const dx = ev.globalX - lastX;
+        const dy = ev.globalY - lastY;
+        if (dx * dx + dy * dy > threshold * threshold) {
           isDragging = true;
         }
       };
@@ -73,7 +86,8 @@ export const libPixiEvent = (
   }
 
   const fn = (e: FederatedPointerEvent) => {
-    if (isDragging && ["pointertap", "pointerup"].includes(eventName as any)) return;
+    if (isDragging && ["pointertap", "pointerup"].includes(eventName as any))
+      return;
     if (e.button === 2) return;
     callback(e);
   };
