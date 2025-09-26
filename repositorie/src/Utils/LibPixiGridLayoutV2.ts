@@ -33,7 +33,7 @@ export class LibPixiGridLayoutV2<T extends Container> extends Container {
 
   /** @description 布局 */
   layout() {
-    const { colNum = 3, colGap = 325, rowGap = 75 } = this._params;
+    const { colNum = this._elementList.length, colGap = 325, rowGap = 75 } = this._params;
     this._elementList.forEach((item, index) => {
       const col = index % colNum;
       const row = Math.floor(index / colNum);
