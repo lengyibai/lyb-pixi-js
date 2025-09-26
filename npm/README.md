@@ -1229,6 +1229,10 @@ LibPixiDownScaleAnimation(sprite);
 LibPixiGridLayout(cardList, 20, 3); //间隔20，一行三个
 ```
 
+### LibPixiGridLayoutV2-网格布局V2
+
+> 省略自己创建数组对组件进行 `push` ，内部做了 `push` 处理
+
 ### LibPixiArrangeLinear-间隔布局
 
 > 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔

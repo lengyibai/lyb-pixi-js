@@ -54,6 +54,7 @@ import { LibPixiOval } from "./Components/Base/LibPixiOval";
 import { LibPixiRound } from "./Components/Base/LibPixiRound";
 import { LibPixiRoundedRect } from "./Components/Base/LibPixiRoundedRect";
 import { LibPixiInput } from "./Components/Custom/LibPixiInput";
+import { LibPixiGridLayoutV2 } from "./Utils/LibPixiGridLayoutV2";
 
 /** @description 组件 */
 export const Components = {
@@ -332,6 +333,9 @@ export const Utils = {
    * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiGridLayout-网格布局
    */
   LibPixiGridLayout,
+
+  /** @description 网格布局V2 */
+  LibPixiGridLayoutV2,
 
   /**
    * @description 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔。
