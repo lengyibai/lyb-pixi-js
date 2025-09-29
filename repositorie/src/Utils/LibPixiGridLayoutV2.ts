@@ -33,7 +33,11 @@ export class LibPixiGridLayoutV2<T extends Container> extends Container {
 
   /** @description 布局 */
   layout() {
-    const { colNum = this._elementList.length, colGap = 325, rowGap = 75 } = this._params;
+    const {
+      colNum = this._elementList.length,
+      colGap = 325,
+      rowGap = 75,
+    } = this._params;
     this._elementList.forEach((item, index) => {
       const col = index % colNum;
       const row = Math.floor(index / colNum);
@@ -45,5 +49,13 @@ export class LibPixiGridLayoutV2<T extends Container> extends Container {
   /** @description 获取列表元素 */
   getList() {
     return this._elementList;
+  }
+
+  /** @description 销毁列表元素 */
+  destroyList() {
+    this._elementList.forEach((item) => {
+      item.destroy();
+    });
+    this._elementList = [];
   }
 }
