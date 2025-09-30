@@ -1248,3 +1248,8 @@ LibPixiArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
 ```ts
 LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ```
+
+### LibPixiTicker-Ticker管理器
+
+> 添加和删除 `Ticker` 函数，单个 `Ticker` 函数暂停开始，所有 `Ticker` 函数使用的是全局的 `Ticker`
+

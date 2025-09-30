@@ -55,6 +55,7 @@ import { LibPixiRound } from "./Components/Base/LibPixiRound";
 import { LibPixiRoundedRect } from "./Components/Base/LibPixiRoundedRect";
 import { LibPixiInput } from "./Components/Custom/LibPixiInput";
 import { LibPixiGridLayoutV2 } from "./Utils/LibPixiGridLayoutV2";
+import { LibPixiTicker } from "./Utils/LibPixiTicker";
 
 /** @description 组件 */
 export const Components = {
@@ -352,4 +353,7 @@ export const Utils = {
    * @param payload 事件携带数据
    */
   LibPixiEmitContainerEvent,
+
+  /** @description Ticker管理器 */
+  LibPixiTicker,
 };
