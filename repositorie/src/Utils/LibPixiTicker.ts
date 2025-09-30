@@ -16,8 +16,7 @@ export class LibPixiTicker {
     Ticker.shared.add(fn);
 
     return () => {
-      Ticker.shared.remove(fn);
-      this._callbacks.delete(id);
+      LibPixiTicker.remove(id);
     };
   }
 
