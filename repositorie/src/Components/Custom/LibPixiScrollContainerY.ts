@@ -65,6 +65,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 滚动条颜色 */
   private _scrollbarColor: string;
 
+  /** 是否显示滚动条 */
+  private _showScrollbar: boolean;
   /** 滚动触发 */
   private _onScroll?: (y: number) => void;
 
@@ -88,6 +90,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._scrollContent = scrollContent;
     this._scrollbarColor = scrollbarColor;
     this._onScroll = onScroll;
+    this._showScrollbar = scrollbar;
 
     // 创建内容容器
     this._content = new Container();
@@ -112,7 +115,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     );
     this._scrollbar.x = width - (scrollbarRgiht || scrollbarWidth);
     this.addChild(this._scrollbar);
-    this._scrollbar.visible = scrollbar;
+    this._scrollbar.visible = this._showScrollbar;
     this._scrollbar.alpha = 0;
     this._updateScrollbarSize();
 
@@ -350,6 +353,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
   /** @description 更新滚动条大小 */
   private _updateScrollbarSize() {
+    if (!this._showScrollbar) return;
+
     const viewHeight = this._maskGraphics.height;
     const contentHeight = this._content.height;
 
