@@ -1,9 +1,9 @@
 import { Container } from "pixi.js";
 import gsap from "gsap";
+import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
 import { LibPixiRectBgColor } from "../../../Components/Base/LibPixiRectBgColor";
 import { libPixiEvent } from "../../LibPixiEvent";
 import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
-import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
 
 interface Params {
   /** 是否需要显示黑色背景 */
@@ -32,9 +32,9 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   private _size = 1;
   /** 竖版初始大小 */
   private _initialSize: number;
-  /** 是否处于关闭动画状态 */
-  private _isCloseAnimating = false;
 
+  /** 窗口变化 */
+  private _resize?: LibJsResizeWatcher;
   /** 停止监听窗口 */
   private _offResize?: () => void;
 
@@ -57,11 +57,17 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     this._maskUI.visible = needBg;
 
     if (onClickMask) {
-      libPixiEvent(this._maskUI, "pointertap", () => {
-        if (this._isCloseAnimating) return;
-        onClickMask?.();
-        this._offResize?.();
-      });
+      libPixiEvent(
+        this._maskUI,
+        "pointertap",
+        () => {
+          onClickMask?.();
+          this._offResize?.();
+        },
+        {
+          once: true,
+        }
+      );
     }
 
     //弹窗内容容器
@@ -88,8 +94,10 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       alpha: 1,
     });
 
-    const resize = new LibJsResizeWatcher(LibPixiDialog.adaptation);
-    this._offResize = resize.on((w, h) => {
+    //部分场景需要重复调用此方法来重新更新布局重新监听尺寸变化，所以需要判断一下
+    this._resize ??= new LibJsResizeWatcher(LibPixiDialog.adaptation);
+    this._offResize?.();
+    this._offResize = this._resize.on((w, h) => {
       const halfW = 1920 / 2;
       const halfH = 1080 / 2;
 
@@ -124,9 +132,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
 
   /** @description 关闭 */
   async close() {
-    if (this._isCloseAnimating) return;
     this._offResize?.();
-    this._isCloseAnimating = true;
     gsap.to(this._dialogContainer.scale, {
       duration: LibPixiDialog.durationOut,
       ease: "back.in",
