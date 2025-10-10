@@ -11,6 +11,8 @@ export interface LibPixiScrollContainerYParams {
   height: number;
   /** 滚动内容 */
   scrollContent: Container;
+  /** 顶部边距 */
+  topMargin?: number;
   /** 底部边距 */
   bottomMargin?: number;
   /** 背景色，用于定位 */
@@ -81,6 +83,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       scrollbarColor = "#ffffff",
       onScroll,
       bgColor,
+      topMargin = 0,
       bottomMargin = 0,
     } = params;
     super(width, height, bgColor);
@@ -97,10 +100,25 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
 
-    //创建底部边距
-    const bottomMarginBox = new Sprite();
-    this._content.addChild(bottomMarginBox);
-    bottomMarginBox.height = this._content.height + bottomMargin;
+    if (topMargin) {
+      //创建底部边距
+      const topMarginBox = new Sprite();
+      this._content.addChild(topMarginBox);
+      topMarginBox.height = topMargin;
+      requestAnimationFrame(() => {
+        this._scrollContent.y += topMargin;
+      });
+    }
+
+    if (bottomMargin) {
+      //创建底部边距
+      const bottomMarginBox = new Sprite();
+      this._content.addChild(bottomMarginBox);
+      bottomMarginBox.height = bottomMargin;
+      requestAnimationFrame(() => {
+        bottomMarginBox.y = topMargin + this._scrollContent.height;
+      });
+    }
 
     // 创建遮罩
     this._maskGraphics = new LibPixiRectangle(width, height, "#000");
