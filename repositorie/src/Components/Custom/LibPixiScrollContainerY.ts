@@ -83,8 +83,6 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       scrollbarColor = "#ffffff",
       onScroll,
       bgColor,
-      topMargin = 0,
-      bottomMargin = 0,
     } = params;
     super(width, height, bgColor);
 
@@ -99,26 +97,6 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._content = new Container();
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
-
-    if (topMargin) {
-      //创建底部边距
-      const topMarginBox = new Sprite();
-      this._content.addChild(topMarginBox);
-      topMarginBox.height = topMargin;
-      requestAnimationFrame(() => {
-        this._scrollContent.y += topMargin;
-      });
-    }
-
-    if (bottomMargin) {
-      //创建底部边距
-      const bottomMarginBox = new Sprite();
-      this._content.addChild(bottomMarginBox);
-      bottomMarginBox.height = bottomMargin;
-      requestAnimationFrame(() => {
-        bottomMarginBox.y = topMargin + this._scrollContent.height;
-      });
-    }
 
     // 创建遮罩
     this._maskGraphics = new LibPixiRectangle(width, height, "#000");
@@ -179,6 +157,23 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     libPixiEvent(this, "pointerupoutside", () => {
       this._onDragEnd();
     });
+  }
+
+  /** @description 添加边距 */
+  addMargin(topMargin: number, bottomMargin: number) {
+    if (topMargin) {
+      const topMarginBox = new Sprite();
+      this._content.addChild(topMarginBox);
+      topMarginBox.height = topMargin;
+      this._scrollContent.y += topMargin;
+    }
+
+    if (bottomMargin) {
+      const bottomMarginBox = new Sprite();
+      this._content.addChild(bottomMarginBox);
+      bottomMarginBox.height = bottomMargin;
+      bottomMarginBox.y = topMargin + this._scrollContent.height;
+    }
   }
 
   /** @description 设置滚动容器可视区宽高
