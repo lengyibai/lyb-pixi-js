@@ -11,10 +11,6 @@ export interface LibPixiScrollContainerYParams {
   height: number;
   /** 滚动内容 */
   scrollContent: Container;
-  /** 顶部边距 */
-  topMargin?: number;
-  /** 底部边距 */
-  bottomMargin?: number;
   /** 背景色，用于定位 */
   bgColor?: string;
   /** 是否需要滚动条 */
