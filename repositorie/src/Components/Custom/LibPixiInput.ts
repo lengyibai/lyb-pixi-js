@@ -6,8 +6,6 @@ import { LibPixiContainer } from "../Base/LibPixiContainer";
 import { LibPixiText } from "../Base/LibPixiText";
 
 interface Params {
-  /** 舞台 */
-  stage: Container;
   /** 宽度 */
   width: number;
   /** 高度 */
@@ -48,6 +46,8 @@ interface Params {
 
 /** @description 动态缩放移动输入框 */
 export class LibPixiInput extends LibPixiContainer {
+  /** 舞台 */
+  static stage: Container;
   /** 参数 */
   private _params: Params;
   /** 只读输入框 */
@@ -259,7 +259,7 @@ export class LibPixiInput extends LibPixiContainer {
     this._input.style.height = `${height}px`;
     this._input.style.fontSize = `${height * fontSizeRatio}px`;
 
-    if (this._params.stage.rotation === 0) {
+    if (LibPixiInput.stage.rotation === 0) {
       this._input.style.left = `${x}px`;
       this._input.style.top = `${y}px`;
       this._input.style.width = `${width}px`;

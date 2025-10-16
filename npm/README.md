@@ -923,6 +923,10 @@ const amountContainer = new LibLabelValue({
 
 > 从左到右从上到下或从上到下从左到右排列，下一个元素的位置基于上一个元素的坐标及宽度，锚点要求在左边
 
+### LibPixiTextGroupWrap-文本组换行
+
+> 内部创建文本类组，公共样式和单个设置样式，并整体支持换行
+
 ## Utils-工具方法
 
 ### LibPixiAudio-音频播放器

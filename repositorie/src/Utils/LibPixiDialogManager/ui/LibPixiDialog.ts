@@ -76,7 +76,15 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   /** @description 设置弹窗内容 */
   setDialogContent(content: Container) {
     this._dialogContainer.addChild(content);
-    this.redraw();
+
+    if (LibPixiDialog.adaptation === "h") {
+      this.redraw(1920, 1080);
+    } else if (LibPixiDialog.adaptation === "v") {
+      this.redraw(1080, 1920);
+    } else {
+      this.redraw(window.innerWidth, window.innerHeight);
+    }
+
     this._dialogContainer.scale.set(0);
     this._dialogContainer.alpha = 0;
 
@@ -91,7 +99,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   }
 
   /** @description 重绘弹窗 */
-  redraw(w = window.innerWidth, h = window.innerHeight) {
+  redraw(w: number, h: number) {
     const dialogW = this._dialogContainer.width / 2;
     const dialogH = this._dialogContainer.height / 2;
     this._dialogContainer.pivot.set(dialogW, dialogH);

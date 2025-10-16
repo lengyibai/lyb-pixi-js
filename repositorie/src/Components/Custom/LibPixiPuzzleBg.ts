@@ -1,17 +1,17 @@
 import { libJsDecimal } from "lyb-js/Math/LibJsDecimal.js";
-import { Assets, Container, Sprite } from "pixi.js";
+import { Container, Sprite, Texture } from "pixi.js";
 
 /** @description 设计图背景拼接
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPuzzleBg-设计图背景拼接
  */
 export class LibPixiPuzzleBg extends Container {
-  constructor() {
+  constructor(texture: Texture) {
     super();
 
     this.eventMode = "none";
 
     // 背景
-    const bg = new Sprite(Assets.get("preload/bg"));
+    const bg = new Sprite(texture);
     this.addChild(bg);
     bg.visible = false;
 
@@ -42,10 +42,7 @@ export class LibPixiPuzzleBg extends Container {
         bg.alpha = libJsDecimal(bg.alpha, 0.1, "-");
       }
 
-      localStorage.setItem(
-        "puzzle_bg_config",
-        JSON.stringify({ alpha: bg.alpha, x: bg.x, y: bg.y })
-      );
+      localStorage.setItem("puzzle_bg_config", JSON.stringify({ alpha: bg.alpha, x: bg.x, y: bg.y }));
     });
   }
 }
