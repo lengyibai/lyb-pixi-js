@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent, Sprite } from "pixi.js";
+import { Container, FederatedPointerEvent, Sprite, Texture } from "pixi.js";
 import { gsap } from "gsap";
 import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
@@ -21,6 +21,12 @@ export interface LibPixiScrollContainerYParams {
   scrollbarWidth?: number;
   /** 滚动条颜色 */
   scrollbarColor?: string;
+  /** 自定义遮罩贴图 */
+  maskTexture?: Texture;
+  /** 遮罩X坐标 */
+  maskX?: number;
+  /** 遮罩Y坐标 */
+  maskY?: number;
 
   /** 滚动触发 */
   onScroll?: (y: number) => void;
@@ -55,7 +61,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 滚动容器 */
   public _scrollContent: Container;
   /** 遮罩 */
-  private _maskGraphics: LibPixiRectangle;
+  private _maskGraphics: Container;
   /** 滚动的内容 */
   private _content: Container;
   /** 滚动条 */
@@ -79,6 +85,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       scrollbarColor = "#ffffff",
       onScroll,
       bgColor,
+      maskTexture,
+      maskX = 0,
+      maskY = 0,
     } = params;
     super(width, height, bgColor);
 
@@ -94,10 +103,19 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
 
-    // 创建遮罩
-    this._maskGraphics = new LibPixiRectangle(width, height, "#000");
-    this.addChild(this._maskGraphics);
-    this.mask = this._maskGraphics;
+    //自定义遮罩
+    if (maskTexture) {
+      this._maskGraphics = new Sprite(maskTexture);
+      this.addChild(this._maskGraphics);
+      this._maskGraphics.width = width;
+      this._maskGraphics.height = height;
+      this._maskGraphics.position.set(maskX, maskY);
+      this.mask = this._maskGraphics;
+    } else {
+      this._maskGraphics = new LibPixiRectangle(width, height, "#000");
+      this.addChild(this._maskGraphics);
+      this.mask = this._maskGraphics;
+    }
 
     // 创建滚动条
     this._scrollbar = new LibPixiRectangle(
@@ -177,11 +195,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
    * @param height 高度
    */
   setDimensions(width: number, height: number) {
-    // 更新遮罩尺寸
-    this._maskGraphics.clear();
-    this._maskGraphics.beginFill(0x000000);
-    this._maskGraphics.drawRect(0, 0, width, height);
-    this._maskGraphics.endFill();
+    this._maskGraphics.width = width;
+    this._maskGraphics.height = height;
     this.setSize(width, height);
     this._scrollbar.x = width - (this._scrollbarRgiht || this._scrollbarWidth);
   }

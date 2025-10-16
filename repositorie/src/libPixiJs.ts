@@ -56,6 +56,7 @@ import { LibPixiRoundedRect } from "./Components/Base/LibPixiRoundedRect";
 import { LibPixiInput } from "./Components/Custom/LibPixiInput";
 import { LibPixiGridLayoutV2 } from "./Utils/LibPixiGridLayoutV2";
 import { LibPixiTicker } from "./Utils/LibPixiTicker";
+import { LibPixiArrangeLinearV2 } from "./Components/Custom/LibPixiArrangeLinearV2";
 
 /** @description 组件 */
 export const Components = {
@@ -195,6 +196,9 @@ export const Components = {
 
     /** @description 输入框 */
     LibPixiInput,
+
+    /** @description 线性排列 */
+    LibPixiArrangeLinearV2,
   },
 };
 
