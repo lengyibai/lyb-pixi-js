@@ -13,6 +13,12 @@ export interface LibPixiScrollContainerYParams {
   scrollContent: Container;
   /** 背景色，用于定位 */
   bgColor?: string;
+  /** 自定义遮罩贴图 */
+  maskTexture?: Texture;
+  /** 遮罩X坐标 */
+  maskX?: number;
+  /** 遮罩Y坐标 */
+  maskY?: number;
   /** 是否需要滚动条 */
   scrollbar?: boolean;
   /** 滚动靠右坐标 */
@@ -21,21 +27,16 @@ export interface LibPixiScrollContainerYParams {
   scrollbarWidth?: number;
   /** 滚动条颜色 */
   scrollbarColor?: string;
-  /** 自定义遮罩贴图 */
-  maskTexture?: Texture;
-  /** 遮罩X坐标 */
-  maskX?: number;
-  /** 遮罩Y坐标 */
-  maskY?: number;
 
   /** 滚动触发 */
   onScroll?: (y: number) => void;
 }
 
-/** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerY-Y轴滚动容器
- */
+/** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹 */
 export class LibPixiScrollContainerY extends LibPixiContainer {
+  /** 舞台 */
+  static stage: Container;
+
   /** 开始位置 */
   private _startY = 0;
   /** 惯性速度 */
@@ -57,6 +58,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   private _scrollbarRgiht: number;
   /** 滚动条宽度 */
   private _scrollbarWidth: number;
+
+  /** 上边距 */
+  private _topMargin = 0;
+  /** 右边距元素 */
+  private _bottomMarginBox!: Sprite;
 
   /** 滚动容器 */
   public _scrollContent: Container;
@@ -149,14 +155,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     });
 
     // 添加事件监听
-    this.eventMode = "static";
-    this.on("pointerdown", this._onDragStart, this);
-
     libPixiEvent(this, "pointerdown", (event) => {
       this._onDragStart(event);
       this._updateScrollbarSize();
     });
-    libPixiEvent(this, "pointermove", (event) => {
+    libPixiEvent(LibPixiScrollContainerY.stage, "pointermove", (event) => {
       this._onScrollbarDragMove(event);
       this._onDragMove(event);
     });
@@ -174,7 +177,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   }
 
   /** @description 添加边距 */
-  addMargin(topMargin: number, bottomMargin: number) {
+  addMargin(topMargin: number, bottomMargin = topMargin) {
+    this._topMargin = topMargin;
     if (topMargin) {
       const topMarginBox = new Sprite();
       this._content.addChild(topMarginBox);
@@ -183,10 +187,10 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     }
 
     if (bottomMargin) {
-      const bottomMarginBox = new Sprite();
-      this._content.addChild(bottomMarginBox);
-      bottomMarginBox.height = bottomMargin;
-      bottomMarginBox.y = topMargin + this._scrollContent.height;
+      this._bottomMarginBox = new Sprite();
+      this._content.addChild(this._bottomMarginBox);
+      this._bottomMarginBox.height = bottomMargin;
+      this._bottomMarginBox.y = topMargin + this._scrollContent.height;
     }
   }
 
@@ -199,6 +203,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._maskGraphics.height = height;
     this.setSize(width, height);
     this._scrollbar.x = width - (this._scrollbarRgiht || this._scrollbarWidth);
+    this._updateBottomMargin();
   }
 
   /** @description 返回顶部 */
@@ -212,12 +217,17 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._scrollContent.addChild(container);
   }
 
+  /** @description 更新右边距坐标 */
+  private _updateBottomMargin() {
+    this._bottomMarginBox.x = this._topMargin + this._scrollContent.width;
+  }
+
   /** @description 按下 */
   private _onDragStart(event: FederatedPointerEvent) {
     if (this._content.height <= this._maskGraphics.height) return;
 
-    const position = event.getLocalPosition(this);
-    this._startY = position.y - this._content.y;
+    const { y } = event.getLocalPosition(this);
+    this._startY = y - this._content.y;
     this._isDragging = true;
     this._velocity = 0;
     this._startTime = Date.now();
@@ -228,8 +238,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** @description 拖动 */
   private _onDragMove(event: FederatedPointerEvent) {
     if (this._isDragging) {
-      const position = event.getLocalPosition(this);
-      const newPosition = position.y - this._startY;
+      const { y } = event.getLocalPosition(this);
+      const newPosition = y - this._startY;
       this._content.y = newPosition;
       this._updateScrollbar();
     }

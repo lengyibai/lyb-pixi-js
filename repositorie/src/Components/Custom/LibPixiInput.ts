@@ -12,6 +12,10 @@ interface Params {
   height: number;
   /** 字体与高度比 */
   fontSizeRatio: number;
+  /** 使用字体 */
+  fontFamily?: string;
+  /** 是否加粗 */
+  bold?: boolean;
   /** 是否需要placeholder */
   placeholder?: string;
   /** placeholder颜色 */
@@ -103,6 +107,8 @@ export class LibPixiInput extends LibPixiContainer {
       align = "left",
       type = "text",
       onInput = () => {},
+      fontFamily = "",
+      bold = false,
     } = this._params;
 
     this._input = document.createElement("input");
@@ -116,6 +122,8 @@ export class LibPixiInput extends LibPixiContainer {
       background-color: transparent;
       color: ${color};
       text-align: ${align};
+      font-family: ${fontFamily};
+      font-bold: ${bold ? "bold" : "normal"}
       `;
     document.querySelector("#game")!.appendChild(this._input);
 
@@ -146,6 +154,8 @@ export class LibPixiInput extends LibPixiContainer {
       align = "left",
       placeholder = "",
       placeholderColor,
+      fontFamily = "",
+      bold = false,
     } = this._params;
 
     //创建描述
@@ -153,6 +163,8 @@ export class LibPixiInput extends LibPixiContainer {
       text: placeholder,
       fontColor: placeholderColor,
       fontSize: height * fontSizeRatio,
+      fontFamily,
+      fontWeight: bold ? "bold" : "normal",
     });
     this.addChild(this._placeholder);
     this._placeholder.visible = !value;
@@ -167,6 +179,8 @@ export class LibPixiInput extends LibPixiContainer {
       text: value,
       fontColor: color,
       fontSize: height * fontSizeRatio,
+      fontFamily,
+      fontWeight: bold ? "bold" : "normal",
     });
     this.addChild(this._readonlyInput);
     this._readonlyInput.visible = !!value;

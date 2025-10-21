@@ -1,11 +1,13 @@
 import {
   Container,
-  Graphics,
   Sprite,
+  Texture,
   type FederatedPointerEvent,
 } from "pixi.js";
 import { gsap } from "gsap";
+import { libPixiEvent } from "../../Utils/LibPixiEvent";
 import { LibPixiContainer } from "../Base/LibPixiContainer";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle";
 
 export interface LibPixiScrollContainerXParams {
   /** 宽度 */
@@ -16,14 +18,18 @@ export interface LibPixiScrollContainerXParams {
   scrollContent: Container;
   /** 背景色，用于定位 */
   bgColor?: string;
-  /** 右边距 */
-  rightMargin?: number;
+  /** 自定义遮罩贴图 */
+  maskTexture?: Texture;
+  /** 遮罩X坐标 */
+  maskX?: number;
+  /** 遮罩Y坐标 */
+  maskY?: number;
 }
 
-/** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiScrollContainerX-X轴滚动容器
- */
+/** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹 */
 export class LibPixiScrollContainerX extends LibPixiContainer {
+  /** 舞台 */
+  static stage: Container;
   /** 开始位置 */
   private _startX = 0;
   /** 惯性速度 */
@@ -37,15 +43,28 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   /** 是否处于拖动状态 */
   private _isDragging = false;
 
+  /** 左边距 */
+  private _leftMargin = 0;
+  /** 右边距元素 */
+  private _rightMarginBox!: Sprite;
+
   /** 滚动容器 */
   public _scrollContent: Container;
   /** 遮罩 */
-  private _maskGraphics: Graphics;
+  private _maskGraphics: Container;
   /** 滚动的内容 */
   private _content: Container;
 
   constructor(params: LibPixiScrollContainerXParams) {
-    const { width, height, scrollContent, bgColor, rightMargin = 0 } = params;
+    const {
+      width,
+      height,
+      scrollContent,
+      bgColor,
+      maskTexture,
+      maskX = 0,
+      maskY = 0,
+    } = params;
     super(width, height, bgColor);
 
     this._scrollContent = scrollContent;
@@ -55,27 +74,54 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     this.addChild(this._content);
     this._content.addChild(this._scrollContent);
 
-    //创建右边距
-    const rightMarginBox = new Sprite();
-    this._content.addChild(rightMarginBox);
-    rightMarginBox.width = this._content.width + rightMargin;
-
-    // 创建遮罩
-    this._maskGraphics = new Graphics();
-    this.addChild(this._maskGraphics);
-    this._maskGraphics.clear();
-    this._maskGraphics.beginFill(0x000000);
-    this._maskGraphics.drawRect(0, 0, width, height);
-    this._maskGraphics.endFill();
-    this.mask = this._maskGraphics;
+    //自定义遮罩
+    if (maskTexture) {
+      this._maskGraphics = new Sprite(maskTexture);
+      this.addChild(this._maskGraphics);
+      this._maskGraphics.width = width;
+      this._maskGraphics.height = height;
+      this._maskGraphics.position.set(maskX, maskY);
+      this.mask = this._maskGraphics;
+    } else {
+      this._maskGraphics = new LibPixiRectangle(width, height, "#000");
+      this.addChild(this._maskGraphics);
+      this.mask = this._maskGraphics;
+    }
 
     // 添加事件监听
-    this.eventMode = "static";
-    this.on("pointerdown", this._onDragStart, this);
-    this.on("pointermove", this._onDragMove, this);
-    this.on("pointerup", this._onDragEnd, this);
-    this.on("pointerupoutside", this._onDragEnd, this);
-    this.on("wheel", this._onWheelScroll, this);
+    libPixiEvent(this, "pointerdown", (event) => {
+      this._onDragStart(event);
+    });
+    libPixiEvent(LibPixiScrollContainerX.stage, "pointermove", (event) => {
+      this._onDragMove(event);
+    });
+    libPixiEvent(this, "pointerup", () => {
+      this._onDragEnd();
+    });
+    libPixiEvent(this, "wheel", (event) => {
+      this._onWheelScroll(event as unknown as WheelEvent);
+    });
+    libPixiEvent(this, "pointerupoutside", () => {
+      this._onDragEnd();
+    });
+  }
+
+  /** @description 添加边距 */
+  addMargin(leftMargin: number, rightMargin = leftMargin) {
+    this._leftMargin = leftMargin;
+    if (leftMargin) {
+      const leftMarginBox = new Sprite();
+      this._content.addChild(leftMarginBox);
+      leftMarginBox.width = leftMargin;
+      this._scrollContent.x += leftMargin;
+    }
+
+    if (rightMargin) {
+      this._rightMarginBox = new Sprite();
+      this._content.addChild(this._rightMarginBox);
+      this._rightMarginBox.height = rightMargin;
+      this._rightMarginBox.x = leftMargin + this._scrollContent.width;
+    }
   }
 
   /** @description 设置滚动容器可视区宽高
@@ -83,12 +129,10 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
    * @param height 高度
    */
   setDimensions(width: number, height: number) {
-    // 更新遮罩尺寸
-    this._maskGraphics.clear();
-    this._maskGraphics.beginFill(0x000000);
-    this._maskGraphics.drawRect(0, 0, width, height);
-    this._maskGraphics.endFill();
+    this._maskGraphics.width = width;
+    this._maskGraphics.height = height;
     this.setSize(width, height);
+    this._updateRightMargin();
   }
 
   /** @description 返回顶部 */
@@ -102,12 +146,17 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     this._scrollContent.addChild(container);
   }
 
+  /** @description 更新右边距坐标 */
+  private _updateRightMargin() {
+    this._rightMarginBox.x = this._leftMargin + this._scrollContent.width;
+  }
+
   /** @description 按下 */
   private _onDragStart(event: FederatedPointerEvent) {
     if (this._content.width <= this._maskGraphics.width) return;
 
-    const position = event.getLocalPosition(this);
-    this._startX = position.x - this._content.x;
+    const { x } = event.getLocalPosition(this);
+    this._startX = x - this._content.x;
     this._isDragging = true;
     this._velocity = 0;
     this._startTime = Date.now();
@@ -118,8 +167,8 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   /** @description 拖动 */
   private _onDragMove(event: FederatedPointerEvent) {
     if (this._isDragging) {
-      const position = event.getLocalPosition(this);
-      const newPosition = position.x - this._startX;
+      const { x } = event.getLocalPosition(this);
+      const newPosition = x - this._startX;
       this._content.x = newPosition;
     }
   }
@@ -176,10 +225,11 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   private _limitScrollRange() {
     //如果内容顶部离开了滚动容器顶部，则归位
     if (this._content.x > 0) {
+      //回弹
       gsap.to(this._content, {
-        duration: 0.75,
+        duration: 0.2,
+        ease: "power1.out",
         x: 0,
-        ease: "elastic.out",
       });
     }
     // 如果滚动距离大于内容高度减去遮罩高度
@@ -189,18 +239,12 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     ) {
       // 如果内容高度大于遮罩高度，则滚动到底部
       if (this._content.width > this._maskGraphics.width) {
+        //回弹
         const x = -(this._content.width - this._maskGraphics.width);
         gsap.to(this._content, {
-          duration: 0.75,
+          duration: 0.2,
+          ease: "power1.out",
           x,
-          ease: "elastic.out",
-        });
-      }
-      // 否则静止不动
-      else {
-        gsap.to(this._content, {
-          duration: 0.25,
-          x: 0,
         });
       }
     }
