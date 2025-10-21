@@ -92,11 +92,17 @@ export class LibPixiInput extends LibPixiContainer {
 
   /** @description 设置值 */
   setValue(v: string) {
-    const { onFormatValue } = this._params;
+    const { onFormatValue, type = "text" } = this._params;
 
     const value = v;
     this._value = value;
-    this._readonlyInput.text = onFormatValue?.(value) || value;
+
+    if (type === "password") {
+      this._readonlyInput.text =
+        onFormatValue?.(value) || "●".repeat(value.length);
+    } else {
+      this._readonlyInput.text = onFormatValue?.(value) || value;
+    }
   }
 
   /** @description 创建输入框 */
@@ -123,7 +129,7 @@ export class LibPixiInput extends LibPixiContainer {
       color: ${color};
       text-align: ${align};
       font-family: ${fontFamily};
-      font-bold: ${bold ? "bold" : "normal"}
+      font-weight: ${bold ? "bold" : "normal"}
       `;
     document.querySelector("#game")!.appendChild(this._input);
 
@@ -243,7 +249,7 @@ export class LibPixiInput extends LibPixiContainer {
     let text = this._input.value.trim();
 
     //如果类型为字符串，则不参与校验
-    if (type === "text") return text;
+    if (["text", "password"].includes(type)) return text;
 
     //如果为空，则使用最小值
     if (this._input.value === "") text = min.toString();
@@ -290,5 +296,13 @@ export class LibPixiInput extends LibPixiContainer {
       this._input.style.fontSize = `${width * fontSizeRatio}px`;
       this._input.style.transform = `rotate(90deg)`;
     }
+  }
+
+  /** @description 设置输入框类型 */
+  toggleType(type: "text" | "password") {
+    this._input.type = type;
+    this._params.type = type;
+
+    this.setValue(this._value);
   }
 }

@@ -37,7 +37,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   /** 上一次滚动时间 */
   private _startTime = 0;
   /** 开始位置 */
-  private _startPosition = 0;
+  private _startContentX = 0;
   /** 滚动速度 */
   private _scrollSpeed = 200;
   /** 是否处于拖动状态 */
@@ -46,7 +46,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   /** 左边距 */
   private _leftMargin = 0;
   /** 右边距元素 */
-  private _rightMarginBox!: Sprite;
+  private _rightMarginBox?: Sprite;
 
   /** 滚动容器 */
   public _scrollContent: Container;
@@ -148,6 +148,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
 
   /** @description 更新右边距坐标 */
   private _updateRightMargin() {
+    if (!this._rightMarginBox) return;
     this._rightMarginBox.x = this._leftMargin + this._scrollContent.width;
   }
 
@@ -160,7 +161,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     this._isDragging = true;
     this._velocity = 0;
     this._startTime = Date.now();
-    this._startPosition = this._content.x;
+    this._startContentX = this._content.x;
     gsap.killTweensOf(this._content);
   }
 
@@ -181,7 +182,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
 
     if (deltaTime < 250) {
       // 如果停留时间在阈值内，计算惯性速度
-      this._velocity = (this._content.x - this._startPosition) / deltaTime;
+      this._velocity = (this._content.x - this._startContentX) / deltaTime;
       this._applyInertia();
     } else {
       // 停留时间超出阈值，取消惯性
@@ -245,6 +246,14 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
           duration: 0.2,
           ease: "power1.out",
           x,
+        });
+      }
+
+      // 否则静止不动
+      else {
+        gsap.to(this._content, {
+          duration: 0.25,
+          x: 0,
         });
       }
     }

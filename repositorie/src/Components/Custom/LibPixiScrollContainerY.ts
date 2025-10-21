@@ -44,7 +44,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 上一次滚动时间 */
   private _startTime = 0;
   /** 开始位置 */
-  private _startPosition = 0;
+  private _startContentY = 0;
   /** 滚动速度 */
   private _scrollSpeed = 200;
   /** 是否处于拖动状态 */
@@ -62,7 +62,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** 上边距 */
   private _topMargin = 0;
   /** 右边距元素 */
-  private _bottomMarginBox!: Sprite;
+  private _bottomMarginBox?: Sprite;
 
   /** 滚动容器 */
   public _scrollContent: Container;
@@ -219,6 +219,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
   /** @description 更新右边距坐标 */
   private _updateBottomMargin() {
+    if (!this._bottomMarginBox) return;
     this._bottomMarginBox.x = this._topMargin + this._scrollContent.width;
   }
 
@@ -231,7 +232,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._isDragging = true;
     this._velocity = 0;
     this._startTime = Date.now();
-    this._startPosition = this._content.y;
+    this._startContentY = this._content.y;
     gsap.killTweensOf(this._content);
   }
 
@@ -254,7 +255,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
     if (deltaTime < 250) {
       // 如果停留时间在阈值内，计算惯性速度
-      this._velocity = (this._content.y - this._startPosition) / deltaTime;
+      this._velocity = (this._content.y - this._startContentY) / deltaTime;
       this._applyInertia();
     } else {
       // 停留时间超出阈值，取消惯性
@@ -320,9 +321,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     //如果内容顶部离开了滚动容器顶部，则归位
     if (this._content.y > 0) {
       gsap.to(this._content, {
-        duration: 0.75,
+        duration: 0.2,
         y: 0,
-        ease: "elastic.out",
+        ease: "power1.out",
         onUpdate: () => {
           this._updateScrollbar();
         },
@@ -340,9 +341,9 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       if (this._content.height > this._maskGraphics.height) {
         const y = -(this._content.height - this._maskGraphics.height);
         gsap.to(this._content, {
-          duration: 0.75,
+          duration: 0.2,
           y,
-          ease: "elastic.out",
+          ease: "power1.out",
           onUpdate: () => {
             this._updateScrollbar();
           },

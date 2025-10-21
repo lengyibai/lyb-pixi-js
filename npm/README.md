@@ -80,7 +80,7 @@ app.stage.addChild(box);
 
 ## 目录
 
-### 组件
+### 基础组件
 
 \- [LibPixiText-文本](#LibPixiText-文本)
 
@@ -98,9 +98,23 @@ app.stage.addChild(box);
 
 \- [LibPixiPolygon-多边形](#LibPixiPolygon-多边形)
 
+\- [LibPixiCapsule-胶囊体](#LibPixiCapsule-胶囊体)
+
+\- [LibPixiTriangle-三角形](#LibPixiTriangle-三角形)
+
+\- [LibPixiArc-弧形](#LibPixiArc-弧形)
+
+\- [LibPixiOval-椭圆](#LibPixiOval-椭圆)
+
+\- [LibPixiRound-圆圈](#LibPixiRound-圆圈)
+
+\- [LibPixiRoundedRect-圆角矩形](#LibPixiRoundedRect-圆角矩形)
+
 \- [LibPixiSpine-动画](#LibPixiSpine-动画)
 
 \- [LibPixiParticleMove-粒子容器](#LibPixiParticleMove-粒子容器)
+
+### 定制组件
 
 \- [LibPixiButtonHover-按钮悬浮](#LibPixiButtonHover-按钮悬浮)
 
@@ -125,6 +139,22 @@ app.stage.addChild(box);
 \- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
 
 \- [LibPixiLabelValue-标签值](#LibPixiLabelValue-标签值)
+
+\- [LibPixiPuzzleBg-设计图背景拼接](#LibPixiPuzzleBg-设计图背景拼接)
+
+\- [LibPixiDragLocate-元素拖拽定位](#LibPixiDragLocate-元素拖拽定位)
+
+\- [LibPixiTurntable-转盘布局](#LibPixiTurntable-转盘布局)
+
+\- [LibPixiInput-输入框](#LibPixiInput-输入框)
+
+\- [LibPixiArrangeLinearV2-线性排列](#LibPixiArrangeLinearV2-线性排列)
+
+\- [LibPixiTextGroupWrap-文本组换行](#LibPixiTextGroupWrap-文本组换行)
+
+\- [LibPixiGridLayoutV2-网格布局V2](#LibPixiGridLayoutV2-网格布局V2)
+
+\- [LibPixiAreaClick-扩大点击范围](#LibPixiAreaClick-扩大点击范围)
 
 ### 方法
 
@@ -162,9 +192,9 @@ app.stage.addChild(box);
 
 \- [LibPixiGridLayout-网格布局](#LibPixiGridLayout-网格布局)
 
-\- [LibPixiArrangeLinear-间隔布局](#LibPixiArrangeLinear-间隔布局)
-
 \- [LibPixiEmitContainerEvent-触发后代监听](#LibPixiEmitContainerEvent-触发后代监听)
+
+\- [LibPixiTicker-Ticker管理器](#LibPixiTicker-Ticker管理器)
 
 ## Base-基础
 
@@ -265,55 +295,18 @@ const fontText2 = font.createText("10", 24);
 this.addChild(fontText2);
 ```
 
-### LibPixiContainer-容器
-
-> 自定义容器大小及背景色
-
-```ts
-/**
- * @param width 容器宽度
- * @param height 容器高度
- * @param bgColor 背景色
- * @param overHidden 是否溢出裁剪
- */
-const box = new LibPixiJs.Base.LibPixiContainer(100, 100, "#fff", true);
-this.addChild(box);
-```
-
-### LibPixiRectBgColor-矩形
-
-> 自定义矩形背景色
-
-```ts
-const rect = new LibPixiRectBgColor(LibPixiRectBgColorParams);
-this.addChild(rect);
-
-interface LibPixiRectBgColorParams {
-  /** 宽度 */
-  width: number;
-  /** 高度 */
-  height: number;
-  /** 背景颜色 */
-  bgColor?: string | number;
-  /** 透明度 */
-  alpha?: number;
-  /** 圆角半径 */
-  radius?: number | number[];
-  /** 边框宽度 */
-  borderWidth?: number;
-  /** 边框颜色 */
-  borderColor?: string;
-  /** 是否启用变色功能 */
-  enableTint?: boolean;
-}
-```
-
 ### LibPixiRectangle-矩形
 
 > `LibPixiRectBgColor`精简版，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
 
 ```ts
 const libPixiRectangle = new LibPixiRectangle(100, 100, "#fff");
+```
+
+### LibPixiCircular-圆形
+
+```ts
+const libPixiCircular = new LibPixiCircular(100, "#fff");
 ```
 
 ### LibPixiPolygon-多边形
@@ -335,12 +328,6 @@ const polygonVertices = new LibPixiPolygon(
   ],
   "#000"
 );
-```
-
-### LibPixiCircular-圆形
-
-```ts
-const libPixiCircular = new LibPixiCircular(100, "#fff");
 ```
 
 ### LibPixiCapsule-胶囊体
@@ -790,12 +777,12 @@ scrollNum.slideTo(2);
 > ```ts
 > import { Container } from "pixi.js";
 > import { LibPixiSlider } from "./path/to/LibPixiSlider";
-> 
+>
 > //创建滑动内容容器
 > const slideContent = new Container();
 > //在这里添加幻灯片内容，例如图片、文本等
 > //slideContent.addChild(someImageOrText);
-> 
+>
 > //创建幻灯片
 > const slider = new LibPixiSlider({
 >   width: 400,
@@ -806,15 +793,14 @@ scrollNum.slideTo(2);
 >     console.log(`当前页: ${pageIndex + 1} / ${pageNum + 1}`);
 >   },
 > });
-> 
+>
 > //将幻灯片添加到场景
 > app.stage.addChild(slider);
-> 
+>
 > //手动滑动到上一页或下一页
 > slider.prev();
 > slider.next();
 > ```
->
 
 ### LibPixiSlide-滑动页
 
@@ -926,6 +912,14 @@ const amountContainer = new LibLabelValue({
 ### LibPixiTextGroupWrap-文本组换行
 
 > 内部创建文本类组，公共样式和单个设置样式，并整体支持换行
+
+### LibPixiGridLayoutV2-网格布局V2
+
+> 省略自己创建数组对组件进行 `push` ，内部做了 `push` 处理
+
+### LibPixiAreaClick-扩大点击范围
+
+> 解决当图片有空隙时，无法准确点击图片，如箭头和关闭按钮
 
 ## Utils-工具方法
 
@@ -1079,14 +1073,6 @@ libPixiEvent(btn, "pointertap", () => {
 });
 ```
 
-### LibPixiOverflowHidden-溢出裁剪
-
-> 为容器创建并应用一个矩形遮罩，用于隐藏溢出的内容，函数会返回遮罩，可控制是否显示遮罩
-
-```ts
-const mask = libPixiOverflowHidden(container); //为容器创建并应用矩形蒙版
-```
-
 ### LibPixiPromiseTickerTimeout-TickerPromise 定时器
 
 > 基于 Ticker 和 Promise 的定时器
@@ -1229,26 +1215,6 @@ const amountAnimation = _digitalIncreasingAnimation({
 LibPixiDownScaleAnimation(sprite);
 ```
 
-### LibPixiGridLayout-网格布局
-
-> 将元素按照指定的列数和间隔排列成网格布局
-
-```ts
-LibPixiGridLayout(cardList, 20, 3); //间隔20，一行三个
-```
-
-### LibPixiGridLayoutV2-网格布局V2
-
-> 省略自己创建数组对组件进行 `push` ，内部做了 `push` 处理
-
-### LibPixiArrangeLinear-间隔布局
-
-> 按照指定方向（水平或垂直）排列元素，支持固定间隔或自定义每个间隔
-
-```ts
-LibPixiArrangeLinear(cardList, 20, "y"); //间隔20，y轴排列
-```
-
 ### LibPixiEmitContainerEvent-触发后代监听
 
 > 递归调用后代的事件发射器
@@ -1260,4 +1226,3 @@ LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ### LibPixiTicker-Ticker管理器
 
 > 添加和删除 `Ticker` 函数，单个 `Ticker` 函数暂停开始，所有 `Ticker` 函数使用的是全局的 `Ticker`
-
