@@ -33,7 +33,7 @@ export class LibPixiArrangeLinearV2<T extends Container> extends Container {
   layout() {
     const {
       colNum = this._elementList.length,
-      gap = 10,
+      gap = 0,
       direction = "x",
       anchorX = 0,
       anchorY = 0,
