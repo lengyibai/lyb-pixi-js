@@ -23,7 +23,7 @@ interface Params {
   /** 背景色，用于调试输入框的位置 */
   bgColor?: string;
   /** 输入类型 */
-  type?: "number" | "text";
+  type?: "number" | "text" | "password";
   /** 字体颜色 */
   color?: string;
   /** 初始值 */
