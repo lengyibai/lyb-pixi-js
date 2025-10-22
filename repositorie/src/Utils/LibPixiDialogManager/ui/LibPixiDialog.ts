@@ -139,6 +139,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
 
   /** @description 关闭 */
   async close() {
+    this._maskUI.eventMode = "none";
     this._offResize?.();
     gsap.to(this._dialogContainer.scale, {
       duration: LibPixiDialog.durationOut,

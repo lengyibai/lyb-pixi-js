@@ -156,6 +156,8 @@ app.stage.addChild(box);
 
 \- [LibPixiAreaClick-扩大点击范围](#LibPixiAreaClick-扩大点击范围)
 
+\- [LibPixiHeadingParagraphLayout-文章标题内容布局](#LibPixiHeadingParagraphLayout-文章标题内容布局)
+
 ### 方法
 
 \- [LibPixiAudio-音频播放器](#LibPixiAudio-音频播放器)
@@ -920,6 +922,10 @@ const amountContainer = new LibLabelValue({
 ### LibPixiAreaClick-扩大点击范围
 
 > 解决当图片有空隙时，无法准确点击图片，如箭头和关闭按钮
+
+### LibPixiHeadingParagraphLayout-文章标题内容布局
+
+> 只支持一个标题和一个内容，一般用于一些隐私政策和服务条款
 
 ## Utils-工具方法
 
