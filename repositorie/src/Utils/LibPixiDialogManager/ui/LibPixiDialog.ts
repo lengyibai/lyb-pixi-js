@@ -78,8 +78,6 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     this._dialogContainer.alpha = 0;
 
     requestAnimationFrame(() => {
-      this.updatePivot();
-
       if (LibPixiDialog.adaptation === "h") {
         this._redraw(1920, 1080);
       } else if (LibPixiDialog.adaptation === "v") {
@@ -99,12 +97,21 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     });
   }
 
-  /** @description 设置弹窗容器锚点 */
-  updatePivot() {
-    const dialogW = this._dialogContainer.width / 2;
-    const dialogH = this._dialogContainer.height / 2;
-    this._dialogContainer.pivot.set(dialogW, dialogH);
-    console.log(this._dialogContainer.width, this._dialogContainer.height);
+  /** @description 更新弹窗容器坐标 */
+  updatePosition(w: number, h: number) {
+    const bounds = this._dialogContainer.getLocalBounds();
+    const dialogW = bounds.width / 2;
+    const dialogH = bounds.height / 2;
+    this._dialogContainer.pivot.set(bounds.x + dialogW, bounds.y + dialogH);
+
+    const halfW = 1920 / 2;
+    const halfH = 1080 / 2;
+
+    if (w > h) {
+      this._dialogContainer.position.set(halfW, halfH);
+    } else {
+      this._dialogContainer.position.set(halfH, halfW);
+    }
   }
 
   /** @description 关闭 */
@@ -137,22 +144,20 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     this._lastIsH = w > h;
 
     let scale = 0;
-    const halfW = 1920 / 2;
-    const halfH = 1080 / 2;
 
     if (w > h) {
       this._maskUI.width = 2700;
       this._maskUI.height = 1080;
       this._maskUI.x = -(2700 - 1920) / 2;
-      this._dialogContainer.position.set(halfW, halfH);
       scale = 1;
     } else {
       this._maskUI.width = 1080;
       this._maskUI.height = 2700;
       this._maskUI.x = 0;
-      this._dialogContainer.position.set(halfH, halfW);
       scale = this._vScale;
     }
+
+    this.updatePosition(w, h);
 
     this._dialogContainer.scale.set(0);
     gsap.to(this._dialogContainer.scale, {
