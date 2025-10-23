@@ -149,11 +149,13 @@ export class LibPixiDialog extends LibPixiBaseContainer {
       this._maskUI.width = 2700;
       this._maskUI.height = 1080;
       this._maskUI.x = -(2700 - 1920) / 2;
+      this._maskUI.y = 0;
       scale = 1;
     } else {
       this._maskUI.width = 1080;
       this._maskUI.height = 2700;
       this._maskUI.x = 0;
+      this._maskUI.y = -(2700 - 1920) / 2;
       scale = this._vScale;
     }
 
