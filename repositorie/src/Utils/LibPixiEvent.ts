@@ -4,32 +4,28 @@ import type {
   FederatedPointerEvent,
 } from "pixi.js";
 
-const debounceImmediate = <T extends (...args: any[]) => void>(
+const throttleImmediate = <T extends (...args: any[]) => void>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  let invoked = false;
+  let lastTime = 0;
 
   return (...args: Parameters<T>) => {
-    if (!invoked) {
+    const now = Date.now();
+    if (now - lastTime >= wait) {
+      lastTime = now;
       func(...args);
-      invoked = true;
     }
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      invoked = false;
-    }, wait);
   };
 };
 
 export interface LibPixiEventParams {
   /** 是否只执行一次 */
   once?: boolean;
-  /** 是否启用防抖 */
-  debounce?: boolean;
-  /** 防抖时长 */
-  debounceTime?: number;
+  /** 是否启用节流 */
+  throttle?: boolean;
+  /** 节流时长 */
+  throttleTime?: number;
   /** 是否阻止拖动点击 */
   preventDragClick?: boolean;
 }
@@ -49,8 +45,8 @@ export const libPixiEvent = (
 ) => {
   const {
     once = false,
-    debounce = false,
-    debounceTime = 1000,
+    throttle = false,
+    throttleTime = 1000,
     preventDragClick = false,
   } = params;
   v.cursor = "pointer";
@@ -92,7 +88,7 @@ export const libPixiEvent = (
     callback(e);
   };
 
-  const handler = debounce ? debounceImmediate(fn, debounceTime) : fn;
+  const handler = throttle ? throttleImmediate(fn, throttleTime) : fn;
 
   if (once) {
     v.once(eventName, handler);
