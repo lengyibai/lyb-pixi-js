@@ -1,7 +1,7 @@
 import { Container, Text, type ITextStyle } from "pixi.js";
 
 interface TextItem {
-  text: string;
+  text: string | number;
   style?: Partial<ITextStyle>;
 }
 
