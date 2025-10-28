@@ -45,4 +45,12 @@ export class LibPixiDialogManager {
       delete this.views[id];
     }
   }
+
+  /** @description 关闭并销毁所有弹窗 */
+  async closeAll() {
+    const ids = Object.keys(this.views);
+    for (const id of ids) {
+      await this.close(id);
+    }
+  }
 }
