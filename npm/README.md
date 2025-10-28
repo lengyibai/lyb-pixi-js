@@ -1077,6 +1077,36 @@ libPixiEvent(btn, "pointertap", () => {
     removeEventListener();
   }
 });
+
+//带动画
+libPixiEvent(tipIcon, "pointertap", () => {
+  this._isShowTip = !this._isShowTip;
+  gsap.to(tipContainer, {
+    duration: 0.25,
+    ease: this._isShowTip ? "back.out" : "back.in",
+    pixi: {
+      scale: this._isShowTip ? 1 : 0,
+    },
+  });
+
+  //列表显示后开始监听是否点击容器外
+  if (this._isShowTip) {
+    removeEventListener = libPixiOutsideClick(tipContainer, tipIcon, () => {
+      this._isShowTip = false;
+      gsap.to(tipContainer, {
+        duration: 0.25,
+        ease: "back.in",
+        pixi: {
+          scale: 0,
+        },
+      });
+    });
+  }
+  //如果通过再次点击按钮关闭了列表，则移除监听器
+  else {
+    removeEventListener?.();
+  }
+});
 ```
 
 ### LibPixiPromiseTickerTimeout-TickerPromise 定时器
