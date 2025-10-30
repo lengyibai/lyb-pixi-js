@@ -1,18 +1,26 @@
 export interface GridLayoutParams {
-  /** 列数 */
-  colNum?: number;
+  /** 行数 */
+  rowNum?: number;
   /** 列间隔 */
   colGap?: number;
   /** 行间隔 */
   rowGap?: number;
   /** 元素列表 */
   elementList?: any[];
+  /** 锚点X */
+  anchorX?: number;
+  /** 锚点Y */
+  anchorY?: number;
+  /** 每列最大行数 */
+  maxRow?: number;
+  /** 布局方向：ltr 左到右，rtl 右到左 */
+  direction?: "ltr" | "rtl";
 }
 
 import { Container } from "pixi.js";
 
-/** @description 网格布局 */
-export class LibPixiGridLayoutV2<T extends Container> extends Container {
+/** @description 网格列布局 */
+export class LibPixiGridColumnLayout<T extends Container> extends Container {
   /** 参数 */
   private _params: GridLayoutParams;
   /** 元素列表 */
@@ -31,19 +39,28 @@ export class LibPixiGridLayoutV2<T extends Container> extends Container {
     this._elementList.push(element);
   }
 
-  /** @description 布局 */
+  /** @description 列布局 */
   layout() {
     const {
-      colNum = this._elementList.length,
+      rowNum = 1,
       colGap = 325,
       rowGap = 75,
-    } = this._params;
+      anchorX = 0,
+      anchorY = 0,
+      direction = "ltr",
+    } = this._params as GridLayoutParams;
+
+    const isRTL = direction === "rtl";
+
     this._elementList.forEach((item, index) => {
-      const col = index % colNum;
-      const row = Math.floor(index / colNum);
-      item.x = col * colGap;
+      const row = index % rowNum;
+      const col = Math.floor(index / rowNum);
+      item.x = isRTL ? -col * colGap : col * colGap;
       item.y = row * rowGap;
     });
+
+    const bounds = this.getLocalBounds();
+    this.pivot.set(bounds.x + bounds.width * anchorX, bounds.y + bounds.height * anchorY);
   }
 
   /** @description 获取列表元素 */

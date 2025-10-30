@@ -915,9 +915,9 @@ const amountContainer = new LibLabelValue({
 
 > 内部创建文本类组，公共样式和单个设置样式，并整体支持换行
 
-### LibPixiGridLayoutV2-网格布局V2
+### LibPixiGridRowLayout-网格行布局
 
-> 省略自己创建数组对组件进行 `push` ，内部做了 `push` 处理
+> 一列占满后进入下一列
 
 ### LibPixiAreaClick-扩大点击范围
 
@@ -926,6 +926,10 @@ const amountContainer = new LibLabelValue({
 ### LibPixiHeadingParagraphLayout-文章标题内容布局
 
 > 只支持一个标题和一个内容，一般用于一些隐私政策和服务条款
+
+### LibPixiGridColumnLayout-网格列布局
+
+> 一列占满后进入下一列，支持从左到右或从右到左
 
 ## Utils-工具方法
 
