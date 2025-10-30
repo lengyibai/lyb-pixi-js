@@ -77,7 +77,7 @@ export class LibPixiInput extends LibPixiContainer {
     this._createReadOnlyInput();
 
     //聚焦
-    libPixiEvent(this, "pointertap", this._focus.bind(this));
+    libPixiEvent(this, "pointertap", this.focus.bind(this));
 
     const ticker = new Ticker();
     ticker.add(() => {
@@ -102,6 +102,22 @@ export class LibPixiInput extends LibPixiContainer {
         onFormatValue?.(value) || "●".repeat(value.length);
     } else {
       this._readonlyInput.text = onFormatValue?.(value) || value;
+    }
+  }
+
+  /** @description 聚焦 */
+  focus() {
+    const { type } = this._params;
+
+    this._input.style.display = "block";
+    this._input.focus();
+    this._readonlyInput.visible = false;
+    this._placeholder.visible = false;
+
+    if (type === "number") {
+      this._input.value = this._value && Number(this._value).toString();
+    } else {
+      this._input.value = this._value;
     }
   }
 
@@ -195,22 +211,6 @@ export class LibPixiInput extends LibPixiContainer {
       align === "left" ? 0 : width / 2,
       height / 2
     );
-  }
-
-  /** @description 聚焦 */
-  private _focus() {
-    const { type } = this._params;
-
-    this._input.style.display = "block";
-    this._input.focus();
-    this._readonlyInput.visible = false;
-    this._placeholder.visible = false;
-
-    if (type === "number") {
-      this._input.value = this._value && Number(this._value).toString();
-    } else {
-      this._input.value = this._value;
-    }
   }
 
   /** @description 失焦 */
