@@ -11,7 +11,7 @@ interface Params {
   /** 高度 */
   height: number;
   /** 字体与高度比 */
-  fontSizeRatio: number;
+  fontSizeRatio?: number;
   /** 使用字体 */
   fontFamily?: string;
   /** 是否加粗 */
