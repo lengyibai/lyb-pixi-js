@@ -32,10 +32,6 @@ interface Params {
   integer?: boolean;
   /** 是否允许输入负数 */
   isNegative?: boolean;
-  /** 最小值 */
-  min?: number;
-  /** 最大值 */
-  max?: number;
   /** 最大长度 */
   maxLength?: number;
   /** 对齐方式 */
@@ -105,6 +101,11 @@ export class LibPixiInput extends LibPixiContainer {
     }
   }
 
+  /** @description 更改输入框描述 */
+  setPlaceholder(v: string) {
+    this._placeholder.text = v;
+  }
+
   /** @description 聚焦 */
   focus() {
     const { type } = this._params;
@@ -119,6 +120,21 @@ export class LibPixiInput extends LibPixiContainer {
     } else {
       this._input.value = this._value;
     }
+  }
+
+  /** @description 设置输入框类型 */
+  toggleType(type: "text" | "password") {
+    this._input.type = type;
+    this._params.type = type;
+    this.setValue(this._value);
+  }
+
+  /** @description 清空输入框 */
+  clear() {
+    this._input.value = "";
+    this._placeholder.visible = true;
+    this._readonlyInput.visible = false;
+    this._blur();
   }
 
   /** @description 创建输入框 */
@@ -222,7 +238,7 @@ export class LibPixiInput extends LibPixiContainer {
     this._input.style.display = "none";
     libPixiScaleContainer(this._readonlyInput, width);
 
-    if (this._params.type === "number") {
+    if (this._params.type === "number" && value !== "") {
       this._readonlyInput.visible = true;
       onValue?.(Number(value));
     } else {
@@ -239,26 +255,17 @@ export class LibPixiInput extends LibPixiContainer {
 
   /** @description 失去焦点处理 */
   private _onBlurHandler = () => {
-    const {
-      type = "text",
-      integer = false,
-      min = 1,
-      max = Infinity,
-    } = this._params;
+    const { type = "text", integer = false } = this._params;
 
     let text = this._input.value.trim();
 
     //如果类型为字符串，则不参与校验
     if (["text", "password"].includes(type)) return text;
 
-    //如果为空，则使用最小值
-    if (this._input.value === "") text = min.toString();
+    const num = Number(text);
 
-    //如果不能为负数，输入值小于最小值，则使用最小值
-    if (Number(text) < min) text = min.toString();
-
-    //如果存在最大值，且输入值大于最大值，则使用最大值
-    if (max && Number(text) > max) text = max.toString();
+    //如果小于0，则返回空
+    if (num <= 0) return "";
 
     //如果要求整数，则取整
     if (integer) text = parseInt(text).toString();
@@ -296,13 +303,5 @@ export class LibPixiInput extends LibPixiContainer {
       this._input.style.fontSize = `${width * fontSizeRatio}px`;
       this._input.style.transform = `rotate(90deg)`;
     }
-  }
-
-  /** @description 设置输入框类型 */
-  toggleType(type: "text" | "password") {
-    this._input.type = type;
-    this._params.type = type;
-
-    this.setValue(this._value);
   }
 }
