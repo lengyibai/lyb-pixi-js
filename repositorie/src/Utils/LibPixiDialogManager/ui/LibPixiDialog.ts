@@ -1,9 +1,10 @@
 import { Container } from "pixi.js";
 import gsap from "gsap";
 import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
-import { LibPixiRectangle } from "../../../Components/Base/LibPixiRectangle";
+import { LibPixiMaskBg } from "../../../Components/Custom/LibPixiMaskBg";
 import { libPixiEvent } from "../../LibPixiEvent";
 import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
+import { LibPixiTicker } from "../../LibPixiTicker";
 
 interface Params {
   /** 是否需要显示黑色背景 */
@@ -23,9 +24,11 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   static durationOut = 0.5;
   /** 是否支持横竖版 */
   static adaptation: "hv" | "h" | "v" = "hv";
+  /** 舞台 */
+  static stage: Container;
 
   /** 蒙版UI */
-  private _maskUI: LibPixiRectangle;
+  private _maskUI: LibPixiMaskBg;
   /** 内容容器 */
   private _dialogContainer: Container;
   /** 竖版缩放大小 */
@@ -39,11 +42,14 @@ export class LibPixiDialog extends LibPixiBaseContainer {
   constructor(params?: Params) {
     super();
 
+    LibPixiMaskBg.stage = LibPixiDialog.stage;
+    LibPixiMaskBg.bgAlpha = LibPixiDialog.bgAlpha;
+
     const { onClickMask, vScale = 1, needBg = true } = params || {};
     this._vScale = vScale;
 
     //蒙版
-    this._maskUI = new LibPixiRectangle(2700, 1080, "#000");
+    this._maskUI = new LibPixiMaskBg();
     this.addChild(this._maskUI);
     this._maskUI.alpha = 0;
     this._maskUI.eventMode = "static";
@@ -69,7 +75,14 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     this._dialogContainer.eventMode = "static";
 
     const resize = new LibJsResizeWatcher(LibPixiDialog.adaptation);
-    this._offResize = resize.on(this._redraw.bind(this), false);
+    const off1 = resize.on(this._redraw.bind(this), false);
+    const off2 = LibPixiTicker.add("LibPixiDialog", () => {
+      this._maskUI.updateSize();
+    });
+    this._offResize = () => {
+      off1();
+      off2();
+    };
   }
 
   /** @description 设置弹窗内容 */
@@ -140,22 +153,16 @@ export class LibPixiDialog extends LibPixiBaseContainer {
 
   /** @description 重绘弹窗 */
   private _redraw(w: number, h: number) {
+    this._maskUI.updateSize();
+
     if (this._lastIsH === w > h) return;
     this._lastIsH = w > h;
 
     let scale = 0;
 
     if (w > h) {
-      this._maskUI.width = 2700;
-      this._maskUI.height = 1080;
-      this._maskUI.x = -(2700 - 1920) / 2;
-      this._maskUI.y = 0;
       scale = 1;
     } else {
-      this._maskUI.width = 1080;
-      this._maskUI.height = 2700;
-      this._maskUI.x = 0;
-      this._maskUI.y = -(2700 - 1920) / 2;
       scale = this._vScale;
     }
 
