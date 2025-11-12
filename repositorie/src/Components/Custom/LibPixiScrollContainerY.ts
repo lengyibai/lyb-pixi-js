@@ -207,9 +207,13 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   }
 
   /** @description 返回顶部 */
-  scrollToTop() {
+  scrollToTop(animate = false) {
     gsap.killTweensOf(this._content);
-    this._content.y = 0;
+    if (animate) {
+      gsap.to(this._content, { y: 0, duration: 0.25 });
+    } else {
+      this._content.y = 0;
+    }
   }
 
   /** @description 往滚动内容添加元素 */
