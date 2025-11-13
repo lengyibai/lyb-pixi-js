@@ -24,6 +24,8 @@ export interface LibPixiScrollContainerXParams {
   maskX?: number;
   /** 遮罩Y坐标 */
   maskY?: number;
+  /** 滚动触发 */
+  onScroll?: (x: number) => void;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹 */
@@ -55,6 +57,9 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
   /** 滚动的内容 */
   private _content: Container;
 
+  /** 滚动触发 */
+  private _onScroll?: (x: number) => void;
+
   constructor(params: LibPixiScrollContainerXParams) {
     const {
       width,
@@ -64,10 +69,12 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
       maskTexture,
       maskX = 0,
       maskY = 0,
+      onScroll,
     } = params;
     super(width, height, bgColor);
 
     this._scrollContent = scrollContent;
+    this._onScroll = onScroll;
 
     // 创建内容容器
     this._content = new Container();
@@ -171,6 +178,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
       const { x } = event.getLocalPosition(this);
       const newPosition = x - this._startX;
       this._content.x = newPosition;
+      this._onScroll?.(this._content.x);
     }
   }
 
@@ -224,6 +232,8 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
 
   /** @description 限制滚动范围 */
   private _limitScrollRange() {
+    this._onScroll?.(this._content.x);
+
     //如果内容顶部离开了滚动容器顶部，则归位
     if (this._content.x > 0) {
       //回弹
@@ -231,6 +241,9 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
         duration: 0.2,
         ease: "power1.out",
         x: 0,
+        onUpdate: () => {
+          this._onScroll?.(this._content.x);
+        },
       });
     }
     // 如果滚动距离大于内容高度减去遮罩高度
@@ -246,6 +259,9 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
           duration: 0.2,
           ease: "power1.out",
           x,
+          onUpdate: () => {
+            this._onScroll?.(this._content.x);
+          },
         });
       }
 
@@ -254,6 +270,9 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
         gsap.to(this._content, {
           duration: 0.25,
           x: 0,
+          onUpdate: () => {
+            this._onScroll?.(this._content.x);
+          },
         });
       }
     }

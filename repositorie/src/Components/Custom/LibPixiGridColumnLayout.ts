@@ -60,7 +60,10 @@ export class LibPixiGridColumnLayout<T extends Container> extends Container {
     });
 
     const bounds = this.getLocalBounds();
-    this.pivot.set(bounds.x + bounds.width * anchorX, bounds.y + bounds.height * anchorY);
+    this.pivot.set(
+      bounds.x + bounds.width * anchorX,
+      bounds.y + bounds.height * anchorY
+    );
   }
 
   /** @description 获取列表元素 */
