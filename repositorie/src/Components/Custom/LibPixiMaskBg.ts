@@ -15,20 +15,11 @@ export class LibPixiMaskBg extends Graphics {
 
   /** @description 更新蒙版 */
   updateSize() {
-    const topLeft = LibPixiMaskBg.stage.toLocal({ x: 0, y: 0 });
-    const bottomRight = LibPixiMaskBg.stage.toLocal({
-      x: window.innerWidth,
-      y: window.innerHeight,
-    });
+    const bounds = LibPixiMaskBg.stage.getLocalBounds();
 
     this.clear();
     this.beginFill(0x000000, 1);
-    this.drawRect(
-      topLeft.x,
-      topLeft.y,
-      bottomRight.x - topLeft.x,
-      bottomRight.y - topLeft.y
-    );
+    this.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
     this.endFill();
   }
 }
