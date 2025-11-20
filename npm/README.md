@@ -198,6 +198,8 @@ app.stage.addChild(box);
 
 \- [LibPixiTicker-Ticker管理器](#LibPixiTicker-Ticker管理器)
 
+\- [LibPixiPivot-容器锚点设置](#LibPixiPivot-容器锚点设置)
+
 ## Base-基础
 
 ### LibPixiText-文本
@@ -931,6 +933,10 @@ const amountContainer = new LibLabelValue({
 
 > 一列占满后进入下一列，支持从左到右或从右到左
 
+### LibPixiNoticeBar
+
+> 滚动跑马灯
+
 ## Utils-工具方法
 
 ### LibPixiAudio-音频播放器
@@ -1266,3 +1272,7 @@ LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ### LibPixiTicker-Ticker管理器
 
 > 添加和删除 `Ticker` 函数，单个 `Ticker` 函数暂停开始，所有 `Ticker` 函数使用的是全局的 `Ticker`
+
+### LibPixiPivot-容器锚点设置
+
+> 给容器设置精准的 `Pivot`，但当容器大小改变时，需要重新调用

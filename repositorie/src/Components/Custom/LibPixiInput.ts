@@ -36,8 +36,6 @@ interface Params {
   maxLength?: number;
   /** 对齐方式 */
   align?: "left" | "center";
-  /** 输入回调 */
-  onInput?: (text: number | string) => void;
   /** 失去焦点回调 */
   onValue?: (text: number | string) => void;
   /** 格式化显示值 */
@@ -88,22 +86,37 @@ export class LibPixiInput extends LibPixiContainer {
 
   /** @description 设置值 */
   setValue(v: string) {
-    const { onFormatValue, type = "text" } = this._params;
+    const { onFormatValue, type = "text", onValue, width } = this._params;
+    this._value = v;
 
-    const value = v;
-    this._value = value;
+    const formatted = onFormatValue?.(v);
+    const displayText =
+      type === "password" ? formatted || "●".repeat(v.length) : formatted || v;
+    this._readonlyInput.text = displayText;
 
-    if (type === "password") {
-      this._readonlyInput.text =
-        onFormatValue?.(value) || "●".repeat(value.length);
+    this._input.style.display = "none";
+    libPixiScaleContainer(this._readonlyInput, width);
+
+    const isEmpty = v === "";
+    const isNumber = type === "number";
+    const num = Number(v);
+
+    if (isNumber) {
+      const validNum = !isNaN(num) && num !== 0;
+      this._readonlyInput.visible = validNum;
+      this._placeholder.visible = !validNum;
+      onValue?.(num);
     } else {
-      this._readonlyInput.text = onFormatValue?.(value) || value;
+      this._readonlyInput.visible = !isEmpty;
+      this._placeholder.visible = isEmpty;
+      onValue?.(v);
     }
   }
 
   /** @description 更改输入框描述 */
   setPlaceholder(v: string) {
     this._placeholder.text = v;
+    libPixiScaleContainer(this._placeholder, this._params.width);
   }
 
   /** @description 聚焦 */
@@ -132,8 +145,6 @@ export class LibPixiInput extends LibPixiContainer {
   /** @description 清空输入框 */
   clear() {
     this._input.value = "";
-    this._placeholder.visible = true;
-    this._readonlyInput.visible = false;
     this._blur();
   }
 
@@ -144,7 +155,6 @@ export class LibPixiInput extends LibPixiContainer {
       maxLength = 999999,
       align = "left",
       type = "text",
-      onInput = () => {},
       fontFamily = "",
       bold = false,
     } = this._params;
@@ -169,7 +179,6 @@ export class LibPixiInput extends LibPixiContainer {
       if (this.value.length > maxLength && type === "number") {
         this.value = this.value.slice(0, maxLength);
       }
-      onInput(this.value.trim());
     });
     this._input.addEventListener("paste", function (e) {
       const paste = e.clipboardData?.getData("text") ?? "";
@@ -211,6 +220,7 @@ export class LibPixiInput extends LibPixiContainer {
       align === "left" ? 0 : width / 2,
       height / 2
     );
+    libPixiScaleContainer(this._placeholder, this._params.width);
 
     //创建实际显示的文本
     this._readonlyInput = new LibPixiText({
@@ -227,30 +237,6 @@ export class LibPixiInput extends LibPixiContainer {
       align === "left" ? 0 : width / 2,
       height / 2
     );
-  }
-
-  /** @description 失焦 */
-  private _blur() {
-    const { onValue, width } = this._params;
-
-    const value = this._onBlurHandler();
-    this.setValue(value);
-    this._input.style.display = "none";
-    libPixiScaleContainer(this._readonlyInput, width);
-
-    if (this._params.type === "number" && value !== "") {
-      this._readonlyInput.visible = true;
-      onValue?.(Number(value));
-    } else {
-      onValue?.(value);
-
-      //如果输入的值为空，并且启用了描述，并且没有默认值，则显示描述
-      if (value === "" && this._placeholder) {
-        this._placeholder.visible = true;
-      } else {
-        this._readonlyInput.visible = true;
-      }
-    }
   }
 
   /** @description 失去焦点处理 */
@@ -303,5 +289,11 @@ export class LibPixiInput extends LibPixiContainer {
       this._input.style.fontSize = `${width * fontSizeRatio}px`;
       this._input.style.transform = `rotate(90deg)`;
     }
+  }
+
+  /** @description 失焦 */
+  private _blur() {
+    const value = this._onBlurHandler();
+    this.setValue(value);
   }
 }

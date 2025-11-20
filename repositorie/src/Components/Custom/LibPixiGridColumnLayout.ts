@@ -18,6 +18,7 @@ export interface GridLayoutParams {
 }
 
 import { Container } from "pixi.js";
+import { libPixiPivot } from "../../Utils/LibPixiActhor";
 
 /** @description 网格列布局 */
 export class LibPixiGridColumnLayout<T extends Container> extends Container {
@@ -59,11 +60,7 @@ export class LibPixiGridColumnLayout<T extends Container> extends Container {
       item.y = row * rowGap;
     });
 
-    const bounds = this.getLocalBounds();
-    this.pivot.set(
-      bounds.x + bounds.width * anchorX,
-      bounds.y + bounds.height * anchorY
-    );
+    libPixiPivot(this, anchorX, anchorY);
   }
 
   /** @description 获取列表元素 */

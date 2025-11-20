@@ -1,4 +1,5 @@
 import { Container, Text, type ITextStyle } from "pixi.js";
+import { libPixiPivot } from "../../Utils/LibPixiActhor";
 
 interface TextItem {
   text: string | number;
@@ -77,10 +78,6 @@ export class LibPixiTextGroupWrap extends Container {
     }
 
     // 根据 anchor 调整整体偏移
-    const bounds = this.getLocalBounds();
-    this.pivot.set(
-      bounds.x + bounds.width * anchorX,
-      bounds.y + bounds.height * anchorY
-    );
+    libPixiPivot(this, anchorX, anchorY);
   }
 }

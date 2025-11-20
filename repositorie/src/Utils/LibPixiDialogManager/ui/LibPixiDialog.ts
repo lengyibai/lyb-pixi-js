@@ -5,6 +5,7 @@ import { LibPixiMaskBg } from "../../../Components/Custom/LibPixiMaskBg";
 import { libPixiEvent } from "../../LibPixiEvent";
 import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
 import { LibPixiTicker } from "../../LibPixiTicker";
+import { libPixiPivot } from "../../LibPixiActhor";
 
 interface Params {
   /** 是否需要显示黑色背景 */
@@ -112,10 +113,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
 
   /** @description 更新弹窗容器坐标 */
   updatePosition(w: number, h: number) {
-    const bounds = this._dialogContainer.getLocalBounds();
-    const dialogW = bounds.width / 2;
-    const dialogH = bounds.height / 2;
-    this._dialogContainer.pivot.set(bounds.x + dialogW, bounds.y + dialogH);
+    libPixiPivot(this._dialogContainer, 0.5, 0.5);
 
     const halfW = 1920 / 2;
     const halfH = 1080 / 2;

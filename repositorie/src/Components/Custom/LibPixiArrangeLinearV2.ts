@@ -1,4 +1,5 @@
 import { Container } from "pixi.js";
+import { libPixiPivot } from "../../Utils/LibPixiActhor";
 
 export interface GridLayoutParams {
   gap?: number | number[];
@@ -92,11 +93,7 @@ export class LibPixiArrangeLinearV2<T extends Container> extends Container {
       }
     });
 
-    const bounds = this.getLocalBounds();
-    this.pivot.set(
-      bounds.x + bounds.width * anchorX,
-      bounds.y + bounds.height * anchorY
-    );
+    libPixiPivot(this, anchorX, anchorY);
   }
 
   /** @description 获取列表元素 */
