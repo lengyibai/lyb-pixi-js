@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
-import { libPixiEvent } from "./LibPixiEvent";
 import gsap from "gsap";
+import { libPixiEvent } from "./LibPixiEvent";
 
 /** @description 按下放大
  * @param container 要放大的容器
@@ -9,10 +9,11 @@ import gsap from "gsap";
  */
 export const LibPixiDownScaleAnimation = (
   container: Container,
-  type: "small" | "big" = "big"
+  type: "small" | "big" = "big",
+  scaleContainer?: Container
 ) => {
   libPixiEvent(container, "pointerdown", () => {
-    gsap.to(container, {
+    gsap.to(scaleContainer || container, {
       duration: 0.1,
       pixi: {
         scale: type === "big" ? 1.1 : 0.9,
@@ -21,7 +22,7 @@ export const LibPixiDownScaleAnimation = (
   });
 
   libPixiEvent(container, "pointerup", () => {
-    gsap.to(container, {
+    gsap.to(scaleContainer || container, {
       duration: 0.1,
       pixi: {
         scale: 1,
@@ -30,7 +31,7 @@ export const LibPixiDownScaleAnimation = (
   });
 
   libPixiEvent(container, "pointerleave", () => {
-    gsap.to(container, {
+    gsap.to(scaleContainer || container, {
       duration: 0.1,
       pixi: {
         scale: 1,
