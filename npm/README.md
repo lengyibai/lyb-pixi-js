@@ -200,6 +200,8 @@ app.stage.addChild(box);
 
 \- [LibPixiPivot-容器锚点设置](#LibPixiPivot-容器锚点设置)
 
+\- [LibPixiPivot-容器锚点设置](#libPixiLocalBoundary-本地边界坐标)
+
 ## Base-基础
 
 ### LibPixiText-文本
@@ -1276,3 +1278,7 @@ LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ### LibPixiPivot-容器锚点设置
 
 > 给容器设置精准的 `Pivot`，但当容器大小改变时，需要重新调用
+
+### LibPixiLocalBoundary-本地边界坐标
+
+> 
