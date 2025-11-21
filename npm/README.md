@@ -152,7 +152,7 @@ app.stage.addChild(box);
 
 \- [LibPixiTextGroupWrap-文本组换行](#LibPixiTextGroupWrap-文本组换行)
 
-\- [LibPixiGridLayoutV2-网格布局V2](#LibPixiGridLayoutV2-网格布局V2)
+\- [LibPixiGridLayoutV2-网格布局 V2](#LibPixiGridLayoutV2-网格布局V2)
 
 \- [LibPixiAreaClick-扩大点击范围](#LibPixiAreaClick-扩大点击范围)
 
@@ -196,11 +196,13 @@ app.stage.addChild(box);
 
 \- [LibPixiEmitContainerEvent-触发后代监听](#LibPixiEmitContainerEvent-触发后代监听)
 
-\- [LibPixiTicker-Ticker管理器](#LibPixiTicker-Ticker管理器)
+\- [LibPixiTicker-Ticker 管理器](#LibPixiTicker-Ticker管理器)
 
 \- [LibPixiPivot-容器锚点设置](#LibPixiPivot-容器锚点设置)
 
 \- [LibPixiPivot-容器锚点设置](#libPixiLocalBoundary-本地边界坐标)
+
+\- [LibPixiIsOutOfView-离开可视区检测](#LibPixiIsOutOfView-离开可视区检测)
 
 ## Base-基础
 
@@ -1271,7 +1273,7 @@ LibPixiDownScaleAnimation(sprite);
 LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ```
 
-### LibPixiTicker-Ticker管理器
+### LibPixiTicker-Ticker 管理器
 
 > 添加和删除 `Ticker` 函数，单个 `Ticker` 函数暂停开始，所有 `Ticker` 函数使用的是全局的 `Ticker`
 
@@ -1281,4 +1283,8 @@ LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 
 ### LibPixiLocalBoundary-本地边界坐标
 
-> 
+>获取屏幕左上角和右上角在舞台上的位置
+
+### LibPixiIsOutOfView-离开可视区检测
+
+> 检测元素是否离开可视区
