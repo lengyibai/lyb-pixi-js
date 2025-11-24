@@ -143,6 +143,7 @@ export class LibPixiSlide extends LibPixiContainer {
     libPixiEvent(this, "pointerdown", this._onDragStart.bind(this));
     libPixiEvent(stage, "pointermove", this._onDragMove.bind(this));
     libPixiEvent(stage, "pointerup", this._onDragEnd.bind(this));
+    libPixiEvent(stage, "pointerupoutside", this._onDragEnd.bind(this));
   }
 
   /** @description 更新坐标 */
