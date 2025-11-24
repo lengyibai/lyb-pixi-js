@@ -69,6 +69,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
         }
       );
     }
+    this._maskUI.cursor = "default"
 
     //弹窗内容容器
     this._dialogContainer = new Container();

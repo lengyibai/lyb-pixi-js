@@ -103,6 +103,7 @@ export class LibPixiSlider extends LibPixiContainer {
     this.addChild(this._slideArea);
 
     libPixiEvent(this, "pointerdown", this._onDragStart.bind(this));
+    this.cursor = "default";
     window.addEventListener("pointermove", this._onDragMove.bind(this));
     window.addEventListener("pointerup", this._onDragEnd.bind(this));
   }

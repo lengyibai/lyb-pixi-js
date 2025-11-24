@@ -102,6 +102,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     libPixiEvent(LibPixiScrollContainerX.stage, "pointermove", (event) => {
       this._onDragMove(event);
     });
+    LibPixiScrollContainerX.stage.cursor = "default";
     libPixiEvent(this, "pointerup", () => {
       this._onDragEnd();
     });
@@ -111,6 +112,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     libPixiEvent(this, "pointerupoutside", () => {
       this._onDragEnd();
     });
+    this.cursor = "default";
   }
 
   /** @description 添加边距 */
