@@ -27,6 +27,8 @@ export interface LibPixiHtmlTextParams {
   align?: TextStyleAlign;
   /** 阴影-颜色 角度 模糊度 阴影距离 */
   shadow?: [string, number, number, number];
+  /** 按照单词换行 */
+  breakWord?: boolean;
 }
 
 /** @description 自定义富文本类
@@ -46,6 +48,7 @@ export class LibPixiHtmlText extends HTMLText {
       lineHeight = 1.25,
       align = "left",
       shadow,
+      breakWord = true,
     } = options;
 
     super(text.toString(), {
@@ -54,7 +57,7 @@ export class LibPixiHtmlText extends HTMLText {
       wordWrapWidth,
       fontWeight,
       lineHeight: lineHeight * fontSize,
-      breakWords: !!wordWrapWidth,
+      breakWords: breakWord,
       fill: fontColor,
       align,
       whiteSpace: "pre-line",

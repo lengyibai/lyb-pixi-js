@@ -33,6 +33,8 @@ export interface LibPixiTextParams {
   indent?: number;
   /** 阴影-颜色 角度 模糊度 阴影距离 */
   shadow?: [string, number, number, number];
+  /** 按照单词换行 */
+  breakWord?: boolean;
 }
 
 /** @description 自定义文本类
@@ -57,6 +59,7 @@ export class LibPixiText extends Text {
       indent = 0,
       shadow,
       gradientDirection,
+      breakWord = true,
     } = options;
 
     const style = new TextStyle({
@@ -65,7 +68,7 @@ export class LibPixiText extends Text {
       wordWrapWidth,
       fontWeight,
       lineHeight: lineHeight * fontSize,
-      breakWords: !!wordWrapWidth,
+      breakWords: breakWord,
       fill: fontColor,
       align,
       fontFamily: LibPixiText.fontFamily || fontFamily,

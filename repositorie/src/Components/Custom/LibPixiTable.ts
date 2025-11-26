@@ -1,16 +1,13 @@
-/** @description 表格绘制并填入数字 */
-
-import { Container, Graphics, Text } from "pixi.js";
-import { libPixiScaleContainer } from '../../Utils/LibPixiScaleContainer';
+import { Container, Graphics, Text, TextStyle, TextStyleAlign } from "pixi.js";
 
 export interface LibPixiTableParams {
   /** 表格数据 */
   data: (number | string)[][];
   /** 是否需要表格外框 */
   outsideBorder?: boolean;
-  /** 单元格宽度 */
+  /** 单元格最小宽度 */
   cellWidth?: number;
-  /** 单元格高度 */
+  /** 单元格最小高度 */
   cellHeight?: number;
   /** 字体大小 */
   fontSize?: number;
@@ -18,140 +15,142 @@ export interface LibPixiTableParams {
   fontColor?: string;
   /** 表格第一列字体颜色 */
   firstColumnFontColor?: string;
-  /** 是否需要加粗 */
+  /** 表格第一行字体颜色 */
+  firstRowFontColor?: string;
+  /** 是否字体需要加粗 */
   fontBold?: boolean;
+  /** 格子内部内边距 */
+  cellPadding?: number;
   /** 线条厚度 */
   lineWidth?: number;
   /** 线条颜色 */
   lineColor?: string;
+  /** 文本对齐方式 */
+  textAlign?: TextStyleAlign;
 }
 
-/** @description 绘制表格并填充数字
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiTable-数字表格
- */
+/** @description 绘制表格 */
 export class LibPixiTable extends Container {
-  /** 行数 */
-  private _rows: number;
-  /** 列数 */
-  private _cols: number;
-  /** 单元格宽度 */
-  private _cellWidth: number;
-  /** 单元格高度 */
-  private _cellHeight: number;
-  /** 字体大小 */
-  private _fontSize: number;
-  /** 线条宽度 */
-  private _lineWidth: number;
-
-  /** 字体颜色 */
-  private _fontColor: string;
-  /** 表格第一列字体颜色 */
-  private _firstColumnFontColor: string;
-  /** 线条颜色 */
-  private _lineColor: string;
-
-  /** 是否需要表格外框 */
-  private _outsideBorder: boolean;
-  /** 是否需要加粗 */
-  private _fontBold: boolean;
-
-  /** 二维数字数组 */
-  private _data: (number | string)[][];
-
   constructor(params: LibPixiTableParams) {
     super();
 
     const {
       data,
-      cellWidth = 130,
-      cellHeight = 100,
-      fontColor = "#fff",
-      firstColumnFontColor = "#fff",
-      fontSize = 30,
-      lineWidth = 2,
-      lineColor = "#5b5b5b",
       outsideBorder = true,
-      fontBold = true,
+      cellWidth = 80,
+      cellHeight = 30,
+      fontSize = 14,
+      fontColor = "#000000",
+      firstColumnFontColor,
+      firstRowFontColor,
+      fontBold = false,
+      cellPadding = 6,
+      lineWidth = 1,
+      textAlign = "left",
+      lineColor = "#cccccc",
     } = params;
 
-    this._data = data;
-    this._rows = data.length;
-    this._cols = data[0].length;
-    this._cellWidth = cellWidth;
-    this._cellHeight = cellHeight;
-    this._fontColor = fontColor;
-    this._fontSize = fontSize;
-    this._lineWidth = lineWidth;
-    this._lineColor = lineColor;
-    this._outsideBorder = outsideBorder;
-    this._fontBold = fontBold;
-    this._firstColumnFontColor = firstColumnFontColor;
+    if (!data || !data.length) return;
 
-    this._drawTable();
-    this.fillNumbers();
-  }
+    // 计算列数（取最长行）
+    const cols = data.reduce((max, row) => Math.max(max, row.length), 0);
 
-  /** @description 绘制表格 */
-  private _drawTable() {
-    const tableWidth = this._cellWidth * this._cols;
-    const tableHeight = this._cellHeight * this._rows;
-
-    const graphics = new Graphics();
-    graphics.lineStyle(this._lineWidth, this._lineColor);
-
-    // 绘制表格外框
-    if (this._outsideBorder) {
-      graphics.drawRect(0, 0, tableWidth, tableHeight);
-    }
-
-    // 绘制横线
-    for (let i = 1; i < this._rows; i++) {
-      graphics.moveTo(0, i * this._cellHeight);
-      graphics.lineTo(tableWidth, i * this._cellHeight);
-    }
-
-    // 绘制竖线
-    for (let j = 1; j < this._cols; j++) {
-      graphics.moveTo(j * this._cellWidth, 0);
-      graphics.lineTo(j * this._cellWidth, tableHeight);
-    }
-
-    this.addChild(graphics);
-  }
-
-  /** @description 填充数字 */
-  private fillNumbers() {
-    for (let row = 0; row < this._rows; row++) {
-      for (let col = 0; col < this._cols; col++) {
-        const number = this._data[row][col];
-        this._createNumberText(number, col, row);
-      }
-    }
-  }
-
-  /** @description 创建数字文本
-   * @param number 数字
-   * @param col 列索引
-   * @param row 行索引
-   */
-  private _createNumberText(
-    number: number | string,
-    col: number,
-    row: number
-  ): void {
-    const text = new Text(number.toString(), {
-      _fontSize: this._fontSize,
-      fill: col === 0 ? this._firstColumnFontColor : this._fontColor,
-      fontWeight: this._fontBold ? "bold" : "normal",
+    // 文本样式缓存
+    const baseStyle = new TextStyle({
+      fontSize,
+      fontWeight: fontBold ? "bold" : "normal",
+      align: textAlign,
     });
 
-    // 计算文本的居中位置
-    const x = col * this._cellWidth + this._cellWidth / 2;
-    const y = row * this._cellHeight + this._cellHeight / 2;
+    // 先测量所有单元格尺寸，得到每列宽度、每行高度
+    const colWidths: number[] = Array(cols).fill(cellWidth);
+    const rowHeights: number[] = Array(data.length).fill(cellHeight);
 
-    this.addChild(text);
-    text.anchor.set(0.5);
-    text.position.set(x, y);
-    libPixiScaleContainer(text, this._cellWidth * 0.9);
+    for (let r = 0; r < data.length; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        const raw = (data[r] && data[r][c]) ?? "";
+        const txt = new Text(String(raw), baseStyle);
+        const w = txt.width + cellPadding * 2;
+        const h = txt.height + cellPadding * 2;
+        if (w > colWidths[c]) colWidths[c] = w;
+        if (h > rowHeights[r]) rowHeights[r] = h;
+      }
+    }
+
+    // 计算每个单元格左上坐标
+    const colX: number[] = [];
+    let accX = 0;
+    for (let c = 0; c < cols; c += 1) {
+      colX.push(accX);
+      accX += colWidths[c];
+    }
+    const rowY: number[] = [];
+    let accY = 0;
+    for (let r = 0; r < rowHeights.length; r += 1) {
+      rowY.push(accY);
+      accY += rowHeights[r];
+    }
+
+    // 绘制网格线
+    const g = new Graphics();
+    const lineHex = parseInt(lineColor.replace("#", ""), 16);
+    g.lineStyle(lineWidth, lineHex);
+
+    const totalW = accX;
+    const totalH = accY;
+
+    // 可选外框
+    if (outsideBorder) {
+      g.drawRect(0, 0, totalW, totalH);
+    }
+
+    // 画竖线
+    let xPos = 0;
+    for (let c = 1; c < cols; c += 1) {
+      xPos += colWidths[c - 1];
+      g.moveTo(xPos + lineWidth / 2, 0);
+      g.lineTo(xPos + lineWidth / 2, totalH);
+    }
+    // 画横线
+    let yPos = 0;
+    for (let r = 1; r < rowHeights.length; r += 1) {
+      yPos += rowHeights[r - 1];
+      g.moveTo(0, yPos + lineWidth / 2);
+      g.lineTo(totalW, yPos + lineWidth / 2);
+    }
+
+    this.addChild(g);
+
+    // 绘制文本（居中）
+    for (let r = 0; r < data.length; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        const raw = (data[r] && data[r][c]) ?? "";
+        const color =
+          (r === 0 && firstRowFontColor) ||
+          (c === 0 && firstColumnFontColor) ||
+          fontColor;
+        const style = new TextStyle({
+          fontSize,
+          fontWeight: fontBold ? "bold" : "normal",
+          fill: color,
+          align: textAlign,
+        });
+        const txt = new Text(String(raw), style);
+        const cx = colX[c];
+        const cy = rowY[r];
+        // 居中放置
+        const tx = cx + (colWidths[c] - txt.width) / 2;
+        const ty = cy + (rowHeights[r] - txt.height) / 2;
+        txt.x = Math.round(tx);
+        txt.y = Math.round(ty);
+        this.addChild(txt);
+      }
+    }
+
+    // 设置容器大小属性（便于外部读取）
+    // @ts-ignore 想让外部能通过宽高读取
+    this.width = totalW;
+    // @ts-ignore
+    this.height = totalH;
   }
 }
