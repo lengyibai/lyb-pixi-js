@@ -206,8 +206,6 @@ app.stage.addChild(box);
 
 \- [LibPixiIsOutOfView-离开可视区检测](#LibPixiIsOutOfView-离开可视区检测)
 
-\- [LibBitTextGroup-美术字组](#LibBitTextGroup-美术字组)
-
 ## Base-基础
 
 ### LibPixiText-文本
@@ -1374,7 +1372,3 @@ LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ### LibPixiIsOutOfView-离开可视区检测
 
 > 检测元素是否离开可视区
-
-### LibBitTextGroup-美术字组
-
-> 通过将美术字的 `fnt` 字体文件，循环创建位图文本进行拼接
