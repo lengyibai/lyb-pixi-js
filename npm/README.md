@@ -86,6 +86,8 @@ app.stage.addChild(box);
 
 \- [LibPixiHtmlText-富文本](#LibPixiHtmlText-富文本)
 
+\- [LibPixiBit-位图简化使用](#LibPixiBit-位图简化使用)
+
 \- [LibPixiBitText-位图](#LibPixiBitText-位图)
 
 \- [LibPixiContainer-容器](#LibPixiContainer-容器)
@@ -281,6 +283,8 @@ interface LibPixiHtmlTextParams {
   shadow?: [string, number, number, number];
 }
 ```
+
+### LibPixiBit-位图简化使用
 
 ### LibPixiBitText-位图
 
