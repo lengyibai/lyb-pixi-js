@@ -30,6 +30,7 @@ export class LibPixiDialogManager {
     id: string,
     ...args: ConstructorParameters<T>
   ): InstanceType<T> {
+    if (this._views[id]) return this._views[id] as InstanceType<T>;
     const view = new View(...args);
     this._openContainer.addChild(view);
 

@@ -136,7 +136,9 @@ app.stage.addChild(box);
 
 \- [LibPixiSlide-滑动页](#LibPixiSlide-滑动页)
 
-\- [LibPixiTable-数字表格](#LibPixiTable-数字表格)
+\- [LibPixiTable-简易表格](#LibPixiTable-简易表格)
+
+\- [LibPixiTableV2-自定义表格](#LibPixiTableV2-自定义表格)
 
 \- [LibPixiLabelValue-标签值](#LibPixiLabelValue-标签值)
 
@@ -203,6 +205,8 @@ app.stage.addChild(box);
 \- [LibPixiPivot-容器锚点设置](#libPixiLocalBoundary-本地边界坐标)
 
 \- [LibPixiIsOutOfView-离开可视区检测](#LibPixiIsOutOfView-离开可视区检测)
+
+\- [LibBitTextGroup-美术字组](#LibBitTextGroup-美术字组)
 
 ## Base-基础
 
@@ -836,9 +840,9 @@ const three = new LibPixiSlide({
 });
 ```
 
-### LibPixiTable-数字表格
+### LibPixiTable-简易表格
 
-> 绘制表格并填充数字
+> 绘制表格并填充文本
 
 ```ts
 import { LibPixiTable } from "./path/to/LibPixiTable";
@@ -864,6 +868,88 @@ const table = new LibPixiTable({
 
 //将表格添加到舞台
 stage.addChild(table);
+```
+
+### LibPixiTable-自定义表格
+
+> 表格内部样式和文本全由外部提前设置好
+
+```ts
+    const fontSize = 28;
+    const data = [
+      {
+        text: new LibPixiText({
+          text: "27/11/2025\n14:16:27",
+          fontColor: "#C68251",
+          fontSize,
+          align: "center",
+        }),
+        bgColor: "#F6D7B4",
+      },
+      {
+        text: new LibPixiText({
+          text: "cutepanda",
+          fontColor: "#C68251",
+          fontSize,
+          align: "center",
+        }),
+        bgColor: "#F6D7B4",
+      },
+    ];
+    const scrollContent = new LibPixiTable({
+      lineWidth: 3,
+      cellWidth: 248,
+      cellHeight: 85,
+      cellPadding: 10,
+      lineColor: "#B96D39",
+      data: [
+        [
+          {
+            text: new LibPixiText({
+              text: "Date",
+              fontColor: "#B74715",
+              fontSize,
+              align: "center",
+            }),
+            bgColor: "#F5BC91",
+          },
+          {
+            text: new LibPixiText({
+              text: "Event",
+              fontColor: "#B74715",
+              fontSize,
+              align: "center",
+            }),
+            bgColor: "#F5BC91",
+          },
+        ],
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+        data,
+      ],
+    });
+    scrollContent.x = 50;
 ```
 
 ### LibPixiLabelValue-标签值
@@ -1288,3 +1374,7 @@ LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
 ### LibPixiIsOutOfView-离开可视区检测
 
 > 检测元素是否离开可视区
+
+### LibBitTextGroup-美术字组
+
+> 通过将美术字的 `fnt` 字体文件，循环创建位图文本进行拼接
