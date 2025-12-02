@@ -1,46 +1,33 @@
 import { Ticker } from "pixi.js"; //@ts-ignore
 import { libJsRandom } from "lyb-js/Random/LibJsRandom.js";
 
-/** @description 间隔触发
- * @param callback 回调函数
- * @param interval 间隔毫秒，或随机范围
- * @param immediately 是否立即执行一次
- * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiIntervalTrigger-间隔触发
- */
+/** @description 间隔触发（共享 Ticker 版） */
 export const libPixiIntervalTrigger = (
   callback: () => void,
   interval: number | [number, number],
-  immediately = true,
+  immediately = true
 ) => {
-  let elapsedTime = 0;
+  let nextInterval = Array.isArray(interval)
+    ? libJsRandom(interval[0], interval[1], 2)
+    : interval;
+  let elapsed = 0;
 
-  // 创建一个新的 Ticker 实例
-  const ticker = new Ticker();
+  if (immediately) callback();
 
-  // 创建回调函数
   const tickerCallback = () => {
-    elapsedTime += ticker.elapsedMS;
-
-    let intervalNum = 0;
-    if (Array.isArray(interval)) {
-      intervalNum = libJsRandom(interval[0], interval[1], 2);
-    } else {
-      intervalNum = interval;
-    }
-
-    if (elapsedTime >= intervalNum) {
+    elapsed += Ticker.shared.deltaMS;
+    if (elapsed >= nextInterval) {
+      elapsed -= nextInterval;
       callback();
-      elapsedTime = 0;
+      nextInterval = Array.isArray(interval)
+        ? libJsRandom(interval[0], interval[1], 2)
+        : interval;
     }
   };
 
-  immediately && callback();
-
-  ticker.add(tickerCallback);
-  ticker.start();
+  Ticker.shared.add(tickerCallback);
 
   return () => {
-    ticker.remove(tickerCallback);
-    ticker.stop();
+    Ticker.shared.remove(tickerCallback);
   };
 };
