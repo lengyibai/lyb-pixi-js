@@ -30,6 +30,8 @@ export interface LibPixiScrollContainerYParams {
 
   /** 滚动触发 */
   onScroll?: (y: number) => void;
+  /** 上拉加载触发 */
+  onLoad?: (pageIndex: number) => Promise<void>;
 }
 
 /** @description 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹 */
@@ -53,6 +55,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   private _scrollbarDragging = false;
   /** 滚动条拖动偏移量 */
   private _scrollbarDragOffset = 0;
+
+  /** 分页索引 */
+  private _pageIndex = 0;
+  /** 滚动锁 */
+  private _scrollLock = false;
 
   /** 滚动条右边距 */
   private _scrollbarRgiht: number;
@@ -79,6 +86,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   private _showScrollbar: boolean;
   /** 滚动触发 */
   private _onScroll?: (y: number) => void;
+  /** 上拉加载触发，通过返回Promise.reject可表示暂无更多，停止触底检测 */
+  private _onLoad?: (pageIndex: number) => Promise<void>;
 
   constructor(params: LibPixiScrollContainerYParams) {
     const {
@@ -94,6 +103,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       maskTexture,
       maskX = 0,
       maskY = 0,
+      onLoad,
     } = params;
     super(width, height, bgColor);
 
@@ -102,6 +112,8 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._scrollContent = scrollContent;
     this._scrollbarColor = scrollbarColor;
     this._onScroll = onScroll;
+    this._onLoad = onLoad;
+
     this._showScrollbar = scrollbar;
 
     // 创建内容容器
@@ -221,6 +233,11 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   /** @description 往滚动内容添加元素 */
   addContent(container: Container) {
     this._scrollContent.addChild(container);
+  }
+
+  /** @description 重置页码 */
+  resetPageIndex() {
+    this._pageIndex = 0;
   }
 
   /** @description 更新右边距坐标 */
@@ -375,7 +392,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
   }
 
   /** @description 更新滚动位置 */
-  private _updateScrollbar() {
+  private async _updateScrollbar() {
     this._scrollbar.alpha = 1;
     gsap.killTweensOf(this._scrollbar);
 
@@ -390,6 +407,19 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
     this._scrollbar.y = barY;
     this._onScroll?.(this._content.y);
+
+    const scrollHeight = this._content.height - this._maskGraphics.height;
+
+    if (
+      scrollHeight + this._content.y < this._maskGraphics.height &&
+      !this._scrollLock
+    ) {
+      this._scrollLock = true;
+      this._onLoad?.(this._pageIndex).then(() => {
+        this._pageIndex++;
+        this._scrollLock = false;
+      });
+    }
   }
 
   /** @description 更新滚动条大小 */
