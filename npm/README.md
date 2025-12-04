@@ -61,23 +61,6 @@ const box = new LibPixiRectBgColor({
 app.stage.addChild(box);
 ```
 
-**通过 `CDN ` 使用 `LibPixiJs`**
-
-> 你可以借助 `script` 标签直接通过 `CDN` 来使用 `LibPixiJs`
-
-```html
-<script src="https://unpkg.com/lyb-pixi-js/lyb-pixi.js"></script>
-
-<script>
-  const text = new LibPixiJs.Base.LibPixiText({
-    text: "Hello World!",
-    fontSize: 50,
-    fontColor: "red",
-  });
-  app.stage.addChild(text);
-</script>
-```
-
 ## 目录
 
 ### 基础组件
