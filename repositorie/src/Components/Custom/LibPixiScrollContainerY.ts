@@ -415,10 +415,13 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
       !this._scrollLock
     ) {
       this._scrollLock = true;
-      this._onLoad?.(this._pageIndex).then(() => {
-        this._pageIndex++;
-        this._scrollLock = false;
-      });
+      this._onLoad?.(this._pageIndex)
+        .then(() => {
+          this._pageIndex++;
+        })
+        .finally(() => {
+          this._scrollLock = false;
+        });
     }
   }
 
