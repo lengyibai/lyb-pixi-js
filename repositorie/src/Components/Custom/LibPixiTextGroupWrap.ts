@@ -13,8 +13,10 @@ interface TextGroupOptions {
   paddingX?: number;
   paddingY?: number;
   align?: "left" | "center" | "right";
-  anchorX?: number; // 0~1, 默认中心
-  anchorY?: number; // 0~1, 默认中心
+  anchorX?: number;
+  anchorY?: number;
+  /**  垂直居中 */
+  verticalCenter?: boolean;
 }
 
 /** @description 文本组换行 */
@@ -28,6 +30,7 @@ export class LibPixiTextGroupWrap extends Container {
     align = "left",
     anchorX = 0,
     anchorY = 0,
+    verticalCenter,
   }: TextGroupOptions) {
     super();
     if (!items.length) return;
@@ -39,6 +42,7 @@ export class LibPixiTextGroupWrap extends Container {
     // 分行
     for (const { text, style = {} } of items) {
       const instance = new Text(text, { ...defaultStyle, ...style });
+      instance.anchor.y = verticalCenter ? 0.5 : 0;
       const w = instance.width;
 
       if (wordWrapWidth && x + w > wordWrapWidth && x > 0) {
