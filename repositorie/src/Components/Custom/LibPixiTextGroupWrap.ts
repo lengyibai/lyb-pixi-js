@@ -17,6 +17,8 @@ interface TextGroupOptions {
   anchorY?: number;
   /**  垂直居中 */
   verticalCenter?: boolean;
+  /** 行间隔 */
+  lineGap?: number;
 }
 
 /** @description 文本组换行 */
@@ -31,6 +33,7 @@ export class LibPixiTextGroupWrap extends Container {
     anchorX = 0,
     anchorY = 0,
     verticalCenter,
+    lineGap,
   }: TextGroupOptions) {
     super();
     if (!items.length) return;
@@ -78,7 +81,7 @@ export class LibPixiTextGroupWrap extends Container {
         currentX += item.width + paddingX;
         if (item.height > maxHeight) maxHeight = item.height;
       }
-      y += maxHeight + paddingY;
+      y += (lineGap ?? maxHeight) + paddingY;
     }
 
     // 根据 anchor 调整整体偏移
