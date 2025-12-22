@@ -187,7 +187,7 @@ app.stage.addChild(box);
 
 \- [LibPixiPivot-容器锚点设置](#LibPixiPivot-容器锚点设置)
 
-\- [LibPixiPivot-容器锚点设置](#libPixiLocalBoundary-本地边界坐标)
+\- [LibPixiLocalBoundary-本地边界坐标](#LibPixiLocalBoundary-本地边界坐标)
 
 \- [LibPixiIsOutOfView-离开可视区检测](#LibPixiIsOutOfView-离开可视区检测)
 
