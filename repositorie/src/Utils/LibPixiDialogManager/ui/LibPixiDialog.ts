@@ -81,7 +81,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
     const off2 = LibPixiTicker.add("LibPixiDialog", () => {
       this._maskUI.updateSize();
     });
-    this._offResize = () => {
+    this._onBeforeDestroy = () => {
       off1();
       off2();
     };
