@@ -26,13 +26,13 @@ export class LibPixiPuzzleBg extends Container {
       if (e.ctrlKey && e.key.toLowerCase() === "q" && !e.shiftKey) {
         e.preventDefault();
         bg.visible = !bg.visible;
-      } else if (e.code === "ArrowUp") {
+      } else if (e.code === "KeyW") {
         bg.y -= 2;
-      } else if (e.code === "ArrowDown") {
+      } else if (e.code === "KeyS") {
         bg.y += 2;
-      } else if (e.code === "ArrowLeft") {
+      } else if (e.code === "KeyA") {
         bg.x -= 2;
-      } else if (e.code === "ArrowRight") {
+      } else if (e.code === "KeyD") {
         bg.x += 2;
       }
 
@@ -42,7 +42,10 @@ export class LibPixiPuzzleBg extends Container {
         bg.alpha = libJsDecimal(bg.alpha, 0.1, "-");
       }
 
-      localStorage.setItem("puzzle_bg_config", JSON.stringify({ alpha: bg.alpha, x: bg.x, y: bg.y }));
+      localStorage.setItem(
+        "puzzle_bg_config",
+        JSON.stringify({ alpha: bg.alpha, x: bg.x, y: bg.y })
+      );
     });
   }
 }

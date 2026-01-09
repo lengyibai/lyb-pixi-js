@@ -28,6 +28,8 @@ export interface LibPixiEventParams {
   throttleTime?: number;
   /** 是否阻止拖动点击 */
   preventDragClick?: boolean;
+  /** 是否自动设置鼠标悬浮点击样式 */
+  autoCursor?: boolean;
 }
 
 /** @description 事件注册
@@ -48,7 +50,11 @@ export const libPixiEvent = (
     throttle = false,
     throttleTime = 1000,
     preventDragClick = false,
+    autoCursor = true,
   } = params;
+  if (autoCursor) {
+    v.cursor = "pointer";
+  }
   v.cursor = "pointer";
   v.eventMode = "static";
 
