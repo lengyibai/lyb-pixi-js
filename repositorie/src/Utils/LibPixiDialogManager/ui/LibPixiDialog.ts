@@ -1,10 +1,9 @@
-import { Container } from "pixi.js";
+import { Container, Ticker } from "pixi.js";
 import gsap from "gsap";
 import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
 import { LibPixiMaskBg } from "../../../Components/Custom/LibPixiMaskBg";
 import { libPixiEvent } from "../../LibPixiEvent";
 import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
-import { LibPixiTicker } from "../../LibPixiTicker";
 import { libPixiPivot } from "../../LibPixiActhor";
 
 interface Params {
@@ -69,7 +68,7 @@ export class LibPixiDialog extends LibPixiBaseContainer {
         }
       );
     }
-    this._maskUI.cursor = "default"
+    this._maskUI.cursor = "default";
 
     //弹窗内容容器
     this._dialogContainer = new Container();
@@ -78,12 +77,14 @@ export class LibPixiDialog extends LibPixiBaseContainer {
 
     const resize = new LibJsResizeWatcher(LibPixiDialog.adaptation);
     const off1 = resize.on(this._redraw.bind(this), false);
-    const off2 = LibPixiTicker.add("LibPixiDialog", () => {
+    const updateSize = () => {
       this._maskUI.updateSize();
-    });
-    this._offResize = () => {
+    };
+    Ticker.shared.add(updateSize);
+
+    this._onDestroyed = () => {
       off1();
-      off2();
+      Ticker.shared.remove(updateSize);
     };
   }
 

@@ -128,7 +128,7 @@ export class LibPixiScrollContainerX extends LibPixiContainer {
     if (rightMargin) {
       this._rightMarginBox = new Sprite();
       this._content.addChild(this._rightMarginBox);
-      this._rightMarginBox.height = rightMargin;
+      this._rightMarginBox.width = rightMargin;
       this._rightMarginBox.x = leftMargin + this._scrollContent.width;
     }
   }
