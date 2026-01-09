@@ -55,7 +55,6 @@ export const libPixiEvent = (
   if (autoCursor) {
     v.cursor = "pointer";
   }
-  v.cursor = "pointer";
   v.eventMode = "static";
 
   let lastX = 0;
