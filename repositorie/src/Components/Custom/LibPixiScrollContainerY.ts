@@ -139,7 +139,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     this._scrollbar = new LibPixiRectangle(
       scrollbarWidth,
       height,
-      this._scrollbarColor
+      this._scrollbarColor,
     );
     this._scrollbar.x = width - (scrollbarRgiht || scrollbarWidth);
     this.addChild(this._scrollbar);
@@ -151,7 +151,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     libPixiEvent(
       this._scrollbar,
       "pointerdown",
-      this._onScrollbarDragStart.bind(this)
+      this._onScrollbarDragStart.bind(this),
     );
     libPixiEvent(this._scrollbar, "pointerenter", () => {
       gsap.killTweensOf(this._scrollbar);
@@ -443,7 +443,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
 
     this._scrollbar.clear();
     this._scrollbar.beginFill(this._scrollbarColor);
-    this._scrollbar.drawRect(0, 0, 10, barHeight);
+    this._scrollbar.drawRect(0, 0, this._scrollbarWidth, barHeight);
     this._scrollbar.endFill();
   }
 
@@ -468,7 +468,7 @@ export class LibPixiScrollContainerY extends LibPixiContainer {
     const maxBarY = viewHeight - barHeight;
     const newBarY = Math.min(
       Math.max(localY - this._scrollbarDragOffset, 0),
-      maxBarY
+      maxBarY,
     );
     const scrollY = (newBarY / maxBarY) * (contentHeight - viewHeight);
 
