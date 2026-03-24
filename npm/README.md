@@ -1,387 +1,478 @@
-# Lib 自用 PixiJS 组件&工具方法
+# Lib 自用 PixiJS 组件与工具库
 
 ## 介绍
 
-> 该库为作者在写项目时收集的常用方法，代码简陋，没有严格的边缘处理
->
-> 在通过`import`引入使用时，鼠标悬浮在每一个方法上都有较为完整的`Jsdoc`提示
->
-> 示例仅展示方法的部分参数使用，更多传参和调用，可在编辑器右键方法转到类型定义查看方法的`.d.ts `文件
+`lyb-pixi-js` 是一个偏项目实战型的 PixiJS 组件与工具集合，覆盖文本、图形、滚动容器、表格、动画、交互、布局、音频、弹窗管理等常见场景。
+
+这份 README 的目标不是写成一份冗长的源码手册，而是让你快速知道：
+
+- 怎么安装
+- 怎么按需导入
+- 每个模块大概解决什么问题
+- 最常见的调用方式是什么
+
+更完整的参数说明、类型约束和 JSDoc，请直接查看 `npm` 产物中的 `.d.ts`，或在编辑器里通过 TypeScript 提示查看。
+
+## 安装
+
+```bash
+npm install lyb-pixi-js
+```
+
+```bash
+pnpm add lyb-pixi-js
+```
+
+```bash
+yarn add lyb-pixi-js
+```
 
 ## 起步
 
-> 完整使用
+### 1. 按需导入
+
+当前包导出以按需导入为主，推荐直接从以下三个分类路径导入：
+
+- `lyb-pixi-js/Components/Base/*`
+- `lyb-pixi-js/Components/Custom/*`
+- `lyb-pixi-js/Utils/*`
 
 ```ts
-import { LibPixiJs } from "lyb-pixi-js";
+import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
+import { LibPixiRectBgColor } from "lyb-pixi-js/Components/Base/LibPixiRectBgColor";
+import { libPixiEvent } from "lyb-pixi-js/Utils/LibPixiEvent";
 
-const text = new LibPixiJs.Base.LibPixiText({
-  text: "Hello World!",
-  fontSize: 50,
-  fontColor: "red",
+const title = new LibPixiText({
+  text: "Hello Pixi",
+  fontSize: 42,
+  fontColor: "#ffffff",
 });
-app.stage.addChild(text);
+
+const panel = new LibPixiRectBgColor({
+  width: 320,
+  height: 120,
+  bgColor: "#1f2937",
+  radius: 16,
+});
+
+libPixiEvent(panel, "pointertap", () => {
+  console.log("panel clicked");
+});
+
+app.stage.addChild(panel, title);
 ```
 
-> 按需引入，打包时就不会把整个库打进去
+### 2. 项目内二次封装
+
+如果同一批组件和工具会在多个文件重复使用，建议在项目内做一次聚合导出。
 
 ```ts
-import { LibRectBgColor } from "lyb-pixi-js/Base/LibPixiRectBgColor";
-
-const box = new LibPixiRectBgColor({
-  width: 100,
-  height: 100,
-  bgColor: "red",
-});
-app.stage.addChild(box);
+// utils/pixi.ts
+export * from "lyb-pixi-js/Components/Base/LibPixiText";
+export * from "lyb-pixi-js/Components/Custom/LibPixiSlide";
+export * from "lyb-pixi-js/Utils/LibPixiAudio";
+export * from "lyb-pixi-js/Utils/LibPixiEvent";
 ```
-
-> 如果在多个文件使用到同一个方法，建议采用按需引入聚合导出
 
 ```ts
-//你的公共工具函数文件 utils.ts
-export * from "lyb-pixi-js/Base/LibPixiText";
-export * from "lyb-pixi-js/Base/LibPixiRectBgColor";
-
-//你的项目文件 index.ts
-import { LibText, LibRectBgColor } from "utils";
-
-const text = new LibPixiText({
-  text: "Hello World!",
-  fontSize: 50,
-  fontColor: "red",
-});
-app.stage.addChild(text);
-
-const box = new LibPixiRectBgColor({
-  width: 100,
-  height: 100,
-  bgColor: "red",
-});
-app.stage.addChild(box);
+// page.ts
+import {
+  LibPixiText,
+  LibPixiSlide,
+  LibPixiAudio,
+  libPixiEvent,
+} from "./utils/pixi";
 ```
+
+### 3. 关于整库导入
+
+README 不再主推 `import { LibPixiJs } from "lyb-pixi-js"` 这类整库入口写法。当前 `package.json` 的 `exports` 以按需导出为准，复制示例时请优先使用本 README 中的真实路径。
+
+## 使用说明
+
+### 环境说明
+
+- 大部分组件和工具默认运行在 PixiJS 场景中。
+- 部分模块依赖浏览器环境，例如 `LibPixiInput`、`LibPixiDragLocate`、`LibPixiPolygonDrawTool`。
+- 涉及音频、Spine、粒子、GSAP 的模块，需要你在项目里准备好对应资源与运行时环境。
+
+### 阅读方式
+
+每个章节基本遵循同一结构：
+
+1. 一句话说明用途
+2. 给出真实导入路径
+3. 给出 1 个最常用示例
+
+如果你想快速查参数，优先看 `.d.ts` 类型定义，比 README 更准确。
 
 ## 目录
 
-### 基础组件
-
-\- [LibPixiText-文本](#LibPixiText-文本)
-
-\- [LibPixiHtmlText-富文本](#LibPixiHtmlText-富文本)
-
-\- [LibPixiBit-位图简化使用](#LibPixiBit-位图简化使用)
-
-\- [LibPixiBitText-位图](#LibPixiBitText-位图)
-
-\- [LibPixiContainer-容器](#LibPixiContainer-容器)
-
-\- [LibPixiRectBgColor-矩形](#LibPixiRectBgColor-矩形)
-
-\- [LibPixiRectangle-矩形](#LibPixiRectangle-矩形)
-
-\- [LibPixiCircular-圆形](#LibPixiCircular-圆形)
-
-\- [LibPixiPolygon-多边形](#LibPixiPolygon-多边形)
-
-\- [LibPixiCapsule-胶囊体](#LibPixiCapsule-胶囊体)
-
-\- [LibPixiTriangle-三角形](#LibPixiTriangle-三角形)
-
-\- [LibPixiArc-弧形](#LibPixiArc-弧形)
-
-\- [LibPixiOval-椭圆](#LibPixiOval-椭圆)
-
-\- [LibPixiRound-圆圈](#LibPixiRound-圆圈)
-
-\- [LibPixiRoundedRect-圆角矩形](#LibPixiRoundedRect-圆角矩形)
-
-\- [LibPixiSpine-动画](#LibPixiSpine-动画)
-
-\- [LibPixiParticleMove-粒子容器](#LibPixiParticleMove-粒子容器)
-
-### 定制组件
-
-\- [LibPixiButtonHover-按钮悬浮](#LibPixiButtonHover-按钮悬浮)
-
-\- [LibPixiCloseBtn-关闭按钮](#LibPixiCloseBtn-关闭按钮)
-
-\- [LibPixiDrawer-抽屉](#LibPixiDrawer-抽屉)
-
-\- [LibPixiPerforMon-性能监视器](#LibPixiPerforMon-性能监视器)
-
-\- [LibPixiProgress-进度条](#LibPixiProgress-进度条)
-
-\- [LibPixiScrollContainerX-X 轴滚动容器](#LibPixiScrollContainerX-X轴滚动容器)
-
-\- [LibPixiScrollContainerY-Y 轴滚动容器](#LibPixiScrollContainerY-Y轴滚动容器)
-
-\- [LibPixiScrollNum-数字滑动](#LibPixiScrollNum-数字滑动)
-
-\- [LibPixiSlider-横向滑动图](#LibPixiSlider-横向滑动图)
-
-\- [LibPixiSlide-滑动页](#LibPixiSlide-滑动页)
-
-\- [LibPixiTable-简易表格](#LibPixiTable-简易表格)
-
-\- [LibPixiTableV2-自定义表格](#LibPixiTableV2-自定义表格)
-
-\- [LibPixiLabelValue-标签值](#LibPixiLabelValue-标签值)
-
-\- [LibPixiPuzzleBg-设计图背景拼接](#LibPixiPuzzleBg-设计图背景拼接)
-
-\- [LibPixiDragLocate-元素拖拽定位](#LibPixiDragLocate-元素拖拽定位)
-
-\- [LibPixiTurntable-转盘布局](#LibPixiTurntable-转盘布局)
-
-\- [LibPixiInput-输入框](#LibPixiInput-输入框)
-
-\- [LibPixiArrangeLinearV2-线性排列](#LibPixiArrangeLinearV2-线性排列)
-
-\- [LibPixiTextGroupWrap-文本组换行](#LibPixiTextGroupWrap-文本组换行)
-
-\- [LibPixiGridLayoutV2-网格布局 V2](#LibPixiGridLayoutV2-网格布局V2)
-
-\- [LibPixiAreaClick-扩大点击范围](#LibPixiAreaClick-扩大点击范围)
-
-\- [LibPixiHeadingParagraphLayout-文章标题内容布局](#LibPixiHeadingParagraphLayout-文章标题内容布局)
-
-### 方法
-
-\- [LibPixiAudio-音频播放器](#LibPixiAudio-音频播放器)
-
-\- [LibPixiCreateNineGrid-九宫格图](#LibPixiCreateNineGrid-九宫格图)
-
-\- [LibPixiEvent-事件注册](#LibPixiEvent-事件注册)
-
-\- [LibPixiFilter-滤镜](#LibPixiFilter-滤镜)
-
-\- [LibPixiIntervalTrigger-间隔触发](#LibPixiIntervalTrigger-间隔触发)
-
-\- [LibPixiOutsideClick-失焦隐藏](#LibPixiOutsideClick-失焦隐藏)
-
-\- [LibPixiOverflowHidden-溢出裁剪](#LibPixiOverflowHidden-溢出裁剪)
-
-\- [LibPixiPromiseTickerTimeout-TickerPromise 定时器](#LibPixiPromiseTickerTimeout-TickerPromise定时器)
-
-\- [LibPixiScaleContainer-超出缩放](#LibPixiScaleContainer-超出缩放)
-
-\- [LibPixiShadow-阴影](#LibPixiShadow-阴影)
-
-\- [LibPixiTickerTimeout-Ticker 定时器](#LibPixiTickerTimeout-Ticker定时器)
-
-\- [LibPixiSlideInput-滑块选择值](#LibPixiSlideInput-滑块选择值)
-
-\- [LibGlobalUpdater-事件实例汇总](#LibGlobalUpdater-事件实例汇总)
-
-\- [LibPixiPolygonDrawTool-多边形绘制](#LibPixiPolygonDrawTool-多边形绘制)
-
-\- [LibPixiDigitalIncreasingAnimation-递增动画](#LibPixiDigitalIncreasingAnimation-递增动画)
-
-\- [LibPixiDownScaleAnimation-按下放大](#LibPixiDownScaleAnimation-按下放大)
-
-\- [LibPixiGridLayout-网格布局](#LibPixiGridLayout-网格布局)
-
-\- [LibPixiEmitContainerEvent-触发后代监听](#LibPixiEmitContainerEvent-触发后代监听)
-
-\- [LibPixiTicker-Ticker 管理器](#LibPixiTicker-Ticker管理器)
-
-\- [LibPixiPivot-容器锚点设置](#LibPixiPivot-容器锚点设置)
-
-\- [LibPixiLocalBoundary-本地边界坐标](#LibPixiLocalBoundary-本地边界坐标)
-
-\- [LibPixiIsOutOfView-离开可视区检测](#LibPixiIsOutOfView-离开可视区检测)
-
-## Base-基础
+### Components/Base
+
+- [LibPixiText-文本](#libpixitext-文本)
+- [LibPixiHtmlText-富文本](#libpixihtmltext-富文本)
+- [LibPixiBit-位图文本](#libpixibit-位图文本)
+- [LibPixiBitText-位图文本工厂](#libpixibittext-位图文本工厂)
+- [LibPixiContainer-容器](#libpixicontainer-容器)
+- [LibPixiRectBgColor-带背景色矩形](#libpixirectbgcolor-带背景色矩形)
+- [LibPixiRectangle-矩形](#libpixirectangle-矩形)
+- [LibPixiCircular-圆形](#libpixicircular-圆形)
+- [LibPixiPolygon-多边形](#libpixipolygon-多边形)
+- [LibPixiArc-弧形](#libpixiarc-弧形)
+- [LibPixiOval-椭圆](#libpixioval-椭圆)
+- [LibPixiRound-圆圈](#libpixiround-圆圈)
+- [LibPixiRoundedRect-圆角矩形](#libpixiroundedrect-圆角矩形)
+- [LibPixiTriangle-三角形](#libpixitriangle-三角形)
+- [LibPixiSpine-动画](#libpixispine-动画)
+- [LibPixiParticleMove-粒子容器](#libpixiparticlemove-粒子容器)
+
+### Components/Custom
+
+- [LibPixiAreaClick-扩大点击范围](#libpixiareaclick-扩大点击范围)
+- [LibPixiArrangeLinearV2-线性排列](#libpixiarrangelinearv2-线性排列)
+- [LibPixiButtonHover-按钮悬浮](#libpixibuttonhover-按钮悬浮)
+- [LibPixiCapsule-胶囊形](#libpixicapsule-胶囊形)
+- [LibPixiCloseBtn-关闭按钮](#libpixiclosebtn-关闭按钮)
+- [LibPixiDragLocate-元素拖拽定位](#libpixidraglocate-元素拖拽定位)
+- [LibPixiDrawer-抽屉](#libpixidrawer-抽屉)
+- [LibPixiGridColumnLayout-网格列布局](#libpixigridcolumnlayout-网格列布局)
+- [LibPixiGridRowLayout-网格行布局](#libpixigridrowlayout-网格行布局)
+- [LibPixiHeadingParagraphLayout-标题段落布局](#libpixiheadingparagraphlayout-标题段落布局)
+- [LibPixiInput-输入框](#libpixiinput-输入框)
+- [LibPixiLabelValue-标签值布局](#libpixilabelvalue-标签值布局)
+- [LibPixiMaskBg-全屏黑色蒙版](#libpiximaskbg-全屏黑色蒙版)
+- [LibPixiNoticeBar-滚动通知栏](#libpixinoticebar-滚动通知栏)
+- [LibPixiPerforMon-性能监视器](#libpixiperformon-性能监视器)
+- [LibPixiProgress-进度条](#libpixiprogress-进度条)
+- [LibPixiPuzzleBg-设计图背景拼接](#libpixipuzzlebg-设计图背景拼接)
+- [LibPixiScrollContainerX-X 轴滚动容器](#libpixiscrollcontainerx-x-轴滚动容器)
+- [LibPixiScrollContainerY-Y 轴滚动容器](#libpixiscrollcontainery-y-轴滚动容器)
+- [LibPixiScrollNum-数字滑动](#libpixiscrollnum-数字滑动)
+- [LibPixiSlide-滑动页](#libpixislide-滑动页)
+- [LibPixiSlider-横向滑动图](#libpixislider-横向滑动图)
+- [LibPixiTable-简易表格](#libpixitable-简易表格)
+- [LibPixiTableV2-自定义表格](#libpixitablev2-自定义表格)
+- [LibPixiTextGroupWrap-文本组换行](#libpixitextgroupwrap-文本组换行)
+- [LibPixiTurntable-转盘布局](#libpixiturntable-转盘布局)
+
+### Utils
+
+- [libContainerCenter-父容器居中](#libcontainercenter-父容器居中)
+- [libControlledDelayedCall-可控延迟调用](#libcontrolleddelayedcall-可控延迟调用)
+- [LibPixiAudio-音频播放器](#libpixiaudio-音频播放器)
+- [libPixiCreateNineGrid-九宫格图](#libpixicreateninegrid-九宫格图)
+- [LibPixiDigitalIncreasingAnimation-递增动画](#libpixidigitalincreasinganimation-递增动画)
+- [LibPixiDownScaleAnimation-按下放大](#libpixidownscaleanimation-按下放大)
+- [LibPixiEmitContainerEvent-触发后代监听](#libpixiemitcontainerevent-触发后代监听)
+- [libPixiEvent-事件注册](#libpixievent-事件注册)
+- [libPixiFilter-滤镜](#libpixifilter-滤镜)
+- [LibPixiGlobalUpdater-事件实例汇总](#libpixiglobalupdater-事件实例汇总)
+- [LibPixiGridLayout-网格布局](#libpixigridlayout-网格布局)
+- [libPixiHVCenter-列表居中](#libpixihvcenter-列表居中)
+- [libPixiHVGap-列表间距](#libpixihvgap-列表间距)
+- [libPixiIntervalTrigger-间隔触发](#libpixiintervaltrigger-间隔触发)
+- [libPixiIsOutOfView-离开可视区检测](#libpixiisoutofview-离开可视区检测)
+- [libPixiLocalBoundary-本地边界坐标](#libpixilocalboundary-本地边界坐标)
+- [libPixiOutsideClick-失焦隐藏](#libpixioutsideclick-失焦隐藏)
+- [libPixiOverflowHidden-溢出裁剪](#libpixioverflowhidden-溢出裁剪)
+- [libPixiPivot-容器锚点设置](#libpixipivot-容器锚点设置)
+- [LibPixiPolygonDrawTool-多边形绘制工具](#libpixipolygondrawtool-多边形绘制工具)
+- [libPixiPromiseTickerTimeout-TickerPromise 定时器](#libpixipromisetickertimeout-tickerpromise-定时器)
+- [libPixiScaleContainer-超出缩放](#libpixiscalecontainer-超出缩放)
+- [libPixiShadow-阴影](#libpixishadow-阴影)
+- [LibPixiSlideInput-滑块输入](#libpixislideinput-滑块输入)
+- [LibPixiTicker-Ticker 管理器](#libpixiticker-ticker-管理器)
+- [libPixiTickerTimeout-Ticker 定时器](#libpixitickertimeout-ticker-定时器)
+- [LibPixiDialogManager-弹窗管理器](#libpixidialogmanager-弹窗管理器)
+
+## Components/Base
 
 ### LibPixiText-文本
 
-> 自定义文本类
+自定义文本类，适合普通 Pixi 文本展示。
 
 ```ts
-const text = new LibPixiJs.Base.LibPixiText(LibPixiTextParams);
-this.addChild(text);
+import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
+```
 
+```ts
+const text = new LibPixiText({
+  text: "Hello World",
+  fontSize: 42,
+  fontColor: "#ffffff",
+  stroke: "#111827",
+  strokeThickness: 4,
+  align: "center",
+  shadow: ["#000000", 45, 4, 2],
+});
+
+app.stage.addChild(text);
+```
+
+常用参数：
+
+```ts
 interface LibPixiTextParams {
-  /** 文本内容 */
   text: string | number;
-  /**  字体大小 */
   fontSize?: number;
-  /** 字体颜色 */
   fontColor?: any;
-  /** 是否描边 */
-  stroke?: boolean;
-  /** 描边颜色 */
-  strokeColor?: string | number;
-  /** 描边宽度 */
+  gradientDirection?: "v" | "h";
+  stroke?: string | number;
   strokeThickness?: number;
-  /** 字体样式 */
   fontFamily?: string;
-  /** 字体粗细 */
   fontWeight?: TextStyleFontWeight;
-  /** 换行宽度 */
   wordWrapWidth?: number;
-  /** 行高 */
   lineHeight?: number;
-  /** 对齐方式 */
   align?: TextStyleAlign;
-  /** 缩进，单位为字数 */
   indent?: number;
-  /** 阴影-颜色 角度 模糊度 阴影距离 */
   shadow?: [string, number, number, number];
+  breakWord?: boolean;
 }
 ```
 
 ### LibPixiHtmlText-富文本
 
-> 自定义富文本类
+基于 `HTMLText` 的富文本组件，适合混排与局部样式。
 
 ```ts
-const text = new LibPixiHtmlText(LibPixiTextParams);
-this.addChild(text);
-
-interface LibPixiHtmlTextParams {
-  /** 文本内容 */
-  text: string | number;
-  /**  字体大小 */
-  fontSize?: number;
-  /** 字体颜色 */
-  fontColor?: any;
-  /** 是否描边 */
-  stroke?: boolean;
-  /** 描边颜色 */
-  strokeColor?: string | number;
-  /** 描边宽度 */
-  strokeThickness?: number;
-  /** 字体样式 */
-  fontFamily?: string;
-  /** 字体粗细 */
-  fontWeight?: TextStyleFontWeight;
-  /** 换行宽度 */
-  wordWrapWidth?: number;
-  /** 行高 */
-  lineHeight?: number;
-  /** 对齐方式 */
-  align?: TextStyleAlign;
-  /** 阴影-颜色 角度 模糊度 阴影距离 */
-  shadow?: [string, number, number, number];
-}
+import { LibPixiHtmlText } from "lyb-pixi-js/Components/Base/LibPixiHtmlText";
 ```
 
-### LibPixiBit-位图简化使用
+```ts
+const htmlText = new LibPixiHtmlText({
+  text: `<span style="color:#f59e0b">Gold</span> x 100`,
+  fontSize: 36,
+  fontColor: "#ffffff",
+});
 
-### LibPixiBitText-位图
+app.stage.addChild(htmlText);
+```
 
-> 自定义位图文本
+### LibPixiBit-位图文本
+
+对 `BitmapText` 的简化封装，适合固定字号的位图字。
 
 ```ts
-/**
- * @param fontName 字体名称
- * @param defaultFontSize 默认字体大小
- */
+import { LibPixiBit } from "lyb-pixi-js/Components/Base/LibPixiBit";
+```
 
-//所有文字使用同一个字体大小
-const font = new LibPixiBitText("FontName", 16);
-const fontText = font.createText("10");
-this.addChild(fontText);
+```ts
+const score = new LibPixiBit("ScoreFont", "999", 48);
+app.stage.addChild(score);
+```
 
-//同字体不同大小
-const font = new LibPixiBitText("FontName");
-const fontText1 = font.createText("10", 16);
-this.addChild(fontText1);
-const fontText2 = font.createText("10", 24);
-this.addChild(fontText2);
+### LibPixiBitText-位图文本工厂
+
+用于复用同一位图字体，按需创建多个 `BitmapText`。
+
+```ts
+import { LibPixiBitText } from "lyb-pixi-js/Components/Base/LibPixiBitText";
+```
+
+```ts
+const bitFactory = new LibPixiBitText("ScoreFont", 32);
+const score = bitFactory.createText("1280");
+const combo = bitFactory.createText("Combo x3", 24);
+
+app.stage.addChild(score, combo);
+```
+
+### LibPixiContainer-容器
+
+带尺寸与背景色能力的容器基类，适合做占位、点击区域和布局容器。
+
+```ts
+import { LibPixiContainer } from "lyb-pixi-js/Components/Base/LibPixiContainer";
+```
+
+```ts
+const box = new LibPixiContainer(400, 220, "#0f172a");
+app.stage.addChild(box);
+```
+
+### LibPixiRectBgColor-带背景色矩形
+
+带圆角、透明度等配置的矩形底板，常用于按钮底、面板底、遮罩块。
+
+```ts
+import { LibPixiRectBgColor } from "lyb-pixi-js/Components/Base/LibPixiRectBgColor";
+```
+
+```ts
+const panel = new LibPixiRectBgColor({
+  width: 320,
+  height: 120,
+  bgColor: "#1d4ed8",
+  alpha: 0.9,
+  radius: 16,
+});
+
+app.stage.addChild(panel);
 ```
 
 ### LibPixiRectangle-矩形
 
-> `LibPixiRectBgColor`精简版，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
+更轻量的矩形图形，适合做点击热区或调试定位。
 
 ```ts
-const libPixiRectangle = new LibPixiRectangle(100, 100, "#fff");
+import { LibPixiRectangle } from "lyb-pixi-js/Components/Base/LibPixiRectangle";
+```
+
+```ts
+const hitArea = new LibPixiRectangle(200, 80, "#ff0000");
+hitArea.alpha = 0.2;
+app.stage.addChild(hitArea);
 ```
 
 ### LibPixiCircular-圆形
 
+快速创建纯色圆形。
+
 ```ts
-const libPixiCircular = new LibPixiCircular(100, "#fff");
+import { LibPixiCircular } from "lyb-pixi-js/Components/Base/LibPixiCircular";
+```
+
+```ts
+const dot = new LibPixiCircular(12, "#22c55e");
+app.stage.addChild(dot);
 ```
 
 ### LibPixiPolygon-多边形
 
-> 多边形类，可用于一些场景的局部点击，传颜色是为了方便定位，最终可能需要将颜色隐藏掉
+用于不规则多边形绘制，也常拿来做不规则点击区域。
 
 ```ts
-const polygonVertices = new LibPixiPolygon(
-  [
-    0, 0, 604, 0, 596, 32, 616, 30, 611, 62, 644, 57, 643, 87, 697, 82, 702,
-    102, 724, 86, 744, 83, 753, 91, 756, 83, 772, 85, 793, 100, 797, 114, 794,
-    316, 798, 336, 799, 476, 796, 491, 801, 507, 797, 635, 742, 656, 723, 683,
-    659, 687, 638, 678, 646, 712, 617, 707, 611, 717, 618, 741, 596, 734, 595,
-    746, 601, 762, 14, 763, 18, 739, -4, 741, 4, 712, -5, 705, -28, 711, -22,
-    686, -34, 679, -47, 686, -195, 686, -189, 667, -192, 647, -195, 506, -192,
-    499, -194, 476, -192, 331, -187, 323, -193, 307, -194, 110, -188, 103, -189,
-    93, -172, 81, -112, 82, -98, 95, -93, 80, -56, 82, -40, 89, -36, 80, -41,
-    57, -30, 57, -16, 62, -8, 58, -16, 29, 1, 35, 8, 25, 0, 0,
-  ],
-  "#000"
-);
+import { LibPixiPolygon } from "lyb-pixi-js/Components/Base/LibPixiPolygon";
 ```
 
-### LibPixiCapsule-胶囊体
+```ts
+const polygon = new LibPixiPolygon(
+  [
+    0, 0,
+    120, 0,
+    150, 60,
+    80, 120,
+    0, 90,
+  ],
+  "#f97316"
+);
 
-> 胶囊形状图形
-
-### LibPixiTriangle-三角形
-
-> 三角形
+app.stage.addChild(polygon);
+```
 
 ### LibPixiArc-弧形
 
-> 扇形
+用于绘制弧线或扇形区域。
+
+```ts
+import { LibPixiArc } from "lyb-pixi-js/Components/Base/LibPixiArc";
+```
+
+```ts
+const arc = new LibPixiArc({
+  start: 0,
+  end: Math.PI * 1.2,
+  radius: 80,
+  color: "#38bdf8",
+  thickness: 8,
+});
+
+app.stage.addChild(arc);
+```
 
 ### LibPixiOval-椭圆
 
-> 椭圆
+快速创建椭圆图形。
+
+```ts
+import { LibPixiOval } from "lyb-pixi-js/Components/Base/LibPixiOval";
+```
+
+```ts
+const oval = new LibPixiOval(200, 100, "#a855f7");
+app.stage.addChild(oval);
+```
 
 ### LibPixiRound-圆圈
 
-> 圆圈
+快速创建描边圆圈。
+
+```ts
+import { LibPixiRound } from "lyb-pixi-js/Components/Base/LibPixiRound";
+```
+
+```ts
+const ring = new LibPixiRound(6, 60, "#facc15");
+app.stage.addChild(ring);
+```
 
 ### LibPixiRoundedRect-圆角矩形
 
-### LibPixiSpine-动画
-
-> 自定义 Spine 动画，内置挂点
+快速创建纯色圆角矩形。
 
 ```ts
-//基础使用
-const spine = new LibPixiSpine(Assets.get("lihe"));
-spine.setAnimation("in");
-spine.addAnimation("idle", true);
-this.addChild(spine);
+import { LibPixiRoundedRect } from "lyb-pixi-js/Components/Base/LibPixiRoundedRect";
+```
 
-//挂点
-this.bgSpine = new LibPixiSpine("spine_buyfree", {
+```ts
+const rounded = new LibPixiRoundedRect(260, 100, 20, "#111827");
+app.stage.addChild(rounded);
+```
+
+### LibPixiTriangle-三角形
+
+快速创建三角形图形。
+
+```ts
+import { LibPixiTriangle } from "lyb-pixi-js/Components/Base/LibPixiTriangle";
+```
+
+```ts
+const triangle = new LibPixiTriangle(
+  [
+    [0, 0],
+    [100, 60],
+  ],
+  "#ef4444"
+);
+
+app.stage.addChild(triangle);
+```
+
+### LibPixiSpine-动画
+
+自定义 Spine 动画封装，支持动画播放、换皮和挂点跟随。
+
+```ts
+import { LibPixiSpine } from "lyb-pixi-js/Components/Base/LibPixiSpine";
+import { Assets, Container } from "pixi.js";
+```
+
+```ts
+const weapon = new Container();
+
+const spine = new LibPixiSpine(Assets.get("heroSpine"), {
   followPointList: [
     {
-      boneName: "aaa",
-      follow: followContainer1,
-    },
-    {
-      boneName: "bbb",
-      follow: followContainer2,
-      onUpdate: ({ x, y, rotate, scaleX, scaleY }) => {
-        followContainer2.position.set(
-          x + 1920 / 2 - followContainer2.width / 2,
-          y + 1080 / 2 - followContainer2.height / 2
-        );
-        followContainer2.rotation = rotate;
-        followContainer2.scale.set(scaleX, scaleY);
-      },
+      boneName: "hand_r",
+      follow: weapon,
+      angleFollow: true,
+      scaleFollow: true,
     },
   ],
 });
 
+await spine.setAnimation("appear");
+await spine.addAnimation("idle", true);
+spine.setSkin("default");
+
+app.stage.addChild(spine);
+```
+
+常用参数：
+
+```ts
 interface OnUpdateParams {
   x: number;
   y: number;
@@ -389,20 +480,14 @@ interface OnUpdateParams {
   scaleX: number;
   scaleY: number;
 }
+
 interface LibPixiSpineParams {
-  /** 默认是否可见 */
   visible?: boolean;
-  /** 挂点列表 */
   followPointList?: {
-    /** 挂点名称 */
     boneName: string;
-    /** 跟随的精灵或容器 */
     follow: Container;
-    /** 是否启用角度 */
     angleFollow?: boolean;
-    /** 是否启用缩放 */
     scaleFollow?: boolean;
-    /** 更新回调,不传则接受内置挂点更新 */
     onUpdate?: (config: OnUpdateParams) => void;
   }[];
 }
@@ -410,952 +495,1076 @@ interface LibPixiSpineParams {
 
 ### LibPixiParticleMove-粒子容器
 
-> 利用贝塞尔曲线实现粒子移动
+利用贝塞尔曲线驱动粒子沿路径飞行，适合拖尾、抛物线奖励、路径特效。
 
 ```ts
-const libParticleMove = new LibPixiJs.Components.Base.LibPixiParticleMove({
-  start: { x: 0, y: window.innerHeight },
-  control: [
-    { x: 1000, y: 750 },
-    { x: 500, y: 250 },
-  ],
-  end: { x: 0, y: 0 },
-  container: PIXI.Assets.get("fly.png"),
-  duration: 1,
-  showControl: true,
-  ease: "power1.in",
-  particleConfig: {
-    frequency: 0.001,
-    blendMode: "add",
-    lifetime: {
-      min: 0.01,
-      max: 1,
-    },
-    alpha: {
-      start: 1,
-      end: 0,
-    },
-    color: {
-      start: "#fff96c",
-      end: "#ff837f",
-    },
-    scale: {
-      start: 2,
-      end: 3,
-    },
-    rotation: {
-      min: 0,
-      max: 360,
-    },
-    rotate: {
-      min: 0,
-      max: 360,
-    },
-    speed: {
-      start: 0,
-      end: 0,
-    },
-  },
+import { LibPixiParticleMove } from "lyb-pixi-js/Components/Base/LibPixiParticleMove";
+import { Assets } from "pixi.js";
+import gsap from "gsap";
+```
 
+```ts
+const particleMove = new LibPixiParticleMove({
+  start: { x: 0, y: 720 },
+  control: [
+    { x: 600, y: 200 },
+    { x: 900, y: 300 },
+  ],
+  end: { x: 1280, y: 80 },
+  container: Assets.get("flyParticle"),
+  duration: 1.2,
+  ease: "power1.inOut",
+  particleConfig: {
+    frequency: 0.002,
+    lifetime: { min: 0.2, max: 0.8 },
+    alpha: { start: 1, end: 0 },
+    color: { start: "#fff7ae", end: "#fb7185" },
+    scale: { start: 1.2, end: 2 },
+    speed: { start: 50, end: 0.1 },
+  },
   onDestroy: (destroy) => {
-    gsap.to(libParticleMove, {
+    gsap.to(particleMove, {
       alpha: 0,
-      onComplete: () => {
-        destroy();
-      },
+      duration: 0.2,
+      onComplete: destroy,
     });
   },
 });
-app.stage.addChild(libParticleMove);
 
-export interface LibPixiParticleMoveParams {
-  /** 粒子JSON资源 */
+app.stage.addChild(particleMove);
+```
+
+常用参数：
+
+```ts
+interface LibPixiParticleMoveParams {
   container: Container;
-  /** 运动时长 */
   duration: number;
-  /** 粒子开始位置 */
   start: { x: number; y: number };
-  /** 粒子控制点 */
   control: { x: number; y: number }[];
-  /** 粒子结束点 */
   end: { x: number; y: number };
-  /** 运动曲线 */
   ease?: gsap.EaseString;
-  /** 是否显示控制点，调试使用 */
   showControl?: boolean;
-  /** 是否循环，调试使用 */
   loop?: boolean;
-  /** 是否启用粒子容器 */
   enableParticleContainer?: boolean;
-  /** 粒子配置 */
   particleConfig: {
-    /** 随机时长 */
-    lifetime: {
-      /** 最小时长 */
-      min: number;
-      /** 最大时长 */
-      max: number;
-    };
-    /** 混合模式 */
+    lifetime: { min: number; max: number };
     blendMode?: string;
-    /** 频率，秒/个 */
     frequency?: number;
-    /** 透明度变化 */
-    alpha?: {
-      /** 开始透明度 */
-      start: number;
-      /** 结束透明度 */
-      end: number;
-    };
-    /** 颜色变化 */
-    color?: {
-      /** 开始颜色 */
-      start: string;
-      /** 结束颜色 */
-      end: string;
-    };
-    /** 随机缩放变化 */
-    scale?: {
-      /** 最小 */
-      start: number;
-      /** 最大 */
-      end: number;
-    };
-    /** 随机偏移角度变化 */
-    rotation?: {
-      /** 最小角度 */
-      min: number;
-      /** 最大角度 */
-      max: number;
-    };
-    /** 随机自身旋转角度变化 */
-    rotate?: {
-      /** 最小角度 */
-      min: number;
-      /** 最大角度 */
-      max: number;
-    };
-    /** 移动速度，像素 */
-    speed?: {
-      /** 开始速度，不能为0，可无限接近0 */
-      start: number;
-      /** 结束速度，开始速度会衰减到结束速度 */
-      end: number;
-    };
+    alpha?: { start: number; end: number };
+    color?: { start: string; end: string };
+    scale?: { start: number; end: number };
+    rotation?: { min: number; max: number };
+    rotate?: { min: number; max: number };
+    speed?: { start: number; end: number };
   };
-  /** 头部粒子到达终点后触发，可在此设置隐藏动画，隐藏动画结束后调用 destroy 参数进行销毁 */
   onDestroy?: (destroy: () => void) => void;
 }
 ```
 
-## Custom-定制
+## Components/Custom
+
+### LibPixiAreaClick-扩大点击范围
+
+当视觉元素很小或存在透明边距时，用它扩大点击热区。
+
+```ts
+import { LibPixiAreaClick } from "lyb-pixi-js/Components/Custom/LibPixiAreaClick";
+```
+
+```ts
+const area = new LibPixiAreaClick(120, 120);
+area.push(closeIcon);
+app.stage.addChild(area);
+```
+
+### LibPixiArrangeLinearV2-线性排列
+
+面向容器列表的线性排列组件，支持横向、纵向、列数和间距。
+
+```ts
+import { LibPixiArrangeLinearV2 } from "lyb-pixi-js/Components/Custom/LibPixiArrangeLinearV2";
+```
+
+```ts
+const layout = new LibPixiArrangeLinearV2({
+  direction: "x",
+  gap: 20,
+  colNum: 3,
+  elementList: rewardList,
+});
+
+app.stage.addChild(layout);
+```
 
 ### LibPixiButtonHover-按钮悬浮
 
-> 悬浮切换材质
+提供纹理切换与色彩状态切换的按钮容器。
 
 ```ts
-import { LibPixiButtonHover } from "lyb-pixi-js";
+import { LibPixiButtonHover } from "lyb-pixi-js/Components/Custom/LibPixiButtonHover";
+import { Texture } from "pixi.js";
+```
 
-//创建按钮实例
+```ts
 const button = new LibPixiButtonHover({
-  texture: PIXI.Texture.from("path/to/normal.png"),
-  hoverTexture: PIXI.Texture.from("path/to/hover.png"),
-  tintColor: "#ff0000", //默认颜色
-  hoverTintColor: "#00ff00", //悬浮颜色
-  disabledColor: "#cccccc", //禁用颜色
+  texture: Texture.from("btn-normal.png"),
+  hoverTexture: Texture.from("btn-hover.png"),
+  tintColor: "#ffffff",
+  hoverTintColor: "#fde68a",
+  disabledColor: "#94a3b8",
 });
 
-//启用/禁用按钮
-button.setDisabled(false); //启用
-button.setDisabled(true); //禁用
-
-//切换按钮材质
-button.toggleTexture(
-  PIXI.Texture.from("path/to/new_normal.png"),
-  PIXI.Texture.from("path/to/new_hover.png")
-);
-
-//添加到Pixi舞台
+button.setDisabled(false);
 app.stage.addChild(button);
+```
+
+### LibPixiCapsule-胶囊形
+
+适合做圆角按钮底或标签底板。
+
+```ts
+import { LibPixiCapsule } from "lyb-pixi-js/Components/Custom/LibPixiCapsule";
+```
+
+```ts
+const capsule = new LibPixiCapsule(220, 64, "#2563eb");
+app.stage.addChild(capsule);
 ```
 
 ### LibPixiCloseBtn-关闭按钮
 
-> 右上角关闭按钮，支持悬浮旋转动画
+适合放在弹窗右上角，支持点击关闭和悬浮旋转效果。
 
 ```ts
+import { LibPixiCloseBtn } from "lyb-pixi-js/Components/Custom/LibPixiCloseBtn";
 import { Sprite, Texture } from "pixi.js";
-import { LibPixiCloseBtn } from "./path/to/LibPixiCloseBtn";
+```
 
-//创建按钮材质
-const closeTexture = Texture.from("close-icon.png");
-
-//创建按钮精灵
-const closeButton = new Sprite(closeTexture);
-
-//创建关闭按钮实例
+```ts
 const closeBtn = new LibPixiCloseBtn({
-  sprite: closeButton,
+  sprite: new Sprite(Texture.from("close.png")),
   onClick: () => {
-    console.log("Close button clicked!");
+    dialog.visible = false;
   },
 });
 
-//添加到Pixi.js场景
 app.stage.addChild(closeBtn);
+```
+
+### LibPixiDragLocate-元素拖拽定位
+
+开发期定位工具，可搜索组件类名或 `name` 并拖拽调整位置。
+
+```ts
+import { LibPixiDragLocate } from "lyb-pixi-js/Components/Custom/LibPixiDragLocate";
+```
+
+```ts
+LibPixiDragLocate.stage = app.stage;
+const dragLocate = new LibPixiDragLocate();
+app.stage.addChild(dragLocate);
 ```
 
 ### LibPixiDrawer-抽屉
 
-> 底部弹出抽屉
+底部抽屉容器，适合弹出面板、筛选器和操作栏。
 
 ```ts
+import { LibPixiDrawer } from "lyb-pixi-js/Components/Custom/LibPixiDrawer";
 import { Container } from "pixi.js";
-import { LibPixiDrawer } from "./path/to/LibPixiDrawer";
+```
 
-//创建抽屉内容容器
-const drawerContent = new Container();
-//在这里添加你想要的内容，例如一些按钮或文本等
-//drawerContent.addChild(someOtherPixiElement);
+```ts
+const content = new Container();
+const drawer = new LibPixiDrawer(content);
 
-//创建抽屉实例
-const drawer = new LibPixiDrawer(drawerContent);
-
-//添加到Pixi.js场景
 app.stage.addChild(drawer);
+```
 
-//关闭抽屉
-//drawer.close();
+### LibPixiGridColumnLayout-网格列布局
+
+按列优先布局元素，常用于纵向填充后换列。
+
+```ts
+import { LibPixiGridColumnLayout } from "lyb-pixi-js/Components/Custom/LibPixiGridColumnLayout";
+```
+
+```ts
+const layout = new LibPixiGridColumnLayout({
+  rowNum: 4,
+  colGap: 16,
+  rowGap: 12,
+  elementList: itemList,
+});
+```
+
+### LibPixiGridRowLayout-网格行布局
+
+按行优先布局元素，常用于横向填充后换行。
+
+```ts
+import { LibPixiGridRowLayout } from "lyb-pixi-js/Components/Custom/LibPixiGridRowLayout";
+```
+
+```ts
+const layout = new LibPixiGridRowLayout({
+  colNum: 5,
+  colGap: 16,
+  rowGap: 12,
+  elementList: itemList,
+});
+```
+
+### LibPixiHeadingParagraphLayout-标题段落布局
+
+适合渲染一段由标题和正文构成的说明文案。
+
+```ts
+import { LibPixiHeadingParagraphLayout } from "lyb-pixi-js/Components/Custom/LibPixiHeadingParagraphLayout";
+```
+
+```ts
+const article = new LibPixiHeadingParagraphLayout({
+  width: 600,
+  textList: [
+    { type: "h", text: "隐私政策" },
+    { type: "p", text: "这里放正文内容。" },
+  ],
+});
+
+app.stage.addChild(article);
+```
+
+### LibPixiInput-输入框
+
+基于浏览器原生输入框实现的 Pixi 输入组件。
+
+```ts
+import { LibPixiInput } from "lyb-pixi-js/Components/Custom/LibPixiInput";
+```
+
+```ts
+const input = new LibPixiInput({
+  width: 320,
+  height: 60,
+  fontSizeRatio: 0.5,
+  placeholder: "请输入昵称",
+});
+
+app.stage.addChild(input);
+```
+
+### LibPixiLabelValue-标签值布局
+
+适合左侧标签、右侧动态数值的并排展示。
+
+```ts
+import { LibPixiLabelValue } from "lyb-pixi-js/Components/Custom/LibPixiLabelValue";
+import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
+```
+
+```ts
+const label = new LibPixiText({ text: "金币", fontSize: 28, fontColor: "#94a3b8" });
+const value = new LibPixiText({ text: "1280", fontSize: 36, fontColor: "#facc15" });
+
+const labelValue = new LibPixiLabelValue({
+  label,
+  value,
+  gap: 12,
+});
+
+app.stage.addChild(labelValue);
+```
+
+### LibPixiMaskBg-全屏黑色蒙版
+
+快速生成全屏黑色蒙版，适合弹窗背景与转场遮罩。
+
+```ts
+import { LibPixiMaskBg } from "lyb-pixi-js/Components/Custom/LibPixiMaskBg";
+```
+
+```ts
+LibPixiMaskBg.stage = app.stage;
+LibPixiMaskBg.bgAlpha = 0.6;
+
+const maskBg = new LibPixiMaskBg();
+app.stage.addChild(maskBg);
+```
+
+### LibPixiNoticeBar-滚动通知栏
+
+让多条文本在固定区域内依次滚动展示。
+
+```ts
+import { LibPixiNoticeBar } from "lyb-pixi-js/Components/Custom/LibPixiNoticeBar";
+import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
+```
+
+```ts
+const noticeBar = new LibPixiNoticeBar({
+  width: 600,
+  height: 52,
+  speed: 120,
+  onVisable: (v) => {
+    console.log("当前是否有内容在显示", v);
+  },
+});
+
+noticeBar.addText(
+  new LibPixiText({ text: "系统公告 1", fontSize: 24, fontColor: "#fff" }),
+  new LibPixiText({ text: "系统公告 2", fontSize: 24, fontColor: "#fff" })
+);
+
+app.stage.addChild(noticeBar);
 ```
 
 ### LibPixiPerforMon-性能监视器
 
-> 监视帧率、Draw Call、Max Draw Call
+监视帧率、Draw Call 和 Max Draw Call，适合开发调试阶段。
 
 ```ts
-import { LibPixiPerforMon } from "./path/to/LibPixiPerforMon";
+import { LibPixiPerforMon } from "lyb-pixi-js/Components/Custom/LibPixiPerforMon";
+```
 
-//创建性能监视实例
-const perforMon = new LibPixiPerforMon(app);
-
-//添加到Pixi应用的舞台
-app.stage.addChild(perforMon);
+```ts
+const monitor = new LibPixiPerforMon(app);
+app.stage.addChild(monitor);
 ```
 
 ### LibPixiProgress-进度条
 
-> 通过裁剪的方式显示进度条
+通过裁剪贴图显示进度，适合资源加载条和血条。
 
 ```ts
+import { LibPixiProgress } from "lyb-pixi-js/Components/Custom/LibPixiProgress";
 import { Texture } from "pixi.js";
-import { LibPixiProgress } from "./path/to/LibPixiProgress";
+```
 
-//创建进度条背景和进度条材质
-const bgTexture = Texture.from("background.png");
-const barTexture = Texture.from("progress-bar.png");
-
-//创建进度条实例
+```ts
 const progress = new LibPixiProgress({
   bgWidth: 400,
-  bgHeight: 50,
+  bgHeight: 24,
   barWidth: 400,
-  barHeight: 50,
-  bgTexture: bgTexture,
-  barTexture: barTexture,
+  barHeight: 24,
+  bgTexture: Texture.from("progress-bg.png"),
+  barTexture: Texture.from("progress-bar.png"),
 });
 
-//设置进度值
-progress.setProgress(0.5); //50% 完成
-
-//添加到Pixi.js场景
+progress.setProgress(0.65);
 app.stage.addChild(progress);
-```
-
-### LibPixiScrollContainerX-X 轴滚动容器
-
-> 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
-
-```ts
-import { Container } from "pixi.js";
-import { LibPixiScrollContainerX } from "./path/to/LibPixiScrollContainerX";
-
-//创建滚动内容容器
-const scrollContent = new Container();
-//在这里添加滚动内容，例如图片、文本等
-//scrollContent.addChild(someOtherPixiElement);
-
-//创建滚动容器实例
-const scrollContainer = new LibPixiScrollContainerX({
-  width: 800,
-  height: 600,
-  scrollContent: scrollContent,
-});
-
-//添加到Pixi.js场景
-app.stage.addChild(scrollContainer);
-
-//设置容器大小
-scrollContainer.setDimensions(800, 600);
-
-//将内容添加到滚动容器
-scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
-```
-
-### LibPixiScrollContainerY-Y 轴滚动容器
-
-> 支持鼠标滚轮滚动、鼠标拖动、手指滑动，支持惯性滚动及回弹
-
-```ts
-import { Container } from "pixi.js";
-import { LibPixiScrollContainerY } from "./path/to/LibPixiScrollContainerY";
-
-//创建滚动内容容器
-const scrollContent = new Container();
-//在这里添加滚动内容，例如图片、文本等
-//scrollContent.addChild(someOtherPixiElement);
-
-//创建滚动容器实例
-const scrollContainer = new LibPixiScrollContainerY({
-  width: 800,
-  height: 600,
-  scrollContent: scrollContent,
-});
-
-//添加到Pixi.js场景
-app.stage.addChild(scrollContainer);
-
-//设置容器大小
-scrollContainer.setDimensions(800, 600);
-
-//将内容添加到滚动容器
-scrollContainer.addContent(new Sprite(Texture.from("new-content.png")));
-```
-
-### LibPixiScrollNum-数字滑动
-
-> 通过鼠标或手指拖动数字列选择数字
-
-```ts
-import { Container } from "pixi.js";
-import { LibPixiScrollNum } from "./path/to/LibPixiScrollNum";
-
-//创建滚动内容容器
-const scrollContent = new Container();
-//在这里添加滚动内容，例如数字、文本等
-//scrollContent.addChild(someTextOrSprite);
-
-//创建数字选择滚动器
-const scrollNum = new LibPixiScrollNum({
-  width: 300,
-  height: 600,
-  pageHeight: 100,
-  content: scrollContent,
-  pageNum: 5, //设定总行数
-  slideCallback: (index) => {
-    console.log("滑动到行:", index);
-  },
-  scrollCallback: (y, index) => {
-    console.log(`当前Y: ${y}, 当前行: ${index}`);
-  },
-});
-
-//将滚动器添加到场景
-app.stage.addChild(scrollNum);
-
-//手动滑动到特定行
-scrollNum.slideTo(2);
-```
-
-### LibPixiSlider-横向滑动图
-
-> 类似轮播图，但是不会自动轮播
-
-> ```ts
-> import { Container } from "pixi.js";
-> import { LibPixiSlider } from "./path/to/LibPixiSlider";
->
-> //创建滑动内容容器
-> const slideContent = new Container();
-> //在这里添加幻灯片内容，例如图片、文本等
-> //slideContent.addChild(someImageOrText);
->
-> //创建幻灯片
-> const slider = new LibPixiSlider({
->   width: 400,
->   height: 300,
->   slideContent,
->   enableDepth: true,
->   slideCallback: (pageIndex, pageNum) => {
->     console.log(`当前页: ${pageIndex + 1} / ${pageNum + 1}`);
->   },
-> });
->
-> //将幻灯片添加到场景
-> app.stage.addChild(slider);
->
-> //手动滑动到上一页或下一页
-> slider.prev();
-> slider.next();
-> ```
-
-### LibPixiSlide-滑动页
-
-> `LibPixiSlider-横向滑动图`和`LibPixiScrollNum-数字滑动`的替代品，支持`X`和`Y`配置，景深
-
-```ts
-const three = new LibPixiSlide({
-  stage: gameMount.gameStage,
-  direction: "y",
-  width: 255,
-  height: 320,
-  pageHeight: 70,
-  content: threeList,
-  itemList: threeTextList,
-
-  scrollCallback: (y, index) => {
-    two.updatePosition(y, index);
-  },
-  depthCallback(container, getValue) {
-    const alpha = getValue(0.4);
-    const scaleY = getValue(0.1);
-    container.alpha = alpha;
-    container.scale.y = scaleY;
-  },
-});
-```
-
-### LibPixiTable-简易表格
-
-> 绘制表格并填充文本
-
-```ts
-import { LibPixiTable } from "./path/to/LibPixiTable";
-import { Container } from "pixi.js";
-
-//定义表格数据
-const data: (number | string)[][] = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9],
-];
-
-//创建LibPixiTable实例
-const table = new LibPixiTable({
-  data,
-  cellWidth: 130,
-  cellHeight: 100,
-  fontSize: 24,
-  fontColor: "#B4B4B8",
-  lineWidth: 3,
-  lineColor: "#B4B4B8",
-});
-
-//将表格添加到舞台
-stage.addChild(table);
-```
-
-### LibPixiTable-自定义表格
-
-> 表格内部样式和文本全由外部提前设置好
-
-```ts
-    const fontSize = 28;
-    const data = [
-      {
-        text: new LibPixiText({
-          text: "27/11/2025\n14:16:27",
-          fontColor: "#C68251",
-          fontSize,
-          align: "center",
-        }),
-        bgColor: "#F6D7B4",
-      },
-      {
-        text: new LibPixiText({
-          text: "cutepanda",
-          fontColor: "#C68251",
-          fontSize,
-          align: "center",
-        }),
-        bgColor: "#F6D7B4",
-      },
-    ];
-    const scrollContent = new LibPixiTable({
-      lineWidth: 3,
-      cellWidth: 248,
-      cellHeight: 85,
-      cellPadding: 10,
-      lineColor: "#B96D39",
-      data: [
-        [
-          {
-            text: new LibPixiText({
-              text: "Date",
-              fontColor: "#B74715",
-              fontSize,
-              align: "center",
-            }),
-            bgColor: "#F5BC91",
-          },
-          {
-            text: new LibPixiText({
-              text: "Event",
-              fontColor: "#B74715",
-              fontSize,
-              align: "center",
-            }),
-            bgColor: "#F5BC91",
-          },
-        ],
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-        data,
-      ],
-    });
-    scrollContent.x = 50;
-```
-
-### LibPixiLabelValue-标签值
-
-> 适用于左边图标右边动态数值锚点在容器正中间的场景
-
-```ts
-//单位
-const unit = new LibPixiText({
-  text: "Rp",
-  fontSize: 40,
-  fontColor: "#fff551",
-  strokeThickness: 4,
-  stroke: "#cc5114",
-});
-
-//金额
-const amount = new LibPixiText({
-  text: value,
-  fontSize: 40,
-  fontColor: "#fff551",
-  strokeThickness: 4,
-  stroke: "#cc5114",
-});
-
-//容器
-const amountContainer = new LibLabelValue({
-  label: unit,
-  value: amount,
-  gap: 10,
-});
 ```
 
 ### LibPixiPuzzleBg-设计图背景拼接
 
-> 将设计图盖在游戏上层，对游戏内的元素进行对齐
+将设计图作为覆盖层铺在舞台上，方便做像素级对齐。
 
-### LibPixiDragLocate-元素拖拽定位
+```ts
+import { LibPixiPuzzleBg } from "lyb-pixi-js/Components/Custom/LibPixiPuzzleBg";
+import { Texture } from "pixi.js";
+```
 
-> 可通过快捷键呼出输入框搜索组件类名或 `name`，选中后可进行拖拽定位
+```ts
+const puzzleBg = new LibPixiPuzzleBg(Texture.from("design.png"));
+app.stage.addChild(puzzleBg);
+```
 
-### LibPixiTurntable-转盘布局
+### LibPixiScrollContainerX-X 轴滚动容器
 
-> 转盘上的元素布局
+横向滚动容器，支持拖动、滚轮、惯性与回弹。
 
-### LibPixiInput-输入框
+```ts
+import { LibPixiScrollContainerX } from "lyb-pixi-js/Components/Custom/LibPixiScrollContainerX";
+import { Container } from "pixi.js";
+```
 
-> 基于 `HTML` 输入框实现，失焦时隐藏
+```ts
+const content = new Container();
+const scrollX = new LibPixiScrollContainerX({
+  width: 800,
+  height: 200,
+  scrollContent: content,
+});
 
-### LibPixiArrangeLinearV2-线性排列
+app.stage.addChild(scrollX);
+```
 
-> 从左到右从上到下或从上到下从左到右排列，下一个元素的位置基于上一个元素的坐标及宽度，锚点要求在左边
+### LibPixiScrollContainerY-Y 轴滚动容器
+
+纵向滚动容器，适合长列表与说明面板。
+
+```ts
+import { LibPixiScrollContainerY } from "lyb-pixi-js/Components/Custom/LibPixiScrollContainerY";
+import { Container } from "pixi.js";
+```
+
+```ts
+const content = new Container();
+const scrollY = new LibPixiScrollContainerY({
+  width: 420,
+  height: 560,
+  scrollContent: content,
+});
+
+app.stage.addChild(scrollY);
+```
+
+### LibPixiScrollNum-数字滑动
+
+通过滑动数字列来做数字选择器。
+
+```ts
+import { LibPixiScrollNum } from "lyb-pixi-js/Components/Custom/LibPixiScrollNum";
+import { Container } from "pixi.js";
+```
+
+```ts
+const numberList = new Container();
+const picker = new LibPixiScrollNum({
+  width: 220,
+  height: 320,
+  pageHeight: 64,
+  content: numberList,
+  pageNum: 10,
+  slideCallback: (index) => {
+    console.log("选中了", index);
+  },
+});
+
+app.stage.addChild(picker);
+```
+
+### LibPixiSlide-滑动页
+
+这是更通用的滑动页组件，支持横向、纵向、循环和景深回调。
+
+```ts
+import { LibPixiSlide } from "lyb-pixi-js/Components/Custom/LibPixiSlide";
+import { Container } from "pixi.js";
+```
+
+```ts
+const content = new Container();
+const itemList: Container[] = [page1, page2, page3];
+
+const slide = new LibPixiSlide({
+  stage: app.stage,
+  direction: "x",
+  width: 600,
+  height: 280,
+  pageWidth: 220,
+  content,
+  itemList,
+  loop: true,
+  slideCallback: (index) => {
+    console.log("当前页", index);
+  },
+  depthCallback(container, getValue) {
+    container.alpha = getValue(0.4);
+    container.scale.set(getValue(0.12));
+  },
+});
+
+app.stage.addChild(slide);
+```
+
+常用参数：
+
+```ts
+interface LibPixiSlideParams {
+  stage: Container;
+  direction: "x" | "y";
+  width: number;
+  height: number;
+  pageWidth?: number;
+  pageHeight?: number;
+  content: Container;
+  itemList: Container[];
+  loop?: boolean;
+  depthCallback?: (
+    container: Container,
+    getValue: (depthAtten: number) => number
+  ) => void;
+  slideCallback?: (index: number) => void;
+  scrollCallback?: (x: number, index: number) => void;
+}
+```
+
+### LibPixiSlider-横向滑动图
+
+类似轮播图，但默认不做自动播放。
+
+```ts
+import { LibPixiSlider } from "lyb-pixi-js/Components/Custom/LibPixiSlider";
+```
+
+```ts
+const slider = new LibPixiSlider({
+  width: 500,
+  height: 280,
+  slideList: [page1, page2, page3],
+  loop: true,
+  enableDepth: true,
+  slideCallback: (pageIndex, pageNum) => {
+    console.log(`${pageIndex + 1} / ${pageNum + 1}`);
+  },
+});
+
+app.stage.addChild(slider);
+slider.next();
+```
+
+### LibPixiTable-简易表格
+
+快速绘制基于文本的简单表格。
+
+```ts
+import { LibPixiTable } from "lyb-pixi-js/Components/Custom/LibPixiTable";
+```
+
+```ts
+const table = new LibPixiTable({
+  data: [
+    ["Name", "Score", "Rank"],
+    ["Tom", 1200, 1],
+    ["Jerry", 980, 2],
+  ],
+  cellWidth: 140,
+  cellHeight: 72,
+  fontSize: 24,
+  lineWidth: 2,
+  lineColor: "#94a3b8",
+});
+
+app.stage.addChild(table);
+```
+
+### LibPixiTableV2-自定义表格
+
+单元格内部文本样式完全交给外部控制，适合更复杂的表格 UI。
+
+```ts
+import { LibPixiTableV2 } from "lyb-pixi-js/Components/Custom/LibPixiTableV2";
+import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
+```
+
+```ts
+const headerStyle = { fontSize: 24, fontColor: "#ffffff", align: "center" as const };
+const bodyStyle = { fontSize: 22, fontColor: "#f8fafc", align: "center" as const };
+
+const table = new LibPixiTableV2({
+  cellWidth: 180,
+  cellHeight: 72,
+  cellPadding: 10,
+  lineWidth: 2,
+  lineColor: "#475569",
+  data: [
+    [
+      { text: new LibPixiText({ text: "Date", ...headerStyle }), bgColor: "#334155" },
+      { text: new LibPixiText({ text: "Event", ...headerStyle }), bgColor: "#334155" },
+    ],
+    [
+      { text: new LibPixiText({ text: "2026-03-20", ...bodyStyle }), bgColor: "#0f172a" },
+      { text: new LibPixiText({ text: "Login", ...bodyStyle }), bgColor: "#0f172a" },
+    ],
+  ],
+});
+
+app.stage.addChild(table);
+```
 
 ### LibPixiTextGroupWrap-文本组换行
 
-> 内部创建文本类组，公共样式和单个设置样式，并整体支持换行
+适合由多段文本拼接组成的一整段内容，并统一控制换行。
 
-### LibPixiGridRowLayout-网格行布局
+```ts
+import { LibPixiTextGroupWrap } from "lyb-pixi-js/Components/Custom/LibPixiTextGroupWrap";
+```
 
-> 一列占满后进入下一列
+```ts
+const group = new LibPixiTextGroupWrap({
+  wordWrapWidth: 420,
+  items: [
+    { text: "恭喜你获得 " },
+    { text: "SSR", style: { fill: "#f59e0b" } },
+    { text: " 角色一名。" },
+  ],
+});
 
-### LibPixiAreaClick-扩大点击范围
+app.stage.addChild(group);
+```
 
-> 解决当图片有空隙时，无法准确点击图片，如箭头和关闭按钮
+### LibPixiTurntable-转盘布局
 
-### LibPixiHeadingParagraphLayout-文章标题内容布局
+根据份数和中心距离，计算一圈元素的坐标和旋转。
 
-> 只支持一个标题和一个内容，一般用于一些隐私政策和服务条款
+```ts
+import { LibPixiTurntable } from "lyb-pixi-js/Components/Custom/LibPixiTurntable";
+```
 
-### LibPixiGridColumnLayout-网格列布局
+```ts
+LibPixiTurntable(8, 180, (x, y, rotation, index) => {
+  rewardList[index].position.set(x, y);
+  rewardList[index].rotation = rotation;
+});
+```
 
-> 一列占满后进入下一列，支持从左到右或从右到左
+## Utils
 
-### LibPixiNoticeBar
+### libContainerCenter-父容器居中
 
-> 滚动跑马灯
+让子容器在父容器内按 `x`、`y` 或 `xy` 居中。
 
-## Utils-工具方法
+```ts
+import { libContainerCenter } from "lyb-pixi-js/Utils/LibContainerCenter";
+```
+
+```ts
+libContainerCenter(dialog, button, "xy");
+```
+
+### libControlledDelayedCall-可控延迟调用
+
+创建一个可中止的延迟任务。
+
+```ts
+import { libControlledDelayedCall } from "lyb-pixi-js/Utils/LibControlledDelayedCall";
+```
+
+```ts
+const delayed = libControlledDelayedCall(1000);
+delayed.start.then(() => {
+  console.log("1 秒后执行");
+});
+
+delayed.stop();
+```
 
 ### LibPixiAudio-音频播放器
 
-> 音频播放器
+统一管理 Pixi 场景中的音效和背景音乐。
 
 ```ts
-const audioPlayer = new LibPixiAudio();
-
-//播放音效
-audioPlayer.playEffect("effect-link").then(() => {
-  console.log("音效播放完成");
-});
-
-//播放音乐
-audioPlayer.playMusic("music-link");
-
-//暂停音乐
-audioPlayer.pauseMusic();
-
-//继续播放音乐
-audioPlayer.resumeMusic();
-
-//停止指定音效
-audioPlayer.stopEffect("effect-link");
-
-//设置启用音效
-audioPlayer.setEffectEnabled(false);
-
-//设置启用音乐
-audioPlayer.setMusicEnabled(false);
+import { LibPixiAudio } from "lyb-pixi-js/Utils/LibPixiAudio";
 ```
 
-### LibPixiCreateNineGrid-九宫格图
+```ts
+const audio = new LibPixiAudio();
 
-> 九宫格图
+await audio.playEffect("coin");
+await audio.playMusic("bgm-main");
+
+audio.pauseMusic();
+audio.resumeMusic();
+audio.stopEffect("coin");
+
+audio.setEffectEnabled(true);
+audio.setMusicEnabled(true);
+```
+
+### libPixiCreateNineGrid-九宫格图
+
+创建九宫格拉伸图。
+
+```ts
+import { libPixiCreateNineGrid } from "lyb-pixi-js/Utils/LibPixiCreateNineGrid";
+import { Texture } from "pixi.js";
+```
 
 ```ts
 const nineGrid = libPixiCreateNineGrid({
-  texture: yourTexture, //传入纹理
-  dotWidth: 10, //四个角的宽度，可以是数字或者数组
-  width: 200, //宽度
-  height: 150, //高度
-});
-```
-
-### LibPixiEvent-事件注册
-
-> 事件注册
-
-```ts
-libPixiEvent(container, "pointerdown", (e) => {
-  console.log("Pointer down event triggered", e);
+  texture: Texture.from("panel.png"),
+  dotWidth: [20, 20, 20, 20],
+  width: 420,
+  height: 220,
 });
 
-//停止监听
-const offEvent = libPixiEvent(container, "pointerdown", (e) => {
-  console.log("Pointer down event triggered", e);
-  offEvent();
-});
-
-//只执行一次的事件
-libPixiEvent(
-  container,
-  "pointerup",
-  (e) => {
-    console.log("Pointer up event triggered", e);
-  },
-  {
-    once: true,
-  }
-);
-
-//防抖
-libPixiEvent(
-  container,
-  "pointerup",
-  (e) => {
-    console.log("Pointer up event triggered", e);
-  },
-  {
-    debounce: true,
-    debounceTime: 1000,
-  }
-);
-
-//停止监听
-const off = libPixiEvent(
-  container,
-  "pointerup",
-  (e) => {
-    console.log("Pointer up event triggered", e);
-  },
-  true
-);
-off();
-```
-
-### LibPixiFilter-滤镜
-
-> 滤镜
-
-```ts
-const brightnessFilter = libPixiFilter("brightness", 1.2); //设置亮度为1.2
-const blurFilter = libPixiFilter("blur"); //设置模糊滤镜
-const desaturateFilter = libPixiFilter("desaturate"); //设置去饱和滤镜
-const contrastFilter = libPixiFilter("contrast", 1.5); //设置对比度为1.5
-```
-
-### LibPixiIntervalTrigger-间隔触发
-
-> 间隔触发
-
-```ts
-const stopInterval = libPixiIntervalTrigger(() => {
-  console.log("Triggered interval callback");
-}, [500, 1000]); //随机间隔 500ms 到 1000ms
-
-//or
-
-const stopInterval = libPixiIntervalTrigger(() => {
-  console.log("Triggered interval callback");
-}, 500); //间隔 500ms
-
-//停止间隔触发
-stopInterval();
-```
-
-### LibPixiOutsideClick-失焦隐藏
-
-> 点击容器外或入口按钮时隐藏
-
-```ts
-let removeEventListener: () => void;
-const btn = new Sprite(Assets.get("btnIcon"));
-const optionList = new Container();
-libPixiEvent(btn, "pointertap", () => {
-  optionList.visible = !optionList.visible;
-
-  //列表显示后开始监听是否点击容器外
-  if (optionList.visible) {
-    removeEventListener = libPixiOutsideClick(optionList, btn, () => {
-      optionList.visible = false;
-    });
-  }
-  //如果通过再次点击按钮关闭了列表，则移除监听器
-  else {
-    removeEventListener();
-  }
-});
-
-//带动画
-libPixiEvent(tipIcon, "pointertap", () => {
-  this._isShowTip = !this._isShowTip;
-  gsap.to(tipContainer, {
-    duration: 0.25,
-    ease: this._isShowTip ? "back.out" : "back.in",
-    pixi: {
-      scale: this._isShowTip ? 1 : 0,
-    },
-  });
-
-  //列表显示后开始监听是否点击容器外
-  if (this._isShowTip) {
-    removeEventListener = libPixiOutsideClick(tipContainer, tipIcon, () => {
-      this._isShowTip = false;
-      gsap.to(tipContainer, {
-        duration: 0.25,
-        ease: "back.in",
-        pixi: {
-          scale: 0,
-        },
-      });
-    });
-  }
-  //如果通过再次点击按钮关闭了列表，则移除监听器
-  else {
-    removeEventListener?.();
-  }
-});
-```
-
-### LibPixiPromiseTickerTimeout-TickerPromise 定时器
-
-> 基于 Ticker 和 Promise 的定时器
-
-```ts
-libPixiPromiseTickerTimeout(1000, () => {
-  console.log("Callback after 1000ms");
-}).then(() => {
-  console.log("Timer completed");
-});
-```
-
-### LibPixiScaleContainer-超出缩放
-
-> 元素超过指定宽度就缩放
-
-```ts
-libPixiScaleContainer(container, 500, 300); //容器超过 500px 宽度或 300px 高度时进行缩放
-```
-
-### LibPixiShadow-阴影
-
-> 为图片或容器设置阴影
-
-```ts
-libPixiShadow(container, {
-  color: "#ff0000",
-  alpha: 0.5,
-  blur: 5,
-  distance: 10,
-  offset: { x: 2, y: 2 },
-});
-```
-
-### LibPixiTickerTimeout-Ticker 定时器
-
-> 基于 Ticker 的定时器
-
-```ts
-const stopTimer = libPixiTickerTimeout(() => {
-  console.log("Callback after delay");
-}, 1000);
-
-//停止定时器
-stopTimer();
-```
-
-### LibPixiSlideInput-滑块选择值
-
-> 滑动选择器核心代码
-
-```ts
-import { Application, Container } from "pixi.js";
-import { LibPixiSlideInput } from "./LibPixiSlideInput";
-
-// 初始化 PIXI 应用和容器
-const app = new Application();
-const clickArea = [new Container()]; // 点击范围
-const sideArea = new Container(); // 滑动区域
-
-// 创建 LibPixiSlideInput 实例
-const slideInput = new LibPixiSlideInput({
-  app,
-  clickArea,
-  sideArea,
-  maxMoveDistance: 500,
-  onDown: () => {
-    console.log("按下事件触发");
-  },
-  onUp: () => {
-    console.log("抬起事件触发");
-  },
-  onChange: (x, value) => {
-    console.log(`当前滑动位置: ${x}, 进度: ${value}`);
-  },
-});
-
-// 设置进度为 50%
-slideInput.setValue(0.5);
-```
-
-### LibGlobalUpdater-事件实例汇总
-
-> 将组件实例化后，将涉及通过事件总线更新的实例进行存储，用于事件总线统一在一个位置监听并通过从实例汇总中获取实例调用实例的方法进行更新
-
-```ts
-//app.ts
-this.gameUI = new GameUI();
-this.addChild(this.gameUI);
-globalUpdater.setInstance("GameUI", this.gameUI);
-
-this.toolbarUI = new ToolbarUI();
-this.addChild(this.toolbarUI);
-globalUpdater.setInstance("ToolbarUI", this.toolbarUI);
-
-//globalUpdater.ts
-import type { GameUI } from "@/app/ui/GameUI";
-import type { ToolbarUI } from "@/app/ui/ToolbarUI";
-
-type Instances = "GameUI" | "ToolbarUI";
-const globalUpdater = new GlobalUpdater<Instances>();
-export { globalUpdater };
-
-//开始游戏
-$bus.on("play", () => {
-  globalUpdater.getInstance<GameUI>("GameUI").play();
-  globalUpdater.getInstance<ToolbarUI>("ToolbarUI").play();
-});
-```
-
-### LibPixiPolygonDrawTool-多边形绘制
-
-> 多边形绘制工具，绘制时浏览器窗口需要全屏显示，空格键控制开始和结束，开始后鼠标进行点击绘制，退格删除点，空格结束绘制，绘制结果在控制台打印，不满意可再次按空格清空并重新绘制
-
-```ts
-new LibPixiPolygonDrawTool(app);
+app.stage.addChild(nineGrid);
 ```
 
 ### LibPixiDigitalIncreasingAnimation-递增动画
 
-> 数值递增动画
+让数字在一段时间内平滑增长到目标值。
 
 ```ts
-const amountAnimation = _digitalIncreasingAnimation({
+import { LibPixiDigitalIncreasingAnimation } from "lyb-pixi-js/Utils/LibPixiDigitalIncreasingAnimation";
+```
+
+```ts
+const stop = LibPixiDigitalIncreasingAnimation({
   startValue: 0,
-  value: 100,
+  value: 9999,
   duration: 1,
-  onChange: (v) => {
-    this._winAmountText.text = v;
+  onChange: (value) => {
+    amountText.text = value;
   },
-  onComplete: () => {},
 });
+
+stop();
 ```
 
 ### LibPixiDownScaleAnimation-按下放大
 
-> 鼠标按下放大
+为按钮或图标添加按下反馈动画。
 
 ```ts
-LibPixiDownScaleAnimation(sprite);
+import { LibPixiDownScaleAnimation } from "lyb-pixi-js/Utils/LibPixiDownScaleAnimation";
+```
+
+```ts
+LibPixiDownScaleAnimation(startBtn, "small");
 ```
 
 ### LibPixiEmitContainerEvent-触发后代监听
 
-> 递归调用后代的事件发射器
+向后代容器递归分发事件。
 
 ```ts
-LibPixiEmitContainerEvent(this, "EVENT_NAME", {});
+import { LibPixiEmitContainerEvent } from "lyb-pixi-js/Utils/LibPixiEmitContainerEvent";
+```
+
+```ts
+LibPixiEmitContainerEvent(app.stage, "LANGUAGE_CHANGE", { lang: "zh-CN" });
+```
+
+### libPixiEvent-事件注册
+
+对 Pixi 事件做一层统一封装，支持 `once`、节流、防误触和自动鼠标样式。
+
+```ts
+import { libPixiEvent } from "lyb-pixi-js/Utils/LibPixiEvent";
+```
+
+```ts
+const off = libPixiEvent(
+  button,
+  "pointertap",
+  () => {
+    console.log("clicked");
+  },
+  {
+    once: false,
+    throttle: true,
+    throttleTime: 300,
+    autoCursor: true,
+  }
+);
+
+off();
+```
+
+### libPixiFilter-滤镜
+
+快速创建常见滤镜。
+
+```ts
+import { libPixiFilter } from "lyb-pixi-js/Utils/LibPixiFilter";
+```
+
+```ts
+sprite.filters = [
+  libPixiFilter("brightness", 1.2),
+  libPixiFilter("contrast", 1.1),
+];
+```
+
+### LibPixiGlobalUpdater-事件实例汇总
+
+集中存储组件实例，便于事件总线或全局逻辑按 key 调用。
+
+```ts
+import { LibPixiGlobalUpdater } from "lyb-pixi-js/Utils/LibPixiGlobalUpdater";
+```
+
+```ts
+type Instances = "GameUI" | "ToolbarUI";
+
+const updater = new LibPixiGlobalUpdater<Instances>();
+updater.setInstance("GameUI", gameUI);
+updater.setInstance("ToolbarUI", toolbarUI);
+
+updater.getInstance("GameUI").visible = true;
+```
+
+### LibPixiGridLayout-网格布局
+
+将一组元素快速排成网格。
+
+```ts
+import { LibPixiGridLayout } from "lyb-pixi-js/Utils/LibPixiGridLayout";
+```
+
+```ts
+LibPixiGridLayout(cardList, 20, 4, "row");
+```
+
+### libPixiHVCenter-列表居中
+
+让一组元素整体相对父容器水平或垂直居中。
+
+```ts
+import { libPixiHVCenter } from "lyb-pixi-js/Utils/LibPixiHVCenter";
+```
+
+```ts
+libPixiHVCenter(app.stage, rewardList, ["x"]);
+```
+
+### libPixiHVGap-列表间距
+
+按 `x` 或 `y` 方向设置元素间距。
+
+```ts
+import { libPixiHVGap } from "lyb-pixi-js/Utils/LibPixiHVGap";
+```
+
+```ts
+libPixiHVGap(rewardList, 16, "x");
+```
+
+### libPixiIntervalTrigger-间隔触发
+
+基于共享 Ticker 的间隔触发器，支持固定间隔和随机区间。
+
+```ts
+import { libPixiIntervalTrigger } from "lyb-pixi-js/Utils/LibPixiIntervalTrigger";
+```
+
+```ts
+const stop = libPixiIntervalTrigger(() => {
+  console.log("tick");
+}, [500, 1200]);
+
+stop();
+```
+
+### libPixiIsOutOfView-离开可视区检测
+
+判断某个容器是否已离开屏幕范围。
+
+```ts
+import { libPixiIsOutOfView } from "lyb-pixi-js/Utils/LibPixiIsOutOfView";
+```
+
+```ts
+if (libPixiIsOutOfView(enemy)) {
+  enemy.visible = false;
+}
+```
+
+### libPixiLocalBoundary-本地边界坐标
+
+获取舞台在当前适配模式下的边界信息。
+
+```ts
+import { libPixiLocalBoundary } from "lyb-pixi-js/Utils/LibPixiLocalBoundary";
+```
+
+```ts
+const boundary = libPixiLocalBoundary(app.stage, "hv");
+console.log(boundary.leftTop, boundary.rightTop);
+```
+
+### libPixiOutsideClick-失焦隐藏
+
+点击容器外部或入口按钮时关闭浮层。
+
+```ts
+import { libPixiOutsideClick } from "lyb-pixi-js/Utils/LibPixiOutsideClick";
+import { libPixiEvent } from "lyb-pixi-js/Utils/LibPixiEvent";
+```
+
+```ts
+let removeOutside: () => void;
+
+libPixiEvent(triggerBtn, "pointertap", () => {
+  popup.visible = !popup.visible;
+
+  if (popup.visible) {
+    removeOutside = libPixiOutsideClick(popup, triggerBtn, () => {
+      popup.visible = false;
+    });
+  } else {
+    removeOutside?.();
+  }
+});
+```
+
+### libPixiOverflowHidden-溢出裁剪
+
+为容器添加矩形遮罩，隐藏溢出内容。
+
+```ts
+import { libPixiOverflowHidden } from "lyb-pixi-js/Utils/LibPixiOverflowHidden";
+```
+
+```ts
+const mask = libPixiOverflowHidden(scrollContent);
+mask.visible = false;
+```
+
+### libPixiPivot-容器锚点设置
+
+用于设置容器 `pivot`。注意导入路径文件名是 `LibPixiActhor`，导出名是 `libPixiPivot`。
+
+```ts
+import { libPixiPivot } from "lyb-pixi-js/Utils/LibPixiActhor";
+```
+
+```ts
+libPixiPivot(dialog, 0.5, 0.5);
+```
+
+### LibPixiPolygonDrawTool-多边形绘制工具
+
+开发期辅助工具，用于快速点绘多边形顶点数据。
+
+```ts
+import { LibPixiPolygonDrawTool } from "lyb-pixi-js/Utils/LibPixiPolygonDrawTool";
+```
+
+```ts
+new LibPixiPolygonDrawTool(app, {
+  outFormat: "number",
+  dotRadius: 6,
+  polygonColor: "#22c55e",
+});
+```
+
+### libPixiPromiseTickerTimeout-TickerPromise 定时器
+
+基于 Ticker 与 Promise 的延时工具。
+
+```ts
+import { libPixiPromiseTickerTimeout } from "lyb-pixi-js/Utils/LibPixiPromiseTickerTimeout";
+```
+
+```ts
+await libPixiPromiseTickerTimeout(1000, () => {
+  console.log("1 秒后触发");
+});
+```
+
+### libPixiScaleContainer-超出缩放
+
+当元素超出给定尺寸时自动缩放到范围内。
+
+```ts
+import { libPixiScaleContainer } from "lyb-pixi-js/Utils/LibPixiScaleContainer";
+```
+
+```ts
+libPixiScaleContainer(title, 300, 80);
+```
+
+### libPixiShadow-阴影
+
+给容器添加阴影效果。
+
+```ts
+import { libPixiShadow } from "lyb-pixi-js/Utils/LibPixiShadow";
+```
+
+```ts
+libPixiShadow(card, {
+  color: "#000000",
+  alpha: 0.4,
+  blur: 6,
+  distance: 8,
+  offset: { x: 2, y: 4 },
+});
+```
+
+### LibPixiSlideInput-滑块输入
+
+适合通过拖动来选择某个数值。
+
+```ts
+import { LibPixiSlideInput } from "lyb-pixi-js/Utils/LibPixiSlideInput";
+import { Container } from "pixi.js";
+```
+
+```ts
+const slideInput = new LibPixiSlideInput({
+  app,
+  clickArea: [new Container()],
+  sideArea: new Container(),
+  maxMoveDistance: 500,
+  onChange: (x, value) => {
+    console.log(x, value);
+  },
+});
+
+slideInput.setValue(0.5);
 ```
 
 ### LibPixiTicker-Ticker 管理器
 
-> 添加和删除 `Ticker` 函数，单个 `Ticker` 函数暂停开始，所有 `Ticker` 函数使用的是全局的 `Ticker`
+统一管理全局 Ticker 回调。
 
-### LibPixiPivot-容器锚点设置
+```ts
+import { LibPixiTicker } from "lyb-pixi-js/Utils/LibPixiTicker";
+```
 
-> 给容器设置精准的 `Pivot`，但当容器大小改变时，需要重新调用
+```ts
+const off = LibPixiTicker.add("coin-spin", () => {
+  coin.rotation += 0.05;
+});
 
-### LibPixiLocalBoundary-本地边界坐标
+LibPixiTicker.stop("coin-spin");
+LibPixiTicker.start("coin-spin");
+off();
+```
 
->获取屏幕左上角和右上角在舞台上的位置
+### libPixiTickerTimeout-Ticker 定时器
 
-### LibPixiIsOutOfView-离开可视区检测
+基于 Ticker 的延迟执行工具。
 
-> 检测元素是否离开可视区
+```ts
+import { libPixiTickerTimeout } from "lyb-pixi-js/Utils/LibPixiTickerTimeout";
+```
+
+```ts
+const cancel = libPixiTickerTimeout(() => {
+  console.log("timeout");
+}, 800);
+
+cancel();
+```
+
+### LibPixiDialogManager-弹窗管理器
+
+提供弹窗打开、关闭、批量销毁和关闭监听能力，同时导出 `LibPixiDialog` 与 `LibPixiBaseContainer`。
+
+```ts
+import {
+  LibPixiDialogManager,
+  LibPixiDialog,
+  LibPixiBaseContainer,
+} from "lyb-pixi-js/Utils/LibPixiDialogManager";
+```
+
+```ts
+class RewardDialog extends LibPixiDialog {
+  constructor() {
+    super({ needBg: true });
+  }
+}
+
+const dialogManager = new LibPixiDialogManager(app.stage);
+
+dialogManager.open(RewardDialog, "reward-dialog");
+dialogManager.onClose("reward-dialog", () => {
+  console.log("dialog closed");
+});
+
+await dialogManager.close("reward-dialog");
+```
+
+## 补充说明
+
+- README 中的导入路径以当前 `npm/package.json` 的 `exports` 为准。
+- 组件和工具较多，少数模块存在“文件名”和“导出名”不完全一致的情况，复制代码前建议结合类型提示确认。
+- 本文档优先强调“怎么用”，不是完整的源码设计说明。
+- 如果你需要更准确的参数、方法签名和返回值，请直接查看对应 `.d.ts` 文件。
