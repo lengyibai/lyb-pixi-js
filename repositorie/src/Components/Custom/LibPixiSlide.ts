@@ -1,7 +1,7 @@
 import { Container, FederatedPointerEvent, Graphics } from "pixi.js";
 import gsap from "gsap";
-import { libPixiEvent } from "../../Utils/LibPixiEvent";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
+import { libPixiEvent } from "../../Utils/LibPixiEvent.js";
+import { LibPixiContainer } from "../Base/LibPixiContainer.js";
 
 export interface LibPixiSlideParams {
   /** 舞台 */

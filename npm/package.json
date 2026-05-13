@@ -1,15 +1,30 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.12.98",
-  "description": "自用Pixi.JS方法库",
+  "version": "1.13.0",
+  "description": "PixiJS utility and component library",
   "license": "ISC",
+  "type": "module",
+  "types": "./index.d.ts",
+  "main": "./index.js",
+  "module": "./index.js",
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "Components",
+    "Utils",
+    "README.md"
+  ],
   "exports": {
+    ".": "./index.js",
+    "./Components/Base": "./Components/Base/index.js",
     "./Components/Base/*": "./Components/Base/*",
+    "./Components/Custom": "./Components/Custom/index.js",
     "./Components/Custom/*": "./Components/Custom/*",
+    "./Utils": "./Utils/index.js",
     "./Utils/*": "./Utils/*"
   },
   "author": {
-    "name": "冷弋白",
+    "name": "lengyibai",
     "email": "1329670984@qq.com"
   },
   "repository": {
@@ -17,16 +32,12 @@
     "url": "git+https://github.com/lengyibai/lyb-pixi-js.git"
   },
   "keywords": [
-    "冷弋白",
     "lengyibai",
     "lyb",
-    "lyb-pixi-js"
+    "lyb-pixi-js",
+    "pixi",
+    "pixijs"
   ],
-  "devDependencies": {
-    "@types/howler": "^2.2.12",
-    "@types/node": "^22.10.5",
-    "typescript": "^5.7.3"
-  },
   "dependencies": {
     "@pixi-spine/runtime-3.8": "^4.0.3",
     "@pixi/filter-drop-shadow": "^5.2.0",
@@ -36,9 +47,8 @@
     "decimal.js": "^10.4.3",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
-    "lyb-js": "^1.6.5",
+    "lyb-js": "^1.6.35",
     "pixi-spine": "^4.0.4",
-    "pixi.js": "^7.4.2",
-    "vite": "^4.5.5"
+    "pixi.js": "^7.4.2"
   }
 }

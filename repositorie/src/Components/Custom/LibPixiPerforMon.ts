@@ -6,8 +6,8 @@ import {
   Ticker,
   UPDATE_PRIORITY,
 } from "pixi.js";
-import { LibPixiRectangle } from "../Base/LibPixiRectangle";
-import { LibPixiText } from "../Base/LibPixiText";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle.js";
+import { LibPixiText } from "../Base/LibPixiText.js";
 
 /** @description 监视帧率、Draw Call、Max Draw Call
  * @link 使用方法：https://www.npmjs.com/package/lyb-pixi-js#LibPixiPerforMon-性能监视器

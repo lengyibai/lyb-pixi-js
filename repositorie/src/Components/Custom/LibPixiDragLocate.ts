@@ -1,6 +1,6 @@
 import { Container, Ticker } from "pixi.js";
 import gsap from "gsap";
-import { libPixiFilter } from "../../Utils/LibPixiFilter";
+import { libPixiFilter } from "../../Utils/LibPixiFilter.js";
 import { libJsCopy } from "lyb-js/Browser/LibJsCopy.js";
 
 /** @description 元素拖拽定位 */

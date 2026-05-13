@@ -1,6 +1,6 @@
 import { BitmapText, Container, Sprite } from "pixi.js";
-import { LibPixiText } from "../Base/LibPixiText";
-import { libPixiScaleContainer } from "../../Utils/LibPixiScaleContainer";
+import { LibPixiText } from "../Base/LibPixiText.js";
+import { libPixiScaleContainer } from "../../Utils/LibPixiScaleContainer.js";
 
 type T = Sprite | LibPixiText | BitmapText;
 

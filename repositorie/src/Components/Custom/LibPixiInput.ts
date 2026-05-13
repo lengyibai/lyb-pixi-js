@@ -1,9 +1,9 @@
 import { Container, Ticker } from "pixi.js";
-import Decimal from "decimal.js";
-import { libPixiEvent } from "../../Utils/LibPixiEvent";
-import { libPixiScaleContainer } from "../../Utils/LibPixiScaleContainer";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { LibPixiText } from "../Base/LibPixiText";
+import { Decimal } from "decimal.js";
+import { libPixiEvent } from "../../Utils/LibPixiEvent.js";
+import { libPixiScaleContainer } from "../../Utils/LibPixiScaleContainer.js";
+import { LibPixiContainer } from "../Base/LibPixiContainer.js";
+import { LibPixiText } from "../Base/LibPixiText.js";
 
 interface Params {
   /** 宽度 */

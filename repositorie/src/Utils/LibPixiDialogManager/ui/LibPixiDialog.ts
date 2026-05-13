@@ -1,10 +1,10 @@
 import { Container, Ticker } from "pixi.js";
 import gsap from "gsap";
 import { LibJsResizeWatcher } from "lyb-js/Base/LibJsResizeWatcher.js";
-import { LibPixiMaskBg } from "../../../Components/Custom/LibPixiMaskBg";
-import { libPixiEvent } from "../../LibPixiEvent";
-import { LibPixiBaseContainer } from "./LibPixiBaseContainer";
-import { libPixiPivot } from "../../LibPixiActhor";
+import { LibPixiMaskBg } from "../../../Components/Custom/LibPixiMaskBg.js";
+import { libPixiEvent } from "../../LibPixiEvent.js";
+import { LibPixiBaseContainer } from "./LibPixiBaseContainer.js";
+import { libPixiPivot } from "../../LibPixiActhor.js";
 
 interface Params {
   /** 是否需要显示黑色背景 */

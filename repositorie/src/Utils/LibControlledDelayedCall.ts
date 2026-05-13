@@ -1,4 +1,4 @@
-import { libPixiTickerTimeout } from "./LibPixiTickerTimeout";
+import { libPixiTickerTimeout } from "./LibPixiTickerTimeout.js";
 
 /** @description 可控延迟调用函数 */
 export const libControlledDelayedCall = (time: number) => {

@@ -1,7 +1,7 @@
 import type { Container } from "pixi.js";
-import type { LibPixiBaseContainer } from "./ui/LibPixiBaseContainer";
-export { LibPixiBaseContainer } from "./ui/LibPixiBaseContainer";
-export { LibPixiDialog } from "./ui/LibPixiDialog";
+import type { LibPixiBaseContainer } from "./ui/LibPixiBaseContainer.js";
+export { LibPixiBaseContainer } from "./ui/LibPixiBaseContainer.js";
+export { LibPixiDialog } from "./ui/LibPixiDialog.js";
 
 interface IViewCtor {
   new (...args: any[]): LibPixiBaseContainer;

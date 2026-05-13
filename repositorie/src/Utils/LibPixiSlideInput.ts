@@ -1,5 +1,5 @@
 import type { Application, Container, FederatedPointerEvent } from "pixi.js";
-import { libPixiEvent } from "./LibPixiEvent";
+import { libPixiEvent } from "./LibPixiEvent.js";
 
 export interface LibPixiSlideInputParams {
   /** App */

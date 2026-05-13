@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import { Container, type HTMLText, type Text } from "pixi.js";
-import { LibPixiRectangle } from "../Base/LibPixiRectangle";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle.js";
 
 interface Params {
   /** 高度 */

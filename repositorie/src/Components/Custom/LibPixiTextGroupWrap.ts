@@ -1,5 +1,5 @@
 import { Container, Text, type ITextStyle } from "pixi.js";
-import { libPixiPivot } from "../../Utils/LibPixiActhor";
+import { libPixiPivot } from "../../Utils/LibPixiActhor.js";
 
 interface TextItem {
   text: string | number;

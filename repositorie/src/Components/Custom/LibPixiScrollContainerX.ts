@@ -5,9 +5,9 @@ import {
   type FederatedPointerEvent,
 } from "pixi.js";
 import { gsap } from "gsap";
-import { libPixiEvent } from "../../Utils/LibPixiEvent";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { LibPixiRectangle } from "../Base/LibPixiRectangle";
+import { libPixiEvent } from "../../Utils/LibPixiEvent.js";
+import { LibPixiContainer } from "../Base/LibPixiContainer.js";
+import { LibPixiRectangle } from "../Base/LibPixiRectangle.js";
 
 export interface LibPixiScrollContainerXParams {
   /** 宽度 */

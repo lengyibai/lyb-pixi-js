@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "build": "tsc"
   },
@@ -16,9 +17,8 @@
     "decimal.js": "^10.4.3",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
-    "lyb-js": "^1.6.23",
+    "lyb-js": "^1.6.35",
     "pixi-spine": "^4.0.4",
-    "pixi.js": "^7.4.2",
-    "vite": "^4.5.5"
+    "pixi.js": "^7.4.2"
   }
 }

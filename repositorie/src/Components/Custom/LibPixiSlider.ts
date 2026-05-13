@@ -1,9 +1,9 @@
 import { Container, type FederatedPointerEvent } from "pixi.js";
 import gsap from "gsap";
 import { LibJsLerp } from "lyb-js/Math/LibJsLerp.js";
-import { libPixiOverflowHidden } from "../../Utils/LibPixiOverflowHidden";
-import { LibPixiContainer } from "../Base/LibPixiContainer";
-import { libPixiEvent } from "../../Utils/LibPixiEvent";
+import { libPixiOverflowHidden } from "../../Utils/LibPixiOverflowHidden.js";
+import { LibPixiContainer } from "../Base/LibPixiContainer.js";
+import { libPixiEvent } from "../../Utils/LibPixiEvent.js";
 
 interface LibPixiSliderParams {
   /** 滑动区域宽度 */

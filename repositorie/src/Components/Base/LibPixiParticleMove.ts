@@ -1,7 +1,7 @@
 import { Container, ParticleContainer, Ticker } from "pixi.js";
 import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
 import gsap from "gsap";
-import { LibPixiText } from "./LibPixiText";
+import { LibPixiText } from "./LibPixiText.js";
 
 export interface LibPixiParticleMoveParams {
   /** 粒子JSON资源 */

@@ -18,7 +18,7 @@ export interface GridLayoutParams {
 }
 
 import { Container } from "pixi.js";
-import { libPixiPivot } from "../../Utils/LibPixiActhor";
+import { libPixiPivot } from "../../Utils/LibPixiActhor.js";
 
 /** @description 网格列布局 */
 export class LibPixiGridColumnLayout<T extends Container> extends Container {

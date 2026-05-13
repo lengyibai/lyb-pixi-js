@@ -1,5 +1,5 @@
 import { Container } from "pixi.js";
-import { libPixiPivot } from "../../Utils/LibPixiActhor";
+import { libPixiPivot } from "../../Utils/LibPixiActhor.js";
 
 export interface GridLayoutParams {
   gap?: number | number[];
