@@ -114,6 +114,7 @@ README 不再主推 `import { LibPixiJs } from "lyb-pixi-js"` 这类整库入口
 - [LibPixiHtmlText-富文本](#libpixihtmltext-富文本)
 - [LibPixiBit-位图文本](#libpixibit-位图文本)
 - [LibPixiBitText-位图文本工厂](#libpixibittext-位图文本工厂)
+- [LibPixiBorderRect-矩形描边](#libpixiborderrect-矩形描边)
 - [LibPixiContainer-容器](#libpixicontainer-容器)
 - [LibPixiRectBgColor-带背景色矩形](#libpixirectbgcolor-带背景色矩形)
 - [LibPixiRectangle-矩形](#libpixirectangle-矩形)
@@ -136,15 +137,16 @@ README 不再主推 `import { LibPixiJs } from "lyb-pixi-js"` 这类整库入口
 - [LibPixiCloseBtn-关闭按钮](#libpixiclosebtn-关闭按钮)
 - [LibPixiDragLocate-元素拖拽定位](#libpixidraglocate-元素拖拽定位)
 - [LibPixiDrawer-抽屉](#libpixidrawer-抽屉)
-- [LibPixiGridColumnLayout-网格列布局](#libpixigridcolumnlayout-网格列布局)
-- [LibPixiGridRowLayout-网格行布局](#libpixigridrowlayout-网格行布局)
+- [LibPixiFlex-弹性布局](#libpixiflex-弹性布局)
+- [LibPixiGrid-网格布局组件](#libpixigrid-网格布局组件)
 - [LibPixiHeadingParagraphLayout-标题段落布局](#libpixiheadingparagraphlayout-标题段落布局)
 - [LibPixiInput-输入框](#libpixiinput-输入框)
 - [LibPixiLabelValue-标签值布局](#libpixilabelvalue-标签值布局)
 - [LibPixiMaskBg-全屏黑色蒙版](#libpiximaskbg-全屏黑色蒙版)
 - [LibPixiNoticeBar-滚动通知栏](#libpixinoticebar-滚动通知栏)
 - [LibPixiPerforMon-性能监视器](#libpixiperformon-性能监视器)
-- [LibPixiProgress-进度条](#libpixiprogress-进度条)
+- [LibPixiProgress-纹理进度条](#libpixiprogress-纹理进度条)
+- [LibPixiProgressBar-纯色进度条](#libpixiprogressbar-纯色进度条)
 - [LibPixiPuzzleBg-设计图背景拼接](#libpixipuzzlebg-设计图背景拼接)
 - [LibPixiScrollContainerX-X 轴滚动容器](#libpixiscrollcontainerx-x-轴滚动容器)
 - [LibPixiScrollContainerY-Y 轴滚动容器](#libpixiscrollcontainery-y-轴滚动容器)
@@ -278,6 +280,28 @@ const combo = bitFactory.createText("Combo x3", 24);
 app.stage.addChild(score, combo);
 ```
 
+### LibPixiBorderRect-矩形描边
+
+用于快速绘制矩形或圆角矩形描边，适合做卡片边框、选中态边框和调试框。
+
+```ts
+import { LibPixiBorderRect } from "lyb-pixi-js/Components/Base/LibPixiBorderRect";
+```
+
+```ts
+const border = new LibPixiBorderRect({
+  width: 320,
+  height: 120,
+  radius: 16,
+  lineWidth: 4,
+  color: "#38bdf8",
+  alpha: 0.9,
+  inset: 2,
+});
+
+app.stage.addChild(border);
+```
+
 ### LibPixiContainer-容器
 
 带尺寸与背景色能力的容器基类，适合做占位、点击区域和布局容器。
@@ -348,14 +372,8 @@ import { LibPixiPolygon } from "lyb-pixi-js/Components/Base/LibPixiPolygon";
 
 ```ts
 const polygon = new LibPixiPolygon(
-  [
-    0, 0,
-    120, 0,
-    150, 60,
-    80, 120,
-    0, 90,
-  ],
-  "#f97316"
+  [0, 0, 120, 0, 150, 60, 80, 120, 0, 90],
+  "#f97316",
 );
 
 app.stage.addChild(polygon);
@@ -434,7 +452,7 @@ const triangle = new LibPixiTriangle(
     [0, 0],
     [100, 60],
   ],
-  "#ef4444"
+  "#ef4444",
 );
 
 app.stage.addChild(triangle);
@@ -682,37 +700,60 @@ const drawer = new LibPixiDrawer(content);
 app.stage.addChild(drawer);
 ```
 
-### LibPixiGridColumnLayout-网格列布局
+### LibPixiFlex-弹性布局
 
-按列优先布局元素，常用于纵向填充后换列。
+更通用的布局骨架，支持横向换行、纵向分列、主轴分布、交叉轴对齐、内边距和纵向滚动容器。
 
 ```ts
-import { LibPixiGridColumnLayout } from "lyb-pixi-js/Components/Custom/LibPixiGridColumnLayout";
+import { LibPixiFlex } from "lyb-pixi-js/Components/Custom/LibPixiFlex";
 ```
 
 ```ts
-const layout = new LibPixiGridColumnLayout({
-  rowNum: 4,
-  colGap: 16,
+const layout = new LibPixiFlex(itemList, {
+  direction: "row",
+  maxWidth: 600,
+  gap: 16,
   rowGap: 12,
-  elementList: itemList,
+  justifyContent: "start",
+  alignItems: "center",
+  padding: 20,
+  scrollHeight: 320,
 });
+
+app.stage.addChild(layout);
 ```
 
-### LibPixiGridRowLayout-网格行布局
+### LibPixiGrid-网格布局组件
 
-按行优先布局元素，常用于横向填充后换行。
+用于固定每行或每列个数的网格布局，支持行优先、列优先、RTL 列推进、滚动可视区和背景调试。
 
 ```ts
-import { LibPixiGridRowLayout } from "lyb-pixi-js/Components/Custom/LibPixiGridRowLayout";
+import { LibPixiGrid } from "lyb-pixi-js/Components/Custom/LibPixiGrid";
 ```
 
 ```ts
-const layout = new LibPixiGridRowLayout({
-  colNum: 5,
-  colGap: 16,
+const layout = new LibPixiGrid(itemList, {
+  direction: "row",
+  count: 5,
+  columnGap: 16,
   rowGap: 12,
-  elementList: itemList,
+  padding: 20,
+  scrollWidth: 640,
+  scrollHeight: 360,
+});
+
+app.stage.addChild(layout);
+```
+
+列优先示例：
+
+```ts
+const columnLayout = new LibPixiGrid(itemList, {
+  direction: "column",
+  count: 4,
+  columnDirection: "rtl",
+  columnGap: 24,
+  rowGap: 12,
 });
 ```
 
@@ -765,8 +806,16 @@ import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
 ```
 
 ```ts
-const label = new LibPixiText({ text: "金币", fontSize: 28, fontColor: "#94a3b8" });
-const value = new LibPixiText({ text: "1280", fontSize: 36, fontColor: "#facc15" });
+const label = new LibPixiText({
+  text: "金币",
+  fontSize: 28,
+  fontColor: "#94a3b8",
+});
+const value = new LibPixiText({
+  text: "1280",
+  fontSize: 36,
+  fontColor: "#facc15",
+});
 
 const labelValue = new LibPixiLabelValue({
   label,
@@ -814,7 +863,7 @@ const noticeBar = new LibPixiNoticeBar({
 
 noticeBar.addText(
   new LibPixiText({ text: "系统公告 1", fontSize: 24, fontColor: "#fff" }),
-  new LibPixiText({ text: "系统公告 2", fontSize: 24, fontColor: "#fff" })
+  new LibPixiText({ text: "系统公告 2", fontSize: 24, fontColor: "#fff" }),
 );
 
 app.stage.addChild(noticeBar);
@@ -833,7 +882,7 @@ const monitor = new LibPixiPerforMon(app);
 app.stage.addChild(monitor);
 ```
 
-### LibPixiProgress-进度条
+### LibPixiProgress-纹理进度条
 
 通过裁剪贴图显示进度，适合资源加载条和血条。
 
@@ -854,6 +903,28 @@ const progress = new LibPixiProgress({
 
 progress.setProgress(0.65);
 app.stage.addChild(progress);
+```
+
+### LibPixiProgressBar-纯色进度条
+
+通过图形绘制显示进度，适合无素材场景、调试条和带百分比文字的进度展示。
+
+```ts
+import { LibPixiProgressBar } from "lyb-pixi-js/Components/Custom/LibPixiProgressBar";
+```
+
+```ts
+const progressBar = new LibPixiProgressBar({
+  width: 400,
+  height: 24,
+  radius: 12,
+  bgColor: "#1f2937",
+  barColor: "#22c55e",
+  showText: true,
+});
+
+progressBar.setProgress(0.65);
+app.stage.addChild(progressBar);
 ```
 
 ### LibPixiPuzzleBg-设计图背景拼接
@@ -892,7 +963,7 @@ app.stage.addChild(scrollX);
 
 ### LibPixiScrollContainerY-Y 轴滚动容器
 
-纵向滚动容器，适合长列表与说明面板。
+纵向滚动容器，适合长列表与说明面板，支持滚轮、拖动、惯性回弹、滚动条样式和触底加载。
 
 ```ts
 import { LibPixiScrollContainerY } from "lyb-pixi-js/Components/Custom/LibPixiScrollContainerY";
@@ -901,10 +972,20 @@ import { Container } from "pixi.js";
 
 ```ts
 const content = new Container();
+LibPixiScrollContainerY.stage = app.stage;
+LibPixiScrollContainerY.setScrollbarStyle({
+  scrollbar: true,
+  scrollbarWidth: 8,
+  scrollbarColor: "#ffffff",
+});
+
 const scrollY = new LibPixiScrollContainerY({
   width: 420,
   height: 560,
   scrollContent: content,
+  onScroll: (y) => {
+    console.log("scroll y", y);
+  },
 });
 
 app.stage.addChild(scrollY);
@@ -984,7 +1065,7 @@ interface LibPixiSlideParams {
   loop?: boolean;
   depthCallback?: (
     container: Container,
-    getValue: (depthAtten: number) => number
+    getValue: (depthAtten: number) => number,
   ) => void;
   slideCallback?: (index: number) => void;
   scrollCallback?: (x: number, index: number) => void;
@@ -1050,8 +1131,16 @@ import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
 ```
 
 ```ts
-const headerStyle = { fontSize: 24, fontColor: "#ffffff", align: "center" as const };
-const bodyStyle = { fontSize: 22, fontColor: "#f8fafc", align: "center" as const };
+const headerStyle = {
+  fontSize: 24,
+  fontColor: "#ffffff",
+  align: "center" as const,
+};
+const bodyStyle = {
+  fontSize: 22,
+  fontColor: "#f8fafc",
+  align: "center" as const,
+};
 
 const table = new LibPixiTableV2({
   cellWidth: 180,
@@ -1061,12 +1150,24 @@ const table = new LibPixiTableV2({
   lineColor: "#475569",
   data: [
     [
-      { text: new LibPixiText({ text: "Date", ...headerStyle }), bgColor: "#334155" },
-      { text: new LibPixiText({ text: "Event", ...headerStyle }), bgColor: "#334155" },
+      {
+        text: new LibPixiText({ text: "Date", ...headerStyle }),
+        bgColor: "#334155",
+      },
+      {
+        text: new LibPixiText({ text: "Event", ...headerStyle }),
+        bgColor: "#334155",
+      },
     ],
     [
-      { text: new LibPixiText({ text: "2026-03-20", ...bodyStyle }), bgColor: "#0f172a" },
-      { text: new LibPixiText({ text: "Login", ...bodyStyle }), bgColor: "#0f172a" },
+      {
+        text: new LibPixiText({ text: "2026-03-20", ...bodyStyle }),
+        bgColor: "#0f172a",
+      },
+      {
+        text: new LibPixiText({ text: "Login", ...bodyStyle }),
+        bgColor: "#0f172a",
+      },
     ],
   ],
 });
@@ -1248,7 +1349,7 @@ const off = libPixiEvent(
     throttle: true,
     throttleTime: 300,
     autoCursor: true,
-  }
+  },
 );
 
 off();

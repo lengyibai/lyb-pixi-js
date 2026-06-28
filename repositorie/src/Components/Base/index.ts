@@ -1,6 +1,7 @@
 export * from "./LibPixiArc.js";
 export * from "./LibPixiBit.js";
 export * from "./LibPixiBitText.js";
+export * from "./LibPixiBorderRect.js";
 export * from "./LibPixiCircular.js";
 export * from "./LibPixiContainer.js";
 export * from "./LibPixiHtmlText.js";
