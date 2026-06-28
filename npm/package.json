@@ -1,6 +1,6 @@
 {
   "name": "lyb-pixi-js",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "description": "PixiJS utility and component library",
   "license": "ISC",
   "type": "module",
