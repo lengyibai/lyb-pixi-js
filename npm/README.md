@@ -7,7 +7,7 @@
 这份 README 的目标不是写成一份冗长的源码手册，而是让你快速知道：
 
 - 怎么安装
-- 怎么按需导入
+- 怎么导入使用
 - 每个模块大概解决什么问题
 - 最常见的调用方式是什么
 
@@ -29,18 +29,12 @@ yarn add lyb-pixi-js
 
 ## 起步
 
-### 1. 按需导入
+### 1. 直接导入
 
-当前包导出以按需导入为主，推荐直接从以下三个分类路径导入：
-
-- `lyb-pixi-js/Components/Base/*`
-- `lyb-pixi-js/Components/Custom/*`
-- `lyb-pixi-js/Utils/*`
+当前默认已支持按需导入，不需要手动做聚合导出，直接从 `lyb-js` 引入即可。
 
 ```ts
-import { LibPixiText } from "lyb-pixi-js/Components/Base/LibPixiText";
-import { LibPixiRectBgColor } from "lyb-pixi-js/Components/Base/LibPixiRectBgColor";
-import { libPixiEvent } from "lyb-pixi-js/Utils/LibPixiEvent";
+import { LibPixiText, LibPixiRectBgColor, libPixiEvent } from "lyb-js";
 
 const title = new LibPixiText({
   text: "Hello Pixi",
@@ -62,31 +56,7 @@ libPixiEvent(panel, "pointertap", () => {
 app.stage.addChild(panel, title);
 ```
 
-### 2. 项目内二次封装
-
-如果同一批组件和工具会在多个文件重复使用，建议在项目内做一次聚合导出。
-
-```ts
-// utils/pixi.ts
-export * from "lyb-pixi-js/Components/Base/LibPixiText";
-export * from "lyb-pixi-js/Components/Custom/LibPixiSlide";
-export * from "lyb-pixi-js/Utils/LibPixiAudio";
-export * from "lyb-pixi-js/Utils/LibPixiEvent";
-```
-
-```ts
-// page.ts
-import {
-  LibPixiText,
-  LibPixiSlide,
-  LibPixiAudio,
-  libPixiEvent,
-} from "./utils/pixi";
-```
-
-### 3. 关于整库导入
-
-README 不再主推 `import { LibPixiJs } from "lyb-pixi-js"` 这类整库入口写法。当前 `package.json` 的 `exports` 以按需导出为准，复制示例时请优先使用本 README 中的真实路径。
+README 现在主推直接从 `lyb-js` 导入。默认已经支持按需导入，使用时不需要再手动按目录拆分、聚合，或使用其他旧入口写法。
 
 ## 使用说明
 
